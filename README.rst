@@ -77,3 +77,17 @@ Dispatch statmetrics depending on the regex expression::
         sec_per_row = integer
         nb_rows = integer
         next_sandbox = "2s-min"  #optional
+
+Debug
+-----
+
+Add following line in .heka.toml::
+
+    [UdpOutput]
+    message_matcher = "Type == 'heka.sandbox.influx'"
+    address = "0.0.0.0:8126"
+    encoder = "Statmetric-influx-encoder"
+
+Run the next command::
+
+    socat udp-l:8126,fork STDOUT
