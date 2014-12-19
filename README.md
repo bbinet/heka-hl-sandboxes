@@ -9,7 +9,7 @@ To install heka, do following step
     $ sudo apt-get install heka
     $ git clone git@bitbucket.org:helioslite/heka-hl-sandboxes.git
     $ cd heka-hl-sandboxes
-    $ cp hekad.toml ~/.hekad.toml
+    $ cp heka.toml ~/.heka.toml
     $ cp decoders/* /usr/share/heka/lua_decoders
     $ cp encoders/* /usr/share/heka/lua_encoders
     $ cp filters/* /user/share/heka/lua_filters
@@ -20,7 +20,7 @@ Run
 
 To run heka, do the following step
 
-    $ sudo hekad -config .hekad.toml
+    $ sudo hekad -config .heka.toml
 
 Config
 ------
