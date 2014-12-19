@@ -25,16 +25,16 @@ To run heka, do the following step::
 Config
 ------
 
-To change the default configuration::
+To change the default configuration, edit .heka.toml file::
 
     $ vi ~/.heka.toml
 
-To set uuid prefixe, change the string value as following::
+Set uuid prefixe::
 
     [TrserverParse.config]
     uuid = "uuid_name"
 
-To configure how to filter statmetrics, do as following::
+Dispatch statmetrics depending on the regex expression::
 
     [Dispatcher.config]
     list = "label1 label2 label3"
