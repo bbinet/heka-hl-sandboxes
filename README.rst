@@ -1,8 +1,11 @@
 HEKA Data collection and processing
 ===================================
 
-Install Heka:
--------------
+Install
+------------
+
+To install heka, do following step::
+
     $ sudo apt-get install heka
     $ git clone git@bitbucket.org:helioslite/heka-hl-sandboxes.git
     $ cd heka-hl-sandboxes
@@ -12,21 +15,27 @@ Install Heka:
     $ cp filters/* /user/share/heka/lua_filters
     $ cp modules/* /usr/share/heka/lua_modules
 
-Run:
-----
+Run
+---
+
+To run heka, do the following step::
+
     $ sudo hekad -config .hekad.toml
 
-Config:
--------
+Config
+------
 
 To change the default configuration::
+
     $ vi ~/.heka.toml
 
 To set uuid prefixe, change the string value as following::
+
     [TrserverParse.config]
     uuid = "uuid_name"
 
-To::
+To configure how to filter statmetrics, do as following::
+
     [Dispatcher.config]
     list = "label1 label2 label3"
     label1_regex = "trserver_sun_roll"
