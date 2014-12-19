@@ -14,25 +14,6 @@ parser_type = "regexp"
 delimiter = "\n"
 decoder = "TrserverParse"
 
-[Dispatcher]
-type = "SandboxFilter"
-filename = "lua_filters/dispatcher.lua"
-message_matcher = "Type == 'heka.statmetric.decoder'"
-    [Dispatcher.config]
-    list = "label1"
-    label1_regex = "trserver_sun_roll"
-    label1_sandbox = "5s-avg"
-
-[Cbufs-5s-avg]
-type = "SandboxFilter"
-filename = "lua_filters/operation.lua"
-message_matcher = "Type == 'heka.sandbox.5s-avg'"
-ticker_interval = 5
-    [Cbufs-5s-avg.config]
-    aggregation = "avg"
-    sec_per_row = 5
-    nb_rows = 10
-
 [Output]
 type = "SandboxFilter"
 filename = "lua_encoders/to_influx.lua"
@@ -48,9 +29,3 @@ address = "http://0.0.0.0:8086/db/metrics/series"
 username = "admin"
 password = "admin_password"
 encoder = "Statmetric-influx-encoder"
-
-[PayloadEncoder]
-[UdpOutput]
-message_matcher = "Type == 'heka.sandbox.influx'"
-address = "0.0.0.0:8126"
-encoder = "PayloadEncoder"

@@ -9,7 +9,7 @@ To install heka, do following step
     $ sudo apt-get install heka
     $ git clone git@bitbucket.org:helioslite/heka-hl-sandboxes.git
     $ cd heka-hl-sandboxes
-    $ cp heka.toml ~/.heka.toml
+    $ cp -r hekaconfig ~
     $ cp decoders/* /usr/share/heka/lua_decoders
     $ cp encoders/* /usr/share/heka/lua_encoders
     $ cp filters/* /user/share/heka/lua_filters
@@ -20,19 +20,19 @@ Run
 
 To run heka, do the following step
 
-    $ sudo hekad -config .heka.toml
+    $ sudo hekad -config hekaconfig
 
 Config
 ------
 
-To change the default configuration, edit .heka.toml file
-
-    $ vi ~/.heka.toml
-
-Set uuid prefixe
+To set uuid prefixe, edit `heka.toml` file
 
     [TrserverParse.config]
     uuid = "uuid_name"
+
+To change the default configuration, edit `config.toml` file
+
+    $ vi ~/.hekaconfig/config.toml
 
 Dispatch statmetrics depending on the regex expression
 
@@ -90,14 +90,10 @@ Exemple for send the last metric every minute
 Debug
 -----
 
-Add following line in .heka.toml
+To run debug mode, do the following command
 
-    [PayloadEncoder]
-    [UdpOutput]
-    message_matcher = "Type == 'heka.sandbox.influx'"
-    address = "0.0.0.0:8126"
-    encoder = "PayloadEncoder"
+    $ mv ~/hekaconfig/debug.toml.bak ~/hekaconfig/debug.toml
 
-Run the next command
+And run the next command
 
     socat udp-l:8126,fork STDOUT
