@@ -92,10 +92,11 @@ Debug
 
 Add following line in .heka.toml
 
+    [PayloadEncoder]
     [UdpOutput]
     message_matcher = "Type == 'heka.sandbox.influx'"
     address = "0.0.0.0:8126"
-    encoder = "Statmetric-influx-encoder"
+    encoder = "PayloadEncoder"
 
 Run the next command
 

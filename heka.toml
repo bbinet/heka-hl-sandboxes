@@ -32,7 +32,6 @@ ticker_interval = 5
     aggregation = "avg"
     sec_per_row = 5
     nb_rows = 10
-    #next_sandbox = "output"
 
 [Output]
 type = "SandboxFilter"
@@ -50,7 +49,8 @@ username = "admin"
 password = "admin_password"
 encoder = "Statmetric-influx-encoder"
 
+[PayloadEncoder]
 [UdpOutput]
 message_matcher = "Type == 'heka.sandbox.influx'"
 address = "0.0.0.0:8126"
-encoder = "Statmetric-influx-encoder"
+encoder = "PayloadEncoder"
