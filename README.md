@@ -17,6 +17,7 @@ To run heka, do the following step
 
     $ sudo docker run --rm --name heka --link influxdb:influxdb \
     $ -v path/to/heka-hl-sandboxes:/config \
+    $ -v path/to/heka-hl-sandboxes/cmake:/cmake \
     $ -p 4354:4354 -p 8125:8125/udp -p 5565:5565 \
     $ bbinet/heka
 

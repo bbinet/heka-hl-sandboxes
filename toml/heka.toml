@@ -40,3 +40,8 @@ address = "http://influxdb:8086/db/metrics/series"
 username = "admin"
 password = "admin_password"
 encoder = "Statmetric-influx-encoder"
+
+[Trwebclient]
+type = "WebSocketOutput"
+address = ":5000" # Address to bind websockets output
+message_matcher = "TRUE"
