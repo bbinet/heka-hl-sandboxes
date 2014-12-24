@@ -1,6 +1,6 @@
 [Dispatcher]
 type = "SandboxFilter"
-filename = "lua_filters/dispatcher.lua"
+filename = "filters/dispatcher.lua"
 message_matcher = "Type == 'heka.statmetric.decoder'"
     [Dispatcher.config]
     list = "label1"
@@ -9,7 +9,7 @@ message_matcher = "Type == 'heka.statmetric.decoder'"
 
 [Cbufs-5s-avg]
 type = "SandboxFilter"
-filename = "lua_filters/operation.lua"
+filename = "filters/operation.lua"
 message_matcher = "Type == 'heka.sandbox.5s-avg'"
 ticker_interval = 5
     [Cbufs-5s-avg.config]

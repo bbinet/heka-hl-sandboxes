@@ -1,10 +1,9 @@
-[DashboardOutput]
-ticker_interval = 1
-address = ":4354"
+[hekad]
+share_dir = "/config/toml"
 
 [TrserverParse]
 type = "SandboxDecoder"
-filename = "lua_decoders/trserver.lua"
+filename = "filters/trserver.lua"
     [TrserverParse.config]
     uuid = "uuid"
 [Trserver]
@@ -16,7 +15,7 @@ decoder = "TrserverParse"
 
 [Output]
 type = "SandboxFilter"
-filename = "lua_filters/to_influx.lua"
+filename = "filters/to_influx.lua"
 message_matcher = "Type == 'heka.sandbox.output'"
 
 [Statmetric-influx-encoder]
@@ -25,7 +24,7 @@ filename = "lua_encoders/statmetric_influx.lua"
 [Influx]
 type = "HttpOutput"
 message_matcher = "Type == 'heka.sandbox.influx'"
-address = "http://0.0.0.0:8086/db/metrics/series"
+address = "http://influxdb:8086/db/metrics/series"
 username = "admin"
 password = "admin_password"
 encoder = "Statmetric-influx-encoder"

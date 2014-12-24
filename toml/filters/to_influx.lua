@@ -2,7 +2,7 @@ function process_message()
     local data = {
 	Payload = read_message('Payload'),
 	Type = 'influx',
-	Fields = { 
+	Fields = {
 	    timestamp = read_message('Timestamp') / 1e9
 	}
     }
