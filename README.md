@@ -27,11 +27,18 @@ To set uuid prefix, edit `path/to/heka-hl-sandboxes/toml/heka.toml` file
     [TrserverParse.config]
     uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
 
-To change the default configuration, edit `path/to/heka-hl-sandboxes/toml/config.toml` file
+To change the configuration, edit `path/to/heka-hl-sandboxes/toml/config.toml` file
 
     $ vi path/to/heka-hl-sandboxes/toml/config.toml
 
-Dispatch statmetrics depending on the regex expression
+To change the default destination from Trserver decoder to Dispatcher, edit `path/to/heka-hl-sandboxes/toml/heka.toml` file
+
+    [TrserverParse.config]
+    type_output = "config_2"
+
+Note: "config_2" will be prefix with "heka.statmetric.", if nothing is set the type name will be "heka.statmetric"
+
+To dispatch statmetrics depending on the regex expression
 Exemple for send the last metric every minute
 
     [Dispatcher.config]

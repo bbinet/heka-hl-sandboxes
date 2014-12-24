@@ -3,8 +3,16 @@ require "string"
 local uuid = read_config('uuid') or 'message_not_parse'
 
 function process_message()
+    local type_output = read_config('type_output') or nil
+
+    if type_output then
+        type_output = 'heka.statmetric.' .. type_output
+    else
+	type_output = 'heka.statmetric'
+    end
+
     local data = {
-        Type    = 'heka.statmetric.decoder',
+        Type    = type_output,
         Payload = nil,
         Fields  = { }
     }
