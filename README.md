@@ -8,6 +8,7 @@ To install heka, do following step
 
     $ docker pull bbinet/heka
     $ git clone git@bitbucket.org:helioslite/heka-hl-sandboxes.git
+    $ cp path/to/heka-hl-sandboxes/PlatformDevs.toml ~
 
 Run
 ---
@@ -16,7 +17,7 @@ To run heka, do the following step
 
     $ sudo docker run --rm --name heka --link influxdb:influxdb \
     $ -v path/to/heka-hl-sandboxes:/config \
-    $ -p 4354:4354 -p 8125:8125/udp \
+    $ -p 4354:4354 -p 8125:8125/udp -p 5565:5565 \
     $ bbinet/heka
 
 Config
@@ -73,6 +74,20 @@ Exemple for send the last metric every minute
 * `aggregation` as string (`"avg"`, `"sum"`, `"max"`, `"min"`)
 * if `next_sandbox` is not configure metrics will be send to the output, else metrics will be send to sandbox indicated
 * `"regex_expression_*"` receive a string corresponding to what you want to match, if you want to match everything write `"."`
+
+Load Filter
+-----------
+
+To load a filter, run the following command
+
+    heka-sbmgr -action=load -config=PlatformDevs.toml -script=sandbox_file.lua -scriptconfig=configDev.toml
+
+Unload Filter
+-------------
+
+To unload a filter, run the next command
+
+    heka-sbmgr -action=unload -config=PlatformDevs.toml -filtername=[FilerName]
 
 Debug
 -----

@@ -1,6 +1,18 @@
 [hekad]
 share_dir = "/config/toml"
 
+[PlatformDevs]
+type = "SandboxManagerFilter"
+message_signer = "PlatformDevs"
+max_filters = 100
+[TCP:5565]
+type = "TcpInput"
+parser_type = "message.proto"
+decoder = "ProtobufDecoder"
+address = ":5565"
+    [TCP:5565.signer.PlatformDevs_0]
+    hmac_key = "Platform devs signing key"
+
 [TrserverParse]
 type = "SandboxDecoder"
 filename = "filters/trserver.lua"
