@@ -1,5 +1,5 @@
 [hekad]
-share_dir = "/config/toml"
+share_dir = "/home/helioslite/heka-hl-sandboxes/toml"
 
 [PlatformDevs]
 type = "SandboxManagerFilter"
