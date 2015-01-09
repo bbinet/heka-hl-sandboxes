@@ -15,7 +15,7 @@ address = ":5565"
 
 [TrserverParse]
 type = "SandboxDecoder"
-filename = "filters/trserver.lua"
+filename = "decoders/trserver.lua"
     [TrserverParse.config]
     uuid = "uuid"
     masterController = "masterController"
