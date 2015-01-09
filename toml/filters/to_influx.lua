@@ -6,7 +6,7 @@ function process_message()
 	    timestamp = read_message('Timestamp') / 1e9
 	}
     }
-    local name = read_message('Fields[name]')
+    local name = read_message('Fields[uuid]') .. '.' .. read_message('Fields[masterController]') .. '.' read_message('Fields[name]')
     data.Fields[name] = read_message('Fields[value]')
 
     inject_message(data)

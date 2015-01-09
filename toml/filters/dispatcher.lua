@@ -18,6 +18,8 @@ function init_list()
 end
 
 function process_message()
+    local uuid = read_message('Fields[uuid]')
+    local masterController = read_message('Fields[masterController]')
     local name = read_message('Fields[name]')
     local next_sandbox = nil
 
@@ -35,6 +37,8 @@ function process_message()
 	Type    = next_sandbox,
 	Payload = read_message('Payload'),
 	Fields  = {
+	    uuid = uuid,
+	    masterController = masterController,
 	    name  = name,
 	    value = read_message('Fields[value]')
 	 }

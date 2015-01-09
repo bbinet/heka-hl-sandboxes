@@ -1,6 +1,7 @@
 require "string"
 
-local uuid = read_config('uuid') or 'message_not_parse'
+local uuid = read_config('uuid') or 'uuid_not_parse'
+local masterController = read_config('masterController') or 'masterControllerName_not_parse'
 
 function process_message()
     local type_output = read_config('type_output') or nil
@@ -14,7 +15,10 @@ function process_message()
     local data = {
         Type    = type_output,
         Payload = nil,
-        Fields  = { }
+        Fields  = {
+	    uuid = uuid,
+	    masterController = masterController
+	}
     }
 
     local payload = read_message("Payload")
@@ -25,7 +29,7 @@ function process_message()
 	    break
 	end
 	if position == 'parseName' then
-	    data.Fields.name = uuid .. '.' .. token
+	    data.Fields.name = token
 	    position = 'parseValue'
 	end
     end
