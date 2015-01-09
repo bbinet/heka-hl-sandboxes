@@ -46,8 +46,8 @@ type = "SandboxEncoder"
 filename = "encoders/to_server.lua"
 [Server]
 type = "HttpOutput"
-message_matcher = "Type == 'heka.sandbox.output'"
-address = "http://localhost:8888/serverdb"
+message_matcher = "Type == 'heka.sandbox.trwebclient'"
+address = "http://localhost:8888/heka"
 encoder = "ServerDatabase"
 [Server.headers]
 Content-Type = ["application/json"]
