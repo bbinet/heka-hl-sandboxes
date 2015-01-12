@@ -6,8 +6,6 @@ local nb_rows = read_config('nb_rows') or 10
 local next_sandbox = read_config('type_output') or 'output'
 local nb_columns = 1
 local cbufs = { }
-local uuid = nil
-local hostname = nil
 
 function init_cbuf(name)
     cb = circular_buffer.new(nb_rows, nb_columns, sec_per_row)
@@ -19,8 +17,6 @@ end
 
 function process_message()
     local ts    = read_message('Timestamp')
-    uuid = read_message('Fields[uuid]')
-    hostname = read_message('Fields[hostname]')
     local name  = read_message('Fields[name]')
     local value = read_message('Fields[value]')
 
@@ -40,8 +36,6 @@ function timer_event(ns)
 	    Payload = ns .. ':' .. key .. ':' .. value,
 	    Fields  = {
 		value = value,
-		uuid = uuid,
-		hostname = hostname,
 		name  = key
 	    }
         }

@@ -16,12 +16,6 @@ message_matcher = "Type == 'heka.statmetric'"
     label1_regex = ".*"
     label1_type_output = "collect"
 
-[Trwebclient-filter]
-type = "SandboxFilter"
-filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/collect_data.lua"
-message_matcher = "Type == 'heka.sandbox.collect'"
-ticker_interval = 2
-
 [Cbufs-5s-avg]
 type = "SandboxFilter"
 filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/operation.lua"
@@ -31,3 +25,21 @@ ticker_interval = 5
     aggregation = "avg"
     sec_per_row = 5
     nb_rows = 10
+    type_output = "addFields"
+
+[SetUuidHostnameFilter]
+type = "SandboxFilter"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/to_fields.lua"
+message_matcher = "Type == 'heka.sandbox.addFields'"
+    [SetUuidHostnameFilter.config]
+    matchers = "uuid hostname"
+    uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
+    hostname = "hl-mc-1-dev"
+    emit_in_payload = true
+    type_output = "output"
+
+[Trwebclient-filter]
+type = "SandboxFilter"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/collect_data.lua"
+message_matcher = "Type == 'heka.sandbox.collect'"
+ticker_interval = 2

@@ -20,11 +20,18 @@ To run heka, do the following step
 Config
 ------
 
-To set uuid and hostname prefix, edit `path/to/heka-hl-sandboxes/toml/heka.toml` file
+To add fields in message add this sandbox as following
+    [SetNameFilter]
+    type = "SandboxFilter"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/to_fields.lua"
+    message_matcher = "Type == 'previous_sandbox'"
+        [SetNameFilter.config]
+        matchers = "uuid hostname"
+        uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
+        hostname = "hl-mc-1-dev"
+
 
     [TrServerDecoder.config]
-    uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
-    hostname = "hl-mc-1-dev"
     type_output = "config_2"
 
 Note: "config_2" will be prefix with "heka.statmetric.", if nothing is set the type name will be "heka.statmetric"
