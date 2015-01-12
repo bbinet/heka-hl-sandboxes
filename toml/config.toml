@@ -1,6 +1,6 @@
 [Dispatcher-influx]
 type = "SandboxFilter"
-filename = "filters/dispatcher.lua"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/dispatcher.lua"
 message_matcher = "Type == 'heka.statmetric'"
     [Dispatcher-influx.config]
     list = "label1"
@@ -9,7 +9,7 @@ message_matcher = "Type == 'heka.statmetric'"
 
 [Dispatcher-trwebclient]
 type = "SandboxFilter"
-filename = "filters/dispatcher.lua"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/dispatcher.lua"
 message_matcher = "Type == 'heka.statmetric'"
     [Dispatcher-trwebclient.config]
     list = "label1"
@@ -18,13 +18,13 @@ message_matcher = "Type == 'heka.statmetric'"
 
 [Trwebclient-filter]
 type = "SandboxFilter"
-filename = "filters/collect_data.lua"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/collect_data.lua"
 message_matcher = "Type == 'heka.sandbox.collect'"
 ticker_interval = 2
 
 [Cbufs-5s-avg]
 type = "SandboxFilter"
-filename = "filters/operation.lua"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/operation.lua"
 message_matcher = "Type == 'heka.sandbox.5s-avg'"
 ticker_interval = 5
     [Cbufs-5s-avg.config]
