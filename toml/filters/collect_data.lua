@@ -1,24 +1,19 @@
-require "cjson"
-
 local data = {
     Type = 'trwebclient',
-    Payload = nil
+    Payload = nil,
+    Fields = { }
 }
-local message = { }
 
 function process_message()
-    local name = read_message('Fields[name]')
-    message[name] = {
-        value = read_message('Fields[value]'),
-        time  = read_message('Timestamp') / 1e9
-    }
+    data.Fields.name = read_message('Fields[name]')
+    data.Fields.value = read_message('Fields[value]')
+    data.Payload = data.Fields.name .. ':' .. data.Fields.value
 
     return 0
 end
 
 function timer_event(ns)
-    data.Payload = cjson.encode(message)
     inject_message(data)
 
-    message = { }
+    data.Fields = { }
 end

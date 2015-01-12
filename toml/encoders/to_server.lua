@@ -1,7 +1,13 @@
-function process_message()
-    local payload = read_message('Payload')
+require "cjson"
 
-    inject_payload("json", "server_db", payload)
+function process_message()
+    local payload = { }
+    local name = read_message('Fields[name]')
+    payload[name] = {
+        value = read_message('Fields[value]'),
+    }
+
+    inject_payload("json", "server_db", cjson.encode(payload))
 
     return 0
 end
