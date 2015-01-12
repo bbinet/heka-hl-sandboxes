@@ -78,7 +78,7 @@ Unload Filter
 
 To unload a filter, run the next command
 
-    heka-sbmgr -action=unload -config=PlatformDevs.toml -filtername=[FilerName]
+    heka-sbmgr -action=unload -config=PlatformDevs.toml -filtername=[FilterName]
 
 Debug
 -----
