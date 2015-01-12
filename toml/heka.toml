@@ -15,7 +15,7 @@ type = "SandboxDecoder"
 filename = "/home/helioslite/heka-hl-sandboxes/toml/decoders/trserver.lua"
     [TrserverParse.config]
     uuid = "uuid"
-    masterController = "masterController"
+    hostname = "hl-mc-1-dev"
 [Trserver]
 type = "UdpInput"
 address = "0.0.0.0:8125"

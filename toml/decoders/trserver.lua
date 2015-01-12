@@ -1,7 +1,7 @@
 require "string"
 
 local uuid = read_config('uuid') or 'uuid_not_parse'
-local masterController = read_config('masterController') or 'masterControllerName_not_parse'
+local hostname = read_config('hostname') or 'masterControllerName_not_parse'
 
 function process_message()
     local type_output = read_config('type_output') or nil
@@ -17,7 +17,7 @@ function process_message()
         Payload = nil,
         Fields  = {
 	    uuid = uuid,
-	    masterController = masterController
+	    hostname = hostname
 	}
     }
 
