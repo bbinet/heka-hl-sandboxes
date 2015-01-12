@@ -4,7 +4,7 @@ filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/dispatcher.lua"
 message_matcher = "Type == 'heka.statmetric'"
     [Dispatcher-influx.config]
     list = "label1"
-    label1_regex = "."
+    label1_regex = ".*"
     label1_sandbox = "5s-avg"
 
 [Dispatcher-trwebclient]
@@ -13,7 +13,7 @@ filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/dispatcher.lua"
 message_matcher = "Type == 'heka.statmetric'"
     [Dispatcher-trwebclient.config]
     list = "label1"
-    label1_regex = "."
+    label1_regex = ".*"
     label1_sandbox = "collect"
 
 [Trwebclient-filter]

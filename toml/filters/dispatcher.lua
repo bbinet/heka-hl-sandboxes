@@ -26,7 +26,7 @@ function process_message()
     if #list_item == 0 and list ~= nil then init_list() end
 
     for index, value in ipairs(list_item) do
-	if string.find(name, value.regex) ~= nil then
+	if string.find(name, "^" .. value.regex .. "$") ~= nil then
 	    next_sandbox = value.sandbox
             break
 	end
