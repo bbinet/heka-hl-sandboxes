@@ -4,22 +4,18 @@ HEKA Data collection and processing
 Install
 ------------
 
-To install heka, do following step
+Get and and install heka with this following link https://github.com/mozilla-services/heka/releases
 
-    $ docker pull bbinet/heka
+To get heka configuration do following step
+
     $ git clone git@bitbucket.org:helioslite/heka-hl-sandboxes.git
-    $ cp path/to/heka-hl-sandboxes/PlatformDevs.toml ~
 
 Run
 ---
 
 To run heka, do the following step
 
-    $ sudo docker run --rm --name heka --link influxdb:influxdb \
-    $ -v path/to/heka-hl-sandboxes:/config \
-    $ -v path/to/heka-hl-sandboxes/cmake:/cmake \
-    $ -p 4354:4354 -p 8125:8125/udp -p 5565:5565 \
-    $ bbinet/heka
+    $ sudo hekad -config path/to/heka/toml
 
 Config
 ------
@@ -29,18 +25,11 @@ To set uuid and hostname prefix, edit `path/to/heka-hl-sandboxes/toml/heka.toml`
     [TrserverParse.config]
     uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
     hostname = "hl-mc-1-dev"
-
-To change the configuration, edit `path/to/heka-hl-sandboxes/toml/config.toml` file
-
-    $ vi path/to/heka-hl-sandboxes/toml/config.toml
-
-To change the default destination from Trserver decoder to Dispatcher, edit `path/to/heka-hl-sandboxes/toml/heka.toml` file
-
-    [TrserverParse.config]
     type_output = "config_2"
 
 Note: "config_2" will be prefix with "heka.statmetric.", if nothing is set the type name will be "heka.statmetric"
 
+To change the heka configuration, edit `path/to/heka-hl-sandboxes/toml/config.toml` file
 To dispatch statmetrics depending on the regex expression
 Exemple for send the last metric every minute
 
