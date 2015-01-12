@@ -10,10 +10,10 @@ address = ":5565"
     [TCP:5565.signer.PlatformDevs_0]
     hmac_key = "Platform devs signing key"
 
-[TrserverParse]
+[TrServerDecoder]
 type = "SandboxDecoder"
 filename = "/home/helioslite/heka-hl-sandboxes/toml/decoders/trserver.lua"
-    [TrserverParse.config]
+    [TrServerDecoder.config]
     uuid = "uuid"
     hostname = "hl-mc-1-dev"
 [Trserver]
@@ -21,7 +21,7 @@ type = "UdpInput"
 address = "0.0.0.0:8125"
 parser_type = "regexp"
 delimiter = "\n"
-decoder = "TrserverParse"
+decoder = "TrServerDecoder"
 
 [Statmetric-influx-preEncoder]
 type = "SandboxFilter"

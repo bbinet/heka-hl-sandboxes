@@ -22,7 +22,7 @@ Config
 
 To set uuid and hostname prefix, edit `path/to/heka-hl-sandboxes/toml/heka.toml` file
 
-    [TrserverParse.config]
+    [TrServerDecoder.config]
     uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
     hostname = "hl-mc-1-dev"
     type_output = "config_2"
