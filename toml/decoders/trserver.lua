@@ -21,18 +21,8 @@ function process_message()
 	}
     }
 
-    local payload = read_message("Payload")
-    local position = 'parseName'
-    for token in string.gmatch(payload, "([^{:,|}]+)") do
-	if position == 'parseValue' then
-	    data.Fields.value = tonumber(token)
-	    break
-	end
-	if position == 'parseName' then
-	    data.Fields.name = token
-	    position = 'parseValue'
-	end
-    end
+    local payload = read_message("Payload") .. ''
+    data.Fields.name, data.Fields.value = string.match(payload, "^([%w_]+):([%w_.+]+)|p$")
 
     data.Payload = read_message('Timestamp') .. ':' .. data.Fields.name .. ':' .. data.Fields.value
     inject_message(data)
