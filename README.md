@@ -34,7 +34,7 @@ To dispatch statmetrics depending on the regex expression
 Exemple for send the last metric every minute
 
     [Dispatcher.config]
-    list = "label1 label2"
+    matchers = "label1 label2"
     label1_regex = "roll_angle"
     label1_sandbox = "60s-avg"
     label2_regex = "sun_tilt"

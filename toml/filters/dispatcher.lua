@@ -1,6 +1,6 @@
 require "string"
 
-local list = read_config('list')
+local list = read_config('matchers')
 local list_item = { }
 
 function init_list()
