@@ -16,14 +16,13 @@ function init_list()
 	end
     end
 end
+init_list()
 
 function process_message()
     local uuid = read_message('Fields[uuid]')
     local hostname = read_message('Fields[hostname]')
     local name = read_message('Fields[name]')
     local next_sandbox = nil
-
-    if #list_item == 0 and list ~= nil then init_list() end
 
     for index, value in ipairs(list_item) do
 	if string.find(name, "^" .. value.regex .. "$") ~= nil then
