@@ -63,7 +63,7 @@ Exemple for send the last metric every minute
 
 * `ticker_interval` as integer (unit= second)
 * `aggregation` as string (`"avg"`, `"sum"`, `"max"`, `"min"`)
-* if `next_sandbox` is not configure metrics will be send to the output, else metrics will be send to sandbox indicated
+* if `type_output` is not configure metrics will be send to the output, else metrics will be send to sandbox indicated
 * `"regex_expression_*"` receive a string corresponding to what you want to match, if you want to match everything write `"."`
 
 Load Filter
