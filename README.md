@@ -36,9 +36,9 @@ Exemple for send the last metric every minute
     [Dispatcher.config]
     matchers = "label1 label2"
     label1_regex = "roll_angle"
-    label1_sandbox = "60s-avg"
+    label1_type_output = "60s-avg"
     label2_regex = "sun_tilt"
-    label2_sandbox = "60s-aggregation_2"
+    label2_type_output = "60s-aggregation_2"
 
     [Filter-aggregation_1]
     type = "SandboxFilter"

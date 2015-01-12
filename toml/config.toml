@@ -5,16 +5,16 @@ message_matcher = "Type == 'heka.statmetric'"
     [Dispatcher-influx.config]
     matchers = "label1"
     label1_regex = ".*"
-    label1_sandbox = "5s-avg"
+    label1_type_output = "5s-avg"
 
 [Dispatcher-trwebclient]
 type = "SandboxFilter"
 filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/dispatcher.lua"
 message_matcher = "Type == 'heka.statmetric'"
     [Dispatcher-trwebclient.config]
-    list = "label1"
+    matchers = "label1"
     label1_regex = ".*"
-    label1_sandbox = "collect"
+    label1_type_output = "collect"
 
 [Trwebclient-filter]
 type = "SandboxFilter"

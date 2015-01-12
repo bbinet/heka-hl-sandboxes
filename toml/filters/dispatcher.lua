@@ -5,7 +5,7 @@ local list_item = { }
 
 function init_list()
     for value in string.gmatch(list, "[%S]+") do
-	local sandbox = read_config(value .. '_sandbox')
+	local sandbox = read_config(value .. '_type_output')
 	local regex   = read_config(value .. '_regex')
 
         if sandbox and regex then
