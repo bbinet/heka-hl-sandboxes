@@ -28,7 +28,7 @@ function process_message()
     for index, value in ipairs(list_item) do
 	if string.find(name, "^" .. value.regex .. "$") ~= nil then
 	    next_sandbox = value.sandbox
-            break
+	    break
 	end
     end
 

@@ -35,18 +35,18 @@ function timer_event(ns)
     for key, cb in pairs(cbufs) do
 	local value = cb:compute(agg, 1)
         local data = {
-            Type    = next_sandbox,
+	    Type    = next_sandbox,
 	    Timestamp = ns,
-            Payload = ns .. ':' .. key .. ':' .. value,
-            Fields  = {
+	    Payload = ns .. ':' .. key .. ':' .. value,
+	    Fields  = {
 		value = value,
-	        uuid = uuid,
-	        hostname = hostname,
+		uuid = uuid,
+		hostname = hostname,
 		name  = key
 	    }
         }
 
-        inject_message(data)
+	inject_message(data)
 	data = { }
     end
 end
