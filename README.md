@@ -32,7 +32,7 @@ To add fields in message add this sandbox as following
 
 
     [TrServerDecoder.config]
-    type_output = "config_2"
+    type_output = "heka.statmetric"
 
 Note: "config_2" will be prefix with "heka.statmetric.", if nothing is set the type name will be "heka.statmetric"
 

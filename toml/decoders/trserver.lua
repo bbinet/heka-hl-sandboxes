@@ -1,12 +1,10 @@
 require "string"
 
 function process_message()
-    local type_output = read_config('type_output') or nil
+    local type_output = read_config('type_output')
 
-    if type_output then
-        type_output = 'heka.statmetric.' .. type_output
-    else
-	type_output = 'heka.statmetric'
+    if type_output == nil then
+        return 1
     end
 
     local data = {

@@ -13,7 +13,9 @@ address = ":5565"
 [TrServerDecoder]
 type = "SandboxDecoder"
 filename = "/home/helioslite/heka-hl-sandboxes/toml/decoders/trserver.lua"
-[Trserver]
+    [TrServerDecoder.config]
+    type_output = "heka.statmetric"
+[TrServerInput]
 type = "UdpInput"
 address = "0.0.0.0:8125"
 parser_type = "regexp"
@@ -27,7 +29,7 @@ message_matcher = "Type == 'heka.sandbox.output'"
 [Statmetric-influx-encoder]
 type = "SandboxEncoder"
 filename = "lua_encoders/statmetric_influx.lua"
-[Influx]
+[InfluxOutput]
 type = "HttpOutput"
 message_matcher = "Type == 'heka.sandbox.influx'"
 address = "http://localhost:8086/db/metrics/series"
@@ -35,13 +37,13 @@ username = "admin"
 password = "admin_password"
 encoder = "Statmetric-influx-encoder"
 
-[ServerDatabase]
+[ServerEncoder]
 type = "SandboxEncoder"
 filename = "/home/helioslite/heka-hl-sandboxes/toml/encoders/to_server.lua"
-[Server]
+[ServerOutput]
 type = "HttpOutput"
 message_matcher = "Type == 'heka.sandbox.trwebclient'"
 address = "http://localhost:8888/heka"
-encoder = "ServerDatabase"
-[Server.headers]
+encoder = "ServerEncoder"
+[ServerOutput.headers]
 Content-Type = ["application/json"]
