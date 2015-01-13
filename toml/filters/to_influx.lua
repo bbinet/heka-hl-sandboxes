@@ -9,7 +9,7 @@ function process_message()
     data.Fields[name] = read_message('Fields[value]')
 
     if read_config('emit_in_payload') then
-	data.Payload = name .. ':' .. data.Fields[name]
+	data.Payload = data.Fields.timestamp .. ':' .. name .. ':' .. data.Fields[name]
     end
     inject_message(data)
 

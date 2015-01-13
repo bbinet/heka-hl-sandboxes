@@ -70,8 +70,9 @@ function timer_event(ns)
 	    inject_message(data)
 	    data = { }
 	else
+	    cb.Timestamp = ns
 	    if read_config('emit_in_payload') then
-		cb.Payload = cb.Fields.name .. ':' .. cb.Fields.value
+		cb.Payload = ns .. ':' .. cb.Fields.name .. ':' .. cb.Fields.value
 	    end
 	    inject_message(cb)
 	    cb = { }
