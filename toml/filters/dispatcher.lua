@@ -32,12 +32,14 @@ function process_message()
     if not next_sandbox then return -1 end
     local data = {
 	Type    = next_sandbox,
-	Payload = read_message('Payload'),
 	Fields  = {
 	    name  = name,
 	    value = read_message('Fields[value]')
 	 }
     }
+    if read_config('emit_in_payload') then
+	data.Payload = data.Fields.name .. ':' .. data.Fields.value
+    end
     inject_message(data)
     return 0
 end

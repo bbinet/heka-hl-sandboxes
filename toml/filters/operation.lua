@@ -28,18 +28,20 @@ function process_message()
 end
 
 function timer_event(ns)
+    local emit_in_payload = read_config('emit_in_payload')
     for key, cb in pairs(cbufs) do
 	local value = cb:compute(agg, 1)
         local data = {
 	    Type    = next_sandbox,
 	    Timestamp = ns,
-	    Payload = ns .. ':' .. key .. ':' .. value,
 	    Fields  = {
 		value = value,
 		name  = key
 	    }
         }
-
+	if emit_in_payload then
+	    Payload = ns .. ':' .. key .. ':' .. value
+	end
 	inject_message(data)
 	data = { }
     end

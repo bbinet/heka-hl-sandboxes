@@ -11,14 +11,15 @@ function process_message()
 
     local data = {
         Type    = type_output,
-        Payload = nil,
         Fields  = { }
     }
 
     local payload = read_message("Payload") .. ''
     data.Fields.name, data.Fields.value = string.match(payload, "^([%w_]+):([%w_.+-]+)|p$")
 
-    data.Payload = read_message('Timestamp') .. ':' .. data.Fields.name .. ':' .. data.Fields.value
+    if read_config('emit_in_payload') then
+        data.Payload = read_message('Timestamp') .. ':' .. data.Fields.name .. ':' .. data.Fields.value
+    end
     inject_message(data)
     data = { }
 
