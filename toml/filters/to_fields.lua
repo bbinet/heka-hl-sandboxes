@@ -15,6 +15,9 @@ function process_message()
     end
 
     data.Type = read_config('type_output')
+    if data.Type == nil then
+	return 1
+    end
     data.Timestamp = read_message('Timestamp')
     data.Fields.name = read_message('Fields[name]')
     data.Fields.value = read_message('Fields[value]')
