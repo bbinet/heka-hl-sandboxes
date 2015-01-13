@@ -1,11 +1,26 @@
 require "circular_buffer"
 
-local agg = read_config('aggregation') or 'avg'
-local sec_per_row = read_config('sec_per_row') or 5
-local nb_rows = read_config('nb_rows') or 10
-local next_sandbox = read_config('type_output') or 'output'
+local agg = read_config('aggregation')
+local sec_per_row = read_config('sec_per_row')
+local nb_rows = read_config('nb_rows')
+local type_output = read_config('type_output')
 local nb_columns = 1
 local cbufs = { }
+
+function init()
+    if agg ~= ("avg" or "sum" or "max" or "min" or "last") then
+	return 1
+    end
+    if agg ~= last then
+	if (sec_per_row or nb_rows) == nil then
+	    return 1
+	end
+    end
+    if type_output == nil then
+	return 1
+    end
+end
+init()
 
 function init_cbuf(name)
     cb = circular_buffer.new(nb_rows, nb_columns, sec_per_row)
@@ -32,9 +47,9 @@ function timer_event(ns)
     for key, cb in pairs(cbufs) do
 	local value = cb:compute(agg, 1)
         local data = {
-	    Type    = next_sandbox,
+	    Type = type_output,
 	    Timestamp = ns,
-	    Fields  = {
+	    Fields = {
 		value = value,
 		name  = key
 	    }
