@@ -19,7 +19,14 @@ To run heka, do the following step
 
 Config
 ------
+To change the heka configuration, edit `path/to/heka-hl-sandboxes/toml/heka.toml` file
 
+Edit the maximum number of times a message can be re-injected into the system. The default is 4.
+[hekad]
+max_message_loops = 5
+
+
+To change the heka filter configuration, edit `path/to/heka-hl-sandboxes/toml/config.toml`
 To add fields in message add this sandbox as following
     [SetNameFilter]
     type = "SandboxFilter"
@@ -29,49 +36,60 @@ To add fields in message add this sandbox as following
         matchers = "uuid hostname"
         uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
         hostname = "hl-mc-1-dev"
+        type_output = "next_sandbox"
 
 
-    [TrServerDecoder.config]
-    type_output = "heka.statmetric"
-
-Note: "config_2" will be prefix with "heka.statmetric.", if nothing is set the type name will be "heka.statmetric"
-
-To change the heka configuration, edit `path/to/heka-hl-sandboxes/toml/config.toml` file
 To dispatch statmetrics depending on the regex expression
-Exemple for send the last metric every minute
-
-    [Dispatcher.config]
-    matchers = "label1 label2"
-    label1_regex = "roll_angle"
-    label1_type_output = "60s-avg"
-    label2_regex = "sun_tilt"
-    label2_type_output = "60s-aggregation_2"
-
-    [Filter-aggregation_1]
+    [InfluxDispatcherFilter]
     type = "SandboxFilter"
-    filename = "filters/operation.lua"
-    message_matcher = "Type == 'heka.sandbox.60s-avg'"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/dispatcher.lua"
+    message_matcher = "Type == 'heka.statmetric'"
+        [InfluxDispatcherFilter.config]
+        matchers = "windMetric allMetrics"
+        allMetrics_regex = ".*"
+        allMetrics_type_output = "5s.avg"
+        windMetric_regex = "wind"
+        windMetric_type_output = "3s.avg"
+
+To do last aggregation (every minute)
+
+    [TrwebclientFilter]
+    type = "SandboxFilter"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/operation.lua"
+    message_matcher = "Type == 'previous_sandbox'"
     ticker_interval = 60
-        [Filter-aggregation_1.config]
+        [TrwebclientFilter.config]
+        aggregation = "last"
+        type_output = "next_sandbox"
+
+To do gust aggregation (max value of the 3s avg values in 1 minute)
+
+    [Gust3sAvgFilter]
+    type = "SandboxFilter"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/operation.lua"
+    message_matcher = "Type == 'heka.sandbox.3s.avg'"
+    ticker_interval = 3
+        [Gust3sAvgFilter.config]
         aggregation = "avg"
         sec_per_row = 1
-        nb_rows = 1
+        nb_rows = 3
+        type_output = "60s.max"
 
-    [Filter-aggregation_2]
+    [Gust60sMaxFilter]
     type = "SandboxFilter"
-    filename = "filters/operation.lua"
-    message_matcher = "Type == 'heka.sandbox.60s-aggregation_2'"
-    ticker_interval = 240
-        [Filter-aggregation_2.config]
-        aggregation = "sum"
-        sec_per_row = 60
-        nb_rows = 1
-        type_output = "60s-avg"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/operation.lua"
+    message_matcher = "Type == 'heka.sandbox.60s.max'"
+    ticker_interval = 60
+        [Gust60sMaxFilter.config]
+        aggregation = "max"
+        sec_per_row = 1
+        nb_rows = 60
+        type_output = "addFields"
 
 * `ticker_interval` as integer (unit= second)
-* `aggregation` as string (`"avg"`, `"sum"`, `"max"`, `"min"`)
-* if `type_output` is not configure metrics will be send to the output, else metrics will be send to sandbox indicated
-* `"regex_expression_*"` receive a string corresponding to what you want to match, if you want to match everything write `"."`
+* `aggregation` as string (`"avg"`, `"sum"`, `"max"`, `"min"`, `"last"`)
+* if `type_output` is mandatory
+* `"regex_expression_*"` receive a string corresponding to what you want to match: (http://lua-users.org/wiki/PatternsTutorial)
 
 Load Filter
 -----------
