@@ -35,29 +35,46 @@ function process_message()
     local name  = read_message('Fields[name]')
     local value = read_message('Fields[value]')
 
-    local cb = cbufs[name]
-    if not cb then cb = init_cbuf(name) end
-    cb:set(ts, 1, value)
+    if agg ~= "last" then
+	local cb = cbufs[name]
+	if not cb then cb = init_cbuf(name) end
+	cb:set(ts, 1, value)
+    else
+	cbufs[name] = {
+	    Type = type_output,
+	    Fields = {
+		name = name,
+		value = value
+	    }
+	}
+    end
 
     return 0
 end
 
 function timer_event(ns)
-    local emit_in_payload = read_config('emit_in_payload')
     for key, cb in pairs(cbufs) do
-	local value = cb:compute(agg, 1)
-        local data = {
-	    Type = type_output,
-	    Timestamp = ns,
-	    Fields = {
-		value = value,
-		name  = key
+	if agg ~= "last" then
+	    local value = cb:compute(agg, 1)
+	    local data = {
+		Type = type_output,
+		Timestamp = ns,
+		Fields = {
+		    value = value,
+		    name  = key
+		}
 	    }
-        }
-	if emit_in_payload then
-	    Payload = ns .. ':' .. key .. ':' .. value
+	    if read_config('emit_in_payload') then
+		data.Payload = ns .. ':' .. key .. ':' .. value
+	    end
+	    inject_message(data)
+	    data = { }
+	else
+	    if read_config('emit_in_payload') then
+		cb.Payload = cb.Fields.name .. ':' .. cb.Fields.value
+	    end
+	    inject_message(cb)
+	    cb = { }
 	end
-	inject_message(data)
-	data = { }
     end
 end
