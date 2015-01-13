@@ -15,8 +15,13 @@ function process_message()
 	return 1
     end
     data.Timestamp = read_message('Timestamp')
-    data.Fields.name = read_message('Fields[name]')
-    data.Fields.value = read_message('Fields[value]')
+    while true do
+	typ, name, value = read_next_field()
+	if not typ then break end
+	if typ ~= 1 then
+	    data.Fields[name] = value
+	end
+    end
 
     if read_config('emit_in_payload') then
 	data.Payload = data.Timestamp .. ':' .. data.Fields.name .. ':' .. data.Fields.value
