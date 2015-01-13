@@ -1,3 +1,6 @@
+[hekad]
+max_message_loops = 5
+
 [PlatformDevs]
 type = "SandboxManagerFilter"
 message_signer = "PlatformDevs"

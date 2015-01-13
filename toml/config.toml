@@ -3,28 +3,43 @@ type = "SandboxFilter"
 filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/dispatcher.lua"
 message_matcher = "Type == 'heka.statmetric'"
     [InfluxDispatcherFilter.config]
-    matchers = "label1"
-    label1_regex = ".*"
-    label1_type_output = "5s-avg"
+    matchers = "windMetric allMetrics"
+    allMetrics_regex = ".*"
+    allMetrics_type_output = "5s.avg"
+    windMetric_regex = "wind"
+    windMetric_type_output = "3s.avg"
 
-[TrwebclientDispatcherFilter]
-type = "SandboxFilter"
-filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/dispatcher.lua"
-message_matcher = "Type == 'heka.statmetric'"
-    [TrwebclientDispatcherFilter.config]
-    matchers = "label1"
-    label1_regex = ".*"
-    label1_type_output = "collect"
-
-[Cbufs-5s-avg]
+[5sAvgFilter]
 type = "SandboxFilter"
 filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/operation.lua"
-message_matcher = "Type == 'heka.sandbox.5s-avg'"
+message_matcher = "Type == 'heka.sandbox.5s.avg'"
 ticker_interval = 5
-    [Cbufs-5s-avg.config]
+    [5sAvgFilter.config]
     aggregation = "avg"
-    sec_per_row = 5
-    nb_rows = 10
+    sec_per_row = 1
+    nb_rows = 5
+    type_output = "addFields"
+
+[Gust3sAvgFilter]
+type = "SandboxFilter"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/operation.lua"
+message_matcher = "Type == 'heka.sandbox.3s.avg'"
+ticker_interval = 3
+    [Gust3sAvgFilter.config]
+    aggregation = "avg"
+    sec_per_row = 1
+    nb_rows = 3
+    type_output = "60s.max"
+
+[Gust60sMaxFilter]
+type = "SandboxFilter"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/operation.lua"
+message_matcher = "Type == 'heka.sandbox.60s.max'"
+ticker_interval = 60
+    [Gust60sMaxFilter.config]
+    aggregation = "max"
+    sec_per_row = 1
+    nb_rows = 60
     type_output = "addFields"
 
 [SetUuidHostnameFilter]
@@ -36,6 +51,15 @@ message_matcher = "Type == 'heka.sandbox.addFields'"
     uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
     hostname = "hl-mc-1-dev"
     type_output = "output"
+
+[TrwebclientDispatcherFilter]
+type = "SandboxFilter"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/dispatcher.lua"
+message_matcher = "Type == 'heka.statmetric'"
+    [TrwebclientDispatcherFilter.config]
+    matchers = "label1"
+    label1_regex = ".*"
+    label1_type_output = "collect"
 
 [TrwebclientFilter]
 type = "SandboxFilter"
