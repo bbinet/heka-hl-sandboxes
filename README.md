@@ -15,7 +15,7 @@ Run
 
 To run heka, do the following step
 
-    $ sudo hekad -config path/to/heka/toml
+    $ sudo hekad -config path/to/heka-hl-sandboxes/toml
 
 Config
 ------
