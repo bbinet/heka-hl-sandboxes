@@ -42,6 +42,7 @@ function process_message()
     else
 	cbufs[name] = {
 	    Type = type_output,
+	    Payload = read_message('Payload'),
 	    Fields = {
 		name = name,
 		value = value
@@ -59,21 +60,16 @@ function timer_event(ns)
 	    local data = {
 		Type = type_output,
 		Timestamp = ns,
+		Payload = ns .. ':' .. key .. ':' .. value,
 		Fields = {
 		    value = value,
 		    name  = key
 		}
 	    }
-	    if read_config('emit_in_payload') then
-		data.Payload = ns .. ':' .. key .. ':' .. value
-	    end
 	    inject_message(data)
 	    data = { }
 	else
 	    cb.Timestamp = ns
-	    if read_config('emit_in_payload') then
-		cb.Payload = ns .. ':' .. cb.Fields.name .. ':' .. cb.Fields.value
-	    end
 	    inject_message(cb)
 	    cb = { }
 	end

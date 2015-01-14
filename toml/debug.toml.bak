@@ -1,4 +1,4 @@
-[PayloadEncoder]
+[RstEncoder]
 [LogOutput]
-message_matcher = "Type == 'heka.sandbox.influx'"
-encoder = "PayloadEncoder"
+message_matcher = "Type == 'heka.sandbox.output'"
+encoder = "RstEncoder"

@@ -33,14 +33,13 @@ function process_message()
     local data = {
 	Type    = type_output,
 	Timestamp = read_message('Timestamp'),
+	Payload = read_message('Payload'),
 	Fields  = {
 	    name  = name,
 	    value = read_message('Fields[value]')
 	 }
     }
-    if read_config('emit_in_payload') then
-	data.Payload = data.Timestamp .. ':' .. data.Fields.name .. ':' .. data.Fields.value
-    end
+
     inject_message(data)
     return 0
 end

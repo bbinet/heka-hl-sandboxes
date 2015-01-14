@@ -114,19 +114,7 @@ To run debug mode, do the following command
 
 And edit debug.toml as following
 
-    [PayloadEncoder]
+    [RstEncoder]
     [LogOutput]
     message_matcher = "Type == 'next_sandbox'"
-    encoder = "PayloadEncoder"
-
-And edit config.toml ad following
-
-    [TrwebclientFilter]
-    type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/operation.lua"
-    message_matcher = "Type == 'previous_sandbox'"
-    ticker_interval = 60
-        [TrwebclientFilter.config]
-        aggregation = "last"
-        type_output = "next_sandbox"
-        emit_in_payload = true
+    encoder = "RstEncoder"
