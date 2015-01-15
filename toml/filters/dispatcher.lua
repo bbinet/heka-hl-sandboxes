@@ -1,14 +1,14 @@
 require "string"
 
-local list = read_config('matchers') or error ('you must initialize "matchers" option')
-local list_item = { }
+local matcher = read_config('matchers') or error ('you must initialize "matchers" option')
+local matchers = { }
 
 function init_list()
-    for value in string.gmatch(list, "[%S]+") do
+    for value in string.gmatch(matcher, "[%S]+") do
 	local regex   = read_config(value .. '_regex') or error ('you must initialize "_regex" option')
 	local type_output= read_config(value .. '_type_output') or error ('you must initialize "_type_output" option')
 
-	list_item[#list_item + 1] = {
+	matchers[#matchers + 1] = {
 	    type_output = type_output,
 	    regex   = regex
 	}
@@ -20,7 +20,7 @@ function process_message()
     local name = read_message('Fields[name]')
     local type_output = nil
 
-    for index, value in ipairs(list_item) do
+    for index, value in ipairs(matchers) do
 	if string.find(name, "^" .. value.regex .. "$") ~= nil then
 	    type_output = value.type_output
 	    break
