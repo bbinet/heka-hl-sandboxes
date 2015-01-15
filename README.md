@@ -96,14 +96,14 @@ Load Filter
 
 To load a filter, run the following command
 
-    heka-sbmgr -action=load -config=PlatformDevs.toml -script=sandbox_file.lua -scriptconfig=configDev.toml
+    heka-sbmgr -action=load -config=/path/to/heka-hl-sandboxes/PlatformDevs.toml -script=sandbox_file.lua -scriptconfig=configDev.toml
 
 Unload Filter
 -------------
 
 To unload a filter, run the next command
 
-    heka-sbmgr -action=unload -config=PlatformDevs.toml -filtername=[FilterName]
+    heka-sbmgr -action=unload -config=/path/to/heka-sandboxes/PlatformDevs.toml -filtername=[FilterName]
 
 Debug
 -----
