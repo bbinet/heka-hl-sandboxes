@@ -1,34 +1,27 @@
 require "string"
 
-local fields = read_config('fields') or error('you must initialize "fields" option')
-local data = {
-    Fields = { }
-}
+local matchers = read_config('fields') or error('you must initialize "fields" option')
+local type_output = read_config('type_output') or error('you must initialize "type_output" option')
+local fields = { }
 
-for value in string.gmatch(fields, "[%S]+") do
-    data.Fields[value] = read_config(value)
+for item in string.gmatch(matchers, "[%S]+") do
+    fields[item] = read_config(item) or ('you must initialize "' .. item .. '" option')
 end
 
 function process_message()
-    data.Type = read_config('type_output')
-    if data.Type == nil then
-	return 1
-    end
-    data.Timestamp = read_message('Timestamp')
-    local message = "|"
     while true do
 	typ, name, value = read_next_field()
 	if not typ then break end
 	if typ ~= 1 then -- exclude bytes
-	    data.Fields[name] = value
-	    message = message .. value .. ':'
+	    fields[name] = value
 	end
     end
 
-    if read_config('emit_in_payload') then
-	data.Payload = data.Timestamp .. ':' .. data.Fields.name .. ':' .. data.Fields.value .. message
-    end
-    inject_message(data)
+    inject_message({
+	Type = type_output,
+	Timestamp = read_message('Timestamp'),
+	Fields = fields
+    })
 
     return 0
 end
