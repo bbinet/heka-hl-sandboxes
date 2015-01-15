@@ -26,8 +26,8 @@ function init_cbuf(name)
 end
 
 function process_message()
-    local ts    = read_message('Timestamp')
-    local name  = read_message('Fields[name]')
+    local ts = read_message('Timestamp')
+    local name = read_message('Fields[name]')
     local value = read_message('Fields[value]')
 
     if agg ~= "last" then
@@ -55,7 +55,7 @@ function timer_event(ns)
 	    Timestamp = ns,
 	    Fields = {
 		value = value,
-		name  = key
+		name = key
 	    }
 	})
 	cb = { }

@@ -3,8 +3,8 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 
 function process_message()
     local data = {
-        Type    = type_output,
-        Fields  = { }
+        Type = type_output,
+        Fields = { }
     }
 
     data.Fields.name, data.Fields.value = string.match(read_message('Payload'), "^([%w_]+):([%w_.+-]+)|p$")
