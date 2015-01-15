@@ -17,9 +17,9 @@ function process_message()
     local name = read_message('Fields[name]')
     local type_output = nil
 
-    for index, value in ipairs(matchers) do
-	if string.find(name, "^" .. value.regex .. "$") ~= nil then
-	    type_output = value.type_output
+    for index, item in ipairs(matchers) do
+	if string.find(name, "^" .. item.regex .. "$") ~= nil then
+	    type_output = item.type_output
 	    break
 	end
     end
