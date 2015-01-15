@@ -51,7 +51,6 @@ function timer_event(ns)
 	end
 	inject_message({
 	    Type = type_output,
-	    Payload = cb,
 	    Timestamp = ns,
 	    Fields = {
 		value = value,
