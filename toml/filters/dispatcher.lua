@@ -1,15 +1,12 @@
 require "string"
 
-local list = read_config('matchers')
+local list = read_config('matchers') or error ('you must initialize "matchers" option')
 local list_item = { }
 
 function init_list()
     for value in string.gmatch(list, "[%S]+") do
-	local regex   = read_config(value .. '_regex')
-	local type_output= read_config(value .. '_type_output')
-	if type_output == nil or regex == nil then
-	    return 1
-	end
+	local regex   = read_config(value .. '_regex') or error ('you must initialize "_regex" option')
+	local type_output= read_config(value .. '_type_output') or error ('you must initialize "_type_output" option')
 
 	list_item[#list_item + 1] = {
 	    type_output = type_output,
