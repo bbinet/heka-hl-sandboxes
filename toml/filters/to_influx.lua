@@ -1,6 +1,8 @@
+local type_output = read_config('type_output') or error('you must initialize "type output" option')
+
 function process_message()
     local data = {
-	Type = 'influx',
+	Type = type_output,
 	Payload = read_message('Payload'),
 	Fields = {
 	    timestamp = read_message('Timestamp') / 1e9
