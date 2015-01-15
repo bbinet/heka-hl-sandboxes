@@ -57,6 +57,5 @@ function timer_event(ns)
 		name = key
 	    }
 	})
-	cb = { }
     end
 end
