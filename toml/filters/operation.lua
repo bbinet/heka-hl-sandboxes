@@ -35,14 +35,7 @@ function process_message()
 	if not cb then cb = init_cbuf(name) end
 	cb:set(ts, 1, value)
     else
-	cbufs[name] = {
-	    Type = type_output,
-	    Payload = read_message('Payload'),
-	    Fields = {
-		name = name,
-		value = value
-	    }
-	}
+	cbufs[name] = value
     end
 
     return 0
@@ -50,23 +43,21 @@ end
 
 function timer_event(ns)
     for key, cb in pairs(cbufs) do
+	local value = nil
 	if agg ~= "last" then
-	    local value = cb:compute(agg, 1)
-	    local data = {
-		Type = type_output,
-		Timestamp = ns,
-		Payload = ns .. ':' .. key .. ':' .. value,
-		Fields = {
-		    value = value,
-		    name  = key
-		}
-	    }
-	    inject_message(data)
-	    data = { }
+	    value = cb:compute(agg, 1)
 	else
-	    cb.Timestamp = ns
-	    inject_message(cb)
-	    cb = { }
+	    value = cb
 	end
+	inject_message({
+	    Type = type_output,
+	    Payload = cb,
+	    Timestamp = ns,
+	    Fields = {
+		value = value,
+		name  = key
+	    }
+	})
+	cb = { }
     end
 end
