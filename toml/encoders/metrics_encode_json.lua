@@ -12,7 +12,7 @@ function process_message()
             data[name] = value
         end
     end
-    inject_payload("json", "server_db", cjson.encode(data))
+    inject_payload("json", "metrics_encode_json", cjson.encode(data))
 
     return 0
 end

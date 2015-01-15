@@ -1,10 +1,10 @@
 require "string"
 
-local matchers = read_config('fields') or error('you must initialize "fields" option')
+local fields_cfg = read_config('fields') or error('you must initialize "fields" option')
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
 local fields = { }
 
-for item in string.gmatch(matchers, "[%S]+") do
+for item in string.gmatch(fields_cfg, "[%S]+") do
     fields[item] = read_config(item) or ('you must initialize "' .. item .. '" option')
 end
 

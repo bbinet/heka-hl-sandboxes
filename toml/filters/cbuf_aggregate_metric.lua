@@ -8,7 +8,7 @@ local nb_columns = 1
 local cbufs = { }
 
 if not agg == ("avg" or "max" or "min" or "sum" or "last") then
-    error(agg .. ' arguments allow for aggrementation is "avg", "sum", "max", "min", "last"')
+    error('"' .. agg .. '" unknow aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last"')
 end
 if not agg == last and sec_per_row == nil then
     error('you must initialize "sec_per_row" option')
