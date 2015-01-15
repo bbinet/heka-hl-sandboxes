@@ -11,7 +11,7 @@ end
 function timer_event(ns)
     inject_message({
 	Type = type_output,
-	Timestamp = read_message('Timestamp'),
+	Timestamp = ns,
 	Fields = fields
     })
     fields = { }
