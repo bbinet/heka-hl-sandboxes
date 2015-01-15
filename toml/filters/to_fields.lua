@@ -1,11 +1,11 @@
 require "string"
 
-local matchers = read_config('matchers')
+local fields = read_config('fields') or error('you must initialize "fields" option')
 local data = {
     Fields = { }
 }
 
-for value in string.gmatch(matchers, "[%S]+") do
+for value in string.gmatch(fields, "[%S]+") do
     data.Fields[value] = read_config(value)
 end
 

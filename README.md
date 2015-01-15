@@ -33,7 +33,7 @@ To add fields in message add this sandbox as following
     filename = "/path/to/heka-hl-sandboxes/toml/filters/to_fields.lua"
     message_matcher = "Type == 'previous_sandbox'"
         [SetNameFilter.config]
-        matchers = "uuid hostname"
+        fields = "uuid hostname"
         uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
         hostname = "hl-mc-1-dev"
         type_output = "next_sandbox"
