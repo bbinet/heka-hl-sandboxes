@@ -1,8 +1,5 @@
 require "string"
-local type_output = read_config('type_output')
-if type_output == nil then
-    return 1
-end
+local type_output = read_config('type_output') or error('you must initialize "type_output" option')
 
 function process_message()
     local data = {
