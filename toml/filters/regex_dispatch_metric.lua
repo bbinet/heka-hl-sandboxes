@@ -24,14 +24,16 @@ function process_message()
 	end
     end
 
-    inject_message({
-	Type = type_output,
-	Timestamp = read_message('Timestamp'),
-	Payload = read_message('Payload'),
-	Fields = {
-	    name = name,
-	    value = read_message('Fields[value]')
-	 }
-    })
+    if type_output ~= nil then
+	inject_message({
+	    Type = type_output,
+	    Timestamp = read_message('Timestamp'),
+	    Payload = read_message('Payload'),
+	    Fields = {
+		name = name,
+		value = read_message('Fields[value]')
+	    }
+	})
+    end
     return 0
 end
