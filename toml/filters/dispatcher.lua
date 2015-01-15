@@ -24,7 +24,7 @@ function process_message()
 	end
     end
 
-    local data = {
+    inject_message({
 	Type    = type_output,
 	Timestamp = read_message('Timestamp'),
 	Payload = read_message('Payload'),
@@ -32,8 +32,6 @@ function process_message()
 	    name  = name,
 	    value = read_message('Fields[value]')
 	 }
-    }
-
-    inject_message(data)
+    })
     return 0
 end
