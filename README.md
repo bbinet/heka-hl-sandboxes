@@ -38,6 +38,8 @@ Filter which prepare metrics to be send to influxdb with influx encoder
     filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/format_metric_name.lua"
     message_matcher = "Type == 'heka.sandbox.output'"
         [Statmetric-influx-preEncoder.config]
+        fields = "uuid hostname name"
+        splitter = "."
         type_output = "influx"
 
 Encoder which encode data in json format
