@@ -4,8 +4,8 @@ local matcher = read_config('matchers') or error ('you must initialize "matchers
 local matchers = { }
 
 for value in string.gmatch(matcher, "[%S]+") do
-    local regex   = read_config(value .. '_regex') or error ('you must initialize "_regex" option')
-    local type_output= read_config(value .. '_type_output') or error ('you must initialize "_type_output" option')
+    local regex   = read_config(value .. '_regex') or error ('you must initialize "' .. value .. '_regex" option')
+    local type_output= read_config(value .. '_type_output') or error ('you must initialize "' .. value .. '_type_output" option')
 
     matchers[#matchers + 1] = {
 	type_output = type_output,
