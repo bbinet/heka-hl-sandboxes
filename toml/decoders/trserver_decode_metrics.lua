@@ -4,12 +4,12 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 function process_message()
     local data = {
         Type = type_output,
+        Payload = read_message('Payload'),
         Fields = { }
     }
 
-    data.Fields.name, data.Fields.value = string.match(read_message('Payload'), "^([%w_]+):([%w_.+-]+)|p$")
+    data.Fields.name, data.Fields.value = string.match(data.Payload, "^([%w_]+):([%w_.+-]+)|p$")
 
-    data.Payload = read_message('Timestamp') .. ':' .. data.Fields.name .. ':' .. data.Fields.value
 
     inject_message(data)
 
