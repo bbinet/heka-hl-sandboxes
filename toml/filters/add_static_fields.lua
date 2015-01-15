@@ -9,18 +9,23 @@ for item in string.gmatch(fields_cfg, "[%S]+") do
 end
 
 function process_message()
+    local data = {}
     while true do
 	typ, name, value = read_next_field()
 	if not typ then break end
 	if typ ~= 1 then -- exclude bytes
-	    fields[name] = value
+	    data[name] = value
 	end
+    end
+
+    for key, value in pairs(fields) do
+	data[key] = value
     end
 
     inject_message({
 	Type = type_output,
 	Timestamp = read_message('Timestamp'),
-	Fields = fields
+	Fields = data
     })
 
     return 0
