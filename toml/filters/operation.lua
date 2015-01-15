@@ -1,26 +1,23 @@
 require "circular_buffer"
 
-local agg = read_config('aggregation')
+local agg = read_config('aggregation') or error('you must initialize "aggregation" option')
 local sec_per_row = read_config('sec_per_row')
 local nb_rows = read_config('nb_rows')
-local type_output = read_config('type_output')
+local type_output = read_config('type_output') or error('you must initialize "type_output" option')
 local nb_columns = 1
 local cbufs = { }
 
-function init()
-    if agg ~= ("avg" or "sum" or "max" or "min" or "last") then
-	return 1
+if agg ~= ("avg" or "sum" or "max" or "min" or "last") then
+    error('you must initialize "aggregation" option')
+end
+if agg ~= last then
+    if (sec_per_row) == nil then
+	error('you must initialize "sec_per_row" option')
     end
-    if agg ~= last then
-	if (sec_per_row or nb_rows) == nil then
-	    return 1
-	end
-    end
-    if type_output == nil then
-	return 1
+    if (nb_rows) == nil then
+	error('you must initialize "nb_rows" option')
     end
 end
-init()
 
 function init_cbuf(name)
     cb = circular_buffer.new(nb_rows, nb_columns, sec_per_row)
