@@ -30,7 +30,7 @@ To change the heka filter configuration, edit `path/to/heka-hl-sandboxes/toml/co
 To add fields in message add this sandbox as following
     [SetUuidHostnameFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/to_fields.lua"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/add_static_fields.lua"
     message_matcher = "Type == 'previous_sandbox'"
         [SetUuidHostnameFilter.config]
         fields = "uuid hostname"
@@ -42,7 +42,7 @@ To add fields in message add this sandbox as following
 To dispatch statmetrics depending on the regex expression
     [MainDispatchFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/dispatcher.lua"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/regex_dispatch_metric.lua"
     message_matcher = "Type == 'heka.statmetric'"
         [MainDispatchFilter.config]
         matchers = "windMetric allMetrics"
@@ -55,7 +55,7 @@ To do last aggregation (every minute)
 
     [60sLastFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/operation.lua"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/cbuf_aggregate_metric.lua"
     message_matcher = "Type == 'previous_sandbox'"
     ticker_interval = 60
         [60sLastFilter.config]
@@ -66,7 +66,7 @@ To do gust aggregation (max value of the 3s avg values in 1 minute)
 
     [Gust3sAvgFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/operation.lua"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/cbuf_aggregate_metric.lua"
     message_matcher = "Type == 'heka.sandbox.3s.avg'"
     ticker_interval = 3
         [Gust3sAvgFilter.config]
@@ -77,7 +77,7 @@ To do gust aggregation (max value of the 3s avg values in 1 minute)
 
     [Gust60sMaxFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/operation.lua"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/cbuf_aggregate_metric.lua"
     message_matcher = "Type == 'heka.sandbox.60s.max'"
     ticker_interval = 60
         [Gust60sMaxFilter.config]
