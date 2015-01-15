@@ -2,7 +2,7 @@ require "cjson"
 
 function process_message()
     local data = {
-        timestamp = read_message('Timestamp')
+        timestamp = read_message('Timestamp')/1e6
     }
 
     while true do
