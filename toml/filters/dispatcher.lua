@@ -3,18 +3,15 @@ require "string"
 local matcher = read_config('matchers') or error ('you must initialize "matchers" option')
 local matchers = { }
 
-function init_list()
-    for value in string.gmatch(matcher, "[%S]+") do
-	local regex   = read_config(value .. '_regex') or error ('you must initialize "_regex" option')
-	local type_output= read_config(value .. '_type_output') or error ('you must initialize "_type_output" option')
+for value in string.gmatch(matcher, "[%S]+") do
+    local regex   = read_config(value .. '_regex') or error ('you must initialize "_regex" option')
+    local type_output= read_config(value .. '_type_output') or error ('you must initialize "_type_output" option')
 
-	matchers[#matchers + 1] = {
-	    type_output = type_output,
-	    regex   = regex
-	}
-    end
+    matchers[#matchers + 1] = {
+	type_output = type_output,
+	regex   = regex
+    }
 end
-init_list()
 
 function process_message()
     local name = read_message('Fields[name]')

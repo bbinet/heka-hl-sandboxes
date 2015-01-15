@@ -7,16 +7,14 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 local nb_columns = 1
 local cbufs = { }
 
-if agg ~= ("avg" or "sum" or "max" or "min" or "last") then
-    error('you must initialize "aggregation" option')
+if not agg == ("avg" or "max" or "min" or "sum" or "last") then
+    error(agg .. ' arguments allow for aggrementation is "avg", "sum", "max", "min", "last"')
 end
-if agg ~= last then
-    if (sec_per_row) == nil then
-	error('you must initialize "sec_per_row" option')
-    end
-    if (nb_rows) == nil then
-	error('you must initialize "nb_rows" option')
-    end
+if not agg == last and sec_per_row == nil then
+    error('you must initialize "sec_per_row" option')
+end
+if not agg == last and nb_rows == nil then
+    error('you must initialize "nb_rows" option')
 end
 
 function init_cbuf(name)
