@@ -39,7 +39,7 @@ Filter which prepare metrics to be send to influxdb with influx encoder
     message_matcher = "Type == 'heka.sandbox.output'"
         [Statmetric-influx-preEncoder.config]
         fields = "uuid hostname name"
-        splitter = "."
+        separator = "."
         type_output = "influx"
 
 Encoder which encode data in json format
@@ -84,7 +84,6 @@ To dispatch statmetrics depending on the regex expression
         windMetric_type_output = "3s.avg"
 
 To do last aggregation (every minute)
-
     [60sLastFilter]
     type = "SandboxFilter"
     filename = "/path/to/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
@@ -95,7 +94,6 @@ To do last aggregation (every minute)
         type_output = "next_sandbox"
 
 To do gust aggregation (max value of the 3s avg values in 1 minute)
-
     [Gust3sAvgFilter]
     type = "SandboxFilter"
     filename = "/path/to/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
@@ -141,7 +139,6 @@ To run debug mode, do the following command
     $ mv path/to/heka-hl-sandboxes/toml/debug.toml.bak path/to/heka-hl-sandbowes/toml/debug.toml
 
 And edit debug.toml as following
-
     [RstEncoder]
     [LogOutput]
     message_matcher = "Type == 'next_sandbox'"

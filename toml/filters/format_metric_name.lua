@@ -2,7 +2,7 @@ require "string"
 
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
 local fields = read_config('fields') or error('you must initialize "fields" option')
-local splitter = read_config('splitter') or error('you must initialize "splitter" option')
+local separator = read_config('separator') or error('you must initialize "separator" option')
 
 function process_message()
     local name = ""
@@ -13,7 +13,7 @@ function process_message()
 	if name == "" then
 	    name = read_message('Fields[' .. value .. ']')
 	else
-	    name = name .. splitter .. read_message('Fields[' .. value .. ']')
+	    name = name .. separator.. read_message('Fields[' .. value .. ']')
 	end
     end
 
