@@ -11,16 +11,6 @@ for agg in string.gmatch(aggregation, "[%S]+") do
     end
 end
 
-function min(val1, val2)
-    if val1 > val2 then return val2 end
-    return val1
-end
-
-function max(val1, val2)
-    if val1 < val2 then return val2 end
-    return val1
-end
-
 function process_message()
     local name = read_message('Fields[name]')
     local value = tonumber(read_message('Fields[value]'))
@@ -37,8 +27,8 @@ function process_message()
     end
     
     data[name].last = value
-    data[name].min = min(value, data[name].min)
-    data[name].max = max(value, data[name].max)
+    if value < data[name].min then data[name].min = value end
+    if value > data[name].max then data[name].max = value end
     data[name].sum = data[name].sum + value
     data[name].count = data[name].count + 1
     return 0
