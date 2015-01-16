@@ -17,6 +17,41 @@ To run heka, do the following step
 
     $ sudo hekad -config path/to/heka-hl-sandboxes/toml
 
+API
+---
+All the sandboxes filters describe below are these main common parameters
+- type(string): sandbox type
+- filename(string): path to the sandbox from the racine
+- message_matcher(string): message matching by the sandbox (https://hekad.readthedocs.org/en/v0.8.2/message_matcher.html)
+
+Configuration for each sandbox
+
+__filters/regex_metric_dispatch.lua__ This sandbox will send dispatch each metric in function of this metric name to the sandbox corresponding
+    - matchers(string "arg1" string "arg2"): take arguments with as separator a whitespace. Each arguments will prefix the following parameters. The order of these arguments is important!
+    - arg1_regex(string): regular expression to catch metric (http://lua-users.org/wiki/PatternsTutorial)
+    - arg1_type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+    - arg2_regex(string): regular expression to catch metric (http://lua-users.org/wiki/PatternsTutorial)
+    - arg2_type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+
+__filters/aggregate_metric.lua__ This sandbox will aggregate the value in function of the aggregation type
+    - ticker_interval(int): Frequency (in seconds) that a timer event will be sent to the filter.
+    - aggregation(string): value allow are: "avg", "last", "min", "max", "sum". This value can be multiple with a whitespace as delimiter.
+    - type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+
+__filters/add_static_fields.lua__ This sandbox will be add new Fields to the message
+    - fields(string "arg1" string "arg2"): take arguments with as separator a whitespace. Each arguments will be the name of the field added.
+    - arg1(string): value of the field arg1
+    - arg2(string): value of the field arg2
+    - type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+
+__filters/format_metric_name.lua__ This sandbox will be concatenate field with the separator defined
+    - fields(string "arg1" string "arg2"): take arguments with as separator a whitespace. Each arguments must correspond to a field name. The order of these arguments is important!
+    - separator(string): the string which will separate fields value
+    - type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+
+__filters/gather_last_metrics.lua__ This sandbox will be group different metric in the same message
+    - type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+
 Config
 ------
 To change the heka configuration, edit `path/to/heka-hl-sandboxes/toml/heka.toml` file
