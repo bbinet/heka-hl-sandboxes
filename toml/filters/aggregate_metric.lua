@@ -53,6 +53,7 @@ function timer_event(ns)
 	    Type = type_output,
 	    Timestamp = ns,
 	    Fields = {
+		aggregation = agg,
 		value = value,
 		name = name
 	    }
