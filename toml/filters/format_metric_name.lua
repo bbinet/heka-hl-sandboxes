@@ -6,15 +6,15 @@ local fields = read_config('fields') or error('you must initialize "fields" opti
 local separator = read_config('separator') or error('you must initialize "separator" option')
 
 function process_message()
-    local name_list = { }
-    for value in string.gmatch(fields, "[%S]+") do
-	if read_message('Fields[' .. value .. ']') == nil then
-	    error('the Fields: ' .. value .. ' can\' be a nil value')
+    local parts = { }
+    for part in string.gmatch(fields, "[%S]+") do
+	if read_message('Fields[' .. part .. ']') == nil then
+	    --error('the Fields: ' .. part .. ' can\' be a nil value')
 	end
-	name_list[#name_list+1] = read_message('Fields[' .. value .. ']')
+	parts[#parts+1] = read_message('Fields[' .. part .. ']')
     end
 
-    local new_name = table.concat(name_list, separator)
+    local new_name = table.concat(parts, separator)
     local data = {
 	Type = type_output,
 	Payload = read_message('Payload'),
