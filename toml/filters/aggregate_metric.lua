@@ -8,36 +8,36 @@ if not agg == ("avg" or "max" or "min" or "sum" or "last") then
     error('"' .. agg .. '" unknow aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last"')
 end
 
+function min(val1, val2)
+    if val1 > val2 then return val2 end
+    return val1
+end
+
+function max(val1, val2)
+    if val1 < val2 then return val2 end
+    return val1
+end
+
 function process_message()
     local name = read_message('Fields[name]')
-    local value = read_message('Fields[value]')
+    local value = tonumber(read_message('Fields[value]'))
 
     if data[name] == nil then
-	if agg == "avg" then
-	    data[name] = { }
-	    data[name][#data[name]+1] = value
-	else
-	    data[name] = value
-	end
+	data[name] = {
+	    last = value,
+	    min = value,
+	    max = value,
+	    sum = value,
+	    count = 1
+	}
 	return 0
     end
-
-    if agg == "last" then
-	data[name] = value
-    elseif agg == 'max' then
-	if value > data[name] then
-	    data[name] = value
-	end
-    elseif agg == 'min' then
-	if value < data[name] then
-	    data[name] = value
-	end
-    elseif agg == 'sum' then
-	data[name] = data[name] + value
-    else
-	data[name][#data[name]+1] = value
-    end
-
+    
+    data[name].last = value
+    data[name].min = min(value, data[name].min)
+    data[name].max = max(value, data[name].max)
+    data[name].sum = data[name].sum + value
+    data[name].count = data[name].count + 1
     return 0
 end
 
@@ -45,12 +45,9 @@ function timer_event(ns)
     for name, cb in pairs(data) do
 	local value = 0
 	if agg == "avg" then
-	    for key in pairs(data[name]) do
-		value = value + tonumber(data[name][key])
-	    end
-	    value = value/(#data[name])
+	    value = data[name].sum/data[name].count
 	else
-	    value = cb
+	    value = data[name][agg]
 	end
 	inject_message({
 	    Type = type_output,
