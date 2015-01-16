@@ -14,7 +14,6 @@ function process_message()
 	parts[#parts+1] = read_message('Fields[' .. part .. ']')
     end
 
-    local new_name = table.concat(parts, separator)
     local data = {
 	Type = type_output,
 	Payload = read_message('Payload'),
@@ -22,7 +21,7 @@ function process_message()
 	    timestamp = read_message('Timestamp') / 1e9
 	}
     }
-    data.Fields[new_name] = read_message('Fields[value]')
+    data.Fields[table.concat(parts, separator)] = read_message('Fields[value]')
 
     inject_message(data)
 
