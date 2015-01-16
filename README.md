@@ -87,7 +87,7 @@ To do last aggregation (every minute)
 
     [60sLastFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/cbuf_aggregate_metric.lua"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
     message_matcher = "Type == 'previous_sandbox'"
     ticker_interval = 60
         [60sLastFilter.config]
@@ -98,24 +98,20 @@ To do gust aggregation (max value of the 3s avg values in 1 minute)
 
     [Gust3sAvgFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/cbuf_aggregate_metric.lua"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
     message_matcher = "Type == 'heka.sandbox.3s.avg'"
     ticker_interval = 3
         [Gust3sAvgFilter.config]
         aggregation = "avg"
-        sec_per_row = 1
-        nb_rows = 3
         type_output = "60s.max"
 
     [Gust60sMaxFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/cbuf_aggregate_metric.lua"
+    filename = "/path/to/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
     message_matcher = "Type == 'heka.sandbox.60s.max'"
     ticker_interval = 60
         [Gust60sMaxFilter.config]
         aggregation = "max"
-        sec_per_row = 1
-        nb_rows = 60
         type_output = "next_sandbox"
 
 * `ticker_interval` as integer (unit= second)

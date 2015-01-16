@@ -11,35 +11,29 @@ message_matcher = "Type == 'heka.statmetric'"
 
 [5sAvgFilter]
 type = "SandboxFilter"
-filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/cbuf_aggregate_metric.lua"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
 message_matcher = "Type == 'heka.sandbox.5s.avg'"
 ticker_interval = 5
     [5sAvgFilter.config]
     aggregation = "avg"
-    sec_per_row = 1
-    nb_rows = 5
     type_output = "addFields"
 
 [Gust3sAvgFilter]
 type = "SandboxFilter"
-filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/cbuf_aggregate_metric.lua"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
 message_matcher = "Type == 'heka.sandbox.3s.avg'"
 ticker_interval = 3
     [Gust3sAvgFilter.config]
     aggregation = "avg"
-    sec_per_row = 1
-    nb_rows = 3
     type_output = "60s.max"
 
 [Gust60sMaxFilter]
 type = "SandboxFilter"
-filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/cbuf_aggregate_metric.lua"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
 message_matcher = "Type == 'heka.sandbox.60s.max'"
 ticker_interval = 60
     [Gust60sMaxFilter.config]
     aggregation = "max"
-    sec_per_row = 1
-    nb_rows = 60
     type_output = "addFields"
 
 [SetUuidHostnameFilter]
@@ -63,7 +57,7 @@ message_matcher = "Type == 'heka.statmetric'"
 
 [60sLastFilter]
 type = "SandboxFilter"
-filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/cbuf_aggregate_metric.lua"
+filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
 message_matcher = "Type == 'heka.sandbox.collect'"
 ticker_interval = 1
     [60sLastFilter.config]
