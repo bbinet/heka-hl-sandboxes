@@ -15,7 +15,7 @@ function process_message()
     if data[name] == nil then
 	if agg == "avg" then
 	    data[name] = { }
-	    data[name][#data[name]] = value
+	    data[name][#data[name]+1] = value
 	else
 	    data[name] = value
 	end
@@ -48,7 +48,7 @@ function timer_event(ns)
 	    for key in pairs(data[name]) do
 		value = value + tonumber(data[name][key])
 	    end
-	    value = value/(#data[name]+1)
+	    value = value/(#data[name])
 	else
 	    value = cb
 	end
