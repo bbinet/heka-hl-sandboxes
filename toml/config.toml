@@ -6,7 +6,7 @@ message_matcher = "Type == 'heka.statmetric'"
     matchers = "windMetric allMetrics"
     allMetrics_regex = ".*"
     allMetrics_type_output = "5s.avg"
-    windMetric_regex = "wind"
+    windMetric_regex = ".*wind"
     windMetric_type_output = "3s.avg"
 
 [5sAvgFilter]

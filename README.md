@@ -80,7 +80,7 @@ To dispatch statmetrics depending on the regex expression
         matchers = "windMetric allMetrics"
         allMetrics_regex = ".*"
         allMetrics_type_output = "5s.avg"
-        windMetric_regex = "wind"
+        windMetric_regex = ".*wind"
         windMetric_type_output = "3s.avg"
 
 To do last aggregation (every minute)
