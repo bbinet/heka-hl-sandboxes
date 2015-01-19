@@ -26,6 +26,9 @@ All the sandboxes filters describe below are these main common parameters
 
 Configuration for each sandbox
 
+__decoder/trserver_decode_metrics.lua This sandbox catch metrics from trserver and parse it into the fields
+    - type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+
 __filters/regex_metric_dispatch.lua__ This sandbox will send dispatch each metric in function of this metric name to the sandbox corresponding
     - matchers(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments will prefix the following parameters. The order of these arguments is important!
     - arg1_regex(string): regular expression to catch metric (http://lua-users.org/wiki/PatternsTutorial)
@@ -51,6 +54,8 @@ __filters/format_metric_name.lua__ This sandbox will be concatenate field with t
 
 __filters/gather_last_metrics.lua__ This sandbox will be group different metric in the same message
     - type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+
+__encoders/metrics_encode_json.lua__ This sandbox parse data from fields to a JSON object
 
 Config
 ------
