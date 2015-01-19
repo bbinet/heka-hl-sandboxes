@@ -27,7 +27,7 @@ All the sandboxes filters describe below are these main common parameters
 Configuration for each sandbox
 
 __filters/regex_metric_dispatch.lua__ This sandbox will send dispatch each metric in function of this metric name to the sandbox corresponding
-    - matchers(string "arg1" string "arg2"): take arguments with as separator a whitespace. Each arguments will prefix the following parameters. The order of these arguments is important!
+    - matchers(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments will prefix the following parameters. The order of these arguments is important!
     - arg1_regex(string): regular expression to catch metric (http://lua-users.org/wiki/PatternsTutorial)
     - arg1_type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
     - arg2_regex(string): regular expression to catch metric (http://lua-users.org/wiki/PatternsTutorial)
@@ -39,13 +39,13 @@ __filters/aggregate_metric.lua__ This sandbox will aggregate the value in functi
     - type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
 
 __filters/add_static_fields.lua__ This sandbox will be add new Fields to the message
-    - fields(string "arg1" string "arg2"): take arguments with as separator a whitespace. Each arguments will be the name of the field added.
+    - fields(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments will be the name of the field added.
     - arg1(string): value of the field arg1
     - arg2(string): value of the field arg2
     - type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
 
 __filters/format_metric_name.lua__ This sandbox will be concatenate field with the separator defined
-    - fields(string "arg1" string "arg2"): take arguments with as separator a whitespace. Each arguments must correspond to a field name. The order of these arguments is important!
+    - fields(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments must correspond to a field name. The order of these arguments is important!
     - separator(string): the string which will separate fields value
     - type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
 
