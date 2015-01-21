@@ -1,5 +1,6 @@
 [hekad]
 max_message_loops = 5
+max_timer_inject = 100
 
 [PlatformDevs]
 type = "SandboxManagerFilter"

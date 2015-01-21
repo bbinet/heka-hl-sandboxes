@@ -75,6 +75,11 @@ Edit the maximum number of times a message can be re-injected into the system. T
     [hekad]
     max_message_loops = 5
 
+Edit the maximum number of messages that a sandbox filter’s TimerEvent function can inject in a single call; the default is 10.
+
+    [hekad]
+    max_timer_inject = 100
+
 Decoder which recept metrics from trserver and parse it
 
     [TrServerDecoder]
