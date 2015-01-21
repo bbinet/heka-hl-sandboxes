@@ -4,11 +4,13 @@ require "string"
 local aggregation = read_config('aggregation') or error('you must initialize "aggregation" option')
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
 local data = { }
+local aggs = { }
 
 for agg in string.gmatch(aggregation, "[%S]+") do
     if  agg ~= "avg" and agg ~= "max" and agg ~= "min" and agg ~= "sum" and agg ~= "last" and agg ~= "count" then
 	error('"' .. agg .. '" unknow aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last", "count"')
     end
+    aggs[agg] = agg
 end
 
 function process_message()
