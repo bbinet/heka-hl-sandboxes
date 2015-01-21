@@ -4,6 +4,7 @@ filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/park_mode
 message_matcher = "Type == 'heka.statmetric'"
     [IddleFilter.config]
     type_output = "dispatch"
+    type_output_discard = "dispatch"
 
 [MainDispatchFilter]
 type = "SandboxFilter"
