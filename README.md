@@ -15,7 +15,8 @@ Run
 
 To run heka, do the following step
 
-    $ sudo hekad -config path/to/heka-hl-sandboxes/toml
+    $ export HEKA_PLUGINS_BASE_DIR=path/to/heka-hl-sandboxes
+    $ sudo hekad -config $HEKA_PLUGINS_BASE_DIR/heka-hl-sandboxes/toml
 
 API
 ---
@@ -78,7 +79,7 @@ Decoder which recept metrics from trserver and parse it
 
     [TrServerDecoder]
     type = "SandboxDecoder"
-    filename = "/home/helioslite/heka-hl-sandboxes/toml/decoders/trserver_decode_metrics.lua"
+    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/decoders/trserver_decode_metrics.lua"
         [TrServerDecoder.config]
         type_output = "heka.statmetric"
 
@@ -86,7 +87,7 @@ Filter which prepare metrics to be send to influxdb with influx encoder
 
     [Statmetric-influx-preEncoder]
     type = "SandboxFilter"
-    filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/format_metric_name.lua"
+    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/format_metric_name.lua"
     message_matcher = "Type == 'heka.sandbox.output'"
         [Statmetric-influx-preEncoder.config]
         fields = "uuid hostname name"
@@ -97,7 +98,7 @@ Encoder which encode data in json format
 
     [ServerEncoder]
     type = "SandboxEncoder"
-    filename = "/home/helioslite/heka-hl-sandboxes/toml/encoders/metrics_encode_json.lua"
+    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/metrics_encode_json.lua"
 
 
 To change the heka filter configuration, edit `path/to/heka-hl-sandboxes/toml/config.toml`
@@ -106,7 +107,7 @@ To group metrics in a same message add this sandbox as following
 
     [GroupMetricsFilter]
     type = "SandboxFilter"
-    filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/gather_last_metrics.lua"
+    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/gather_last_metrics.lua"
     message_matcher = "Type == 'heka.sandbox.group'"
     ticker_interval = 1
         [GroupMetricsFilter.config]
@@ -116,7 +117,7 @@ To add fields in message add this sandbox as following
 
     [SetUuidHostnameFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/add_static_fields.lua"
+    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/add_static_fields.lua"
     message_matcher = "Type == 'previous_sandbox'"
         [SetUuidHostnameFilter.config]
         fields = "uuid hostname"
@@ -128,7 +129,7 @@ To dispatch statmetrics depending on the regex expression
 
     [MainDispatchFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/regex_dispatch_metric.lua"
+    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/regex_dispatch_metric.lua"
     message_matcher = "Type == 'heka.statmetric'"
         [MainDispatchFilter.config]
         matchers = "windMetric allMetrics"
@@ -141,7 +142,7 @@ To do last aggregation (every minute)
 
     [60sLastFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
+    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
     message_matcher = "Type == 'previous_sandbox'"
     ticker_interval = 60
         [60sLastFilter.config]
@@ -152,7 +153,7 @@ To do gust aggregation (max value of the 3s avg values in 1 minute)
 
     [Gust3sAvgFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
+    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
     message_matcher = "Type == 'heka.sandbox.3s.avg'"
     ticker_interval = 3
         [Gust3sAvgFilter.config]
@@ -161,7 +162,7 @@ To do gust aggregation (max value of the 3s avg values in 1 minute)
 
     [Gust60sMaxFilter]
     type = "SandboxFilter"
-    filename = "/path/to/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
+    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
     message_matcher = "Type == 'heka.sandbox.60s.max'"
     ticker_interval = 60
         [Gust60sMaxFilter.config]
@@ -178,21 +179,21 @@ Load Filter
 
 To load a filter, run the following command
 
-    heka-sbmgr -action=load -config=/path/to/heka-hl-sandboxes/PlatformDevs.toml -script=sandbox_file.lua -scriptconfig=configDev.toml
+    heka-sbmgr -action=load -config=$HEKA_PLUGINS_BASE_DIR/heka-hl-sandboxes/PlatformDevs.toml -script=sandbox_file.lua -scriptconfig=configDev.toml
 
 Unload Filter
 -------------
 
 To unload a filter, run the next command
 
-    heka-sbmgr -action=unload -config=/path/to/heka-sandboxes/PlatformDevs.toml -filtername=[FilterName]
+    heka-sbmgr -action=unload -config=$HEKA_PLUGINS_BASE_DIR/heka-sandboxes/PlatformDevs.toml -filtername=[FilterName]
 
 Debug
 -----
 Debug mode provide us to see data from payload on the standard output
 To run debug mode, do the following command
 
-    $ mv path/to/heka-hl-sandboxes/toml/debug.toml.bak path/to/heka-hl-sandbowes/toml/debug.toml
+    $ mv $HEKA_PLUGINS_BASE_DIR/heka-hl-sandboxes/toml/debug.toml.bak $HEKA_PLUGINS_BASE_DIR/heka-hl-sandbowes/toml/debug.toml
 
 And edit debug.toml as following
     [RstEncoder]

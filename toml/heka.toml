@@ -15,7 +15,7 @@ address = ":5565"
 
 [TrServerDecoder]
 type = "SandboxDecoder"
-filename = "/home/helioslite/heka-hl-sandboxes/toml/decoders/trserver_decode_metrics.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/decoders/trserver_decode_metrics.lua"
     [TrServerDecoder.config]
     type_output = "heka.statmetric"
 [TrServerInput]
@@ -27,7 +27,7 @@ decoder = "TrServerDecoder"
 
 [Statmetric-influx-preEncoder]
 type = "SandboxFilter"
-filename = "/home/helioslite/heka-hl-sandboxes/toml/filters/format_metric_name.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/format_metric_name.lua"
 message_matcher = "Type == 'heka.sandbox.output'"
     [Statmetric-influx-preEncoder.config]
     fields = "uuid hostname name"
@@ -47,7 +47,7 @@ encoder = "Statmetric-influx-encoder"
 
 [ServerEncoder]
 type = "SandboxEncoder"
-filename = "/home/helioslite/heka-hl-sandboxes/toml/encoders/metrics_encode_json.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/metrics_encode_json.lua"
 [ServerOutput]
 type = "HttpOutput"
 message_matcher = "Type == 'heka.sandbox.trwebclient'"
