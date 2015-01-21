@@ -8,10 +8,15 @@ function process_message()
         Fields = { }
     }
 
-    data.Fields.name, data.Fields.value = string.match(data.Payload, "^([%w_]+):([%w_.+-]+)|p$")
+    local name, value = string.match(data.Payload, "^([%w_]+):([%w_.+-]+)|p$")
+    value = tonumber(value)
 
+    if name ~= nil and value ~= nil then
+        data.Fields.name = name
+        data.Fields.value = value
 
-    inject_message(data)
+        inject_message(data)
+    end
 
     return 0
 end
