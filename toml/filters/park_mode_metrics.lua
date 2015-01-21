@@ -14,7 +14,6 @@ function process_message()
 	    if tonumber(value) == 2 then
 		if to_discard[tracker] then
 		    type_output = type_output_discard
-		    break
 		end
 		to_discard[tracker] = true
 	    elseif to_discard[tracker] then
