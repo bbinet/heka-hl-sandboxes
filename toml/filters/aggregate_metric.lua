@@ -6,7 +6,7 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 local data = { }
 
 for agg in string.gmatch(aggregation, "[%S]+") do
-    if not agg == ("avg" or "max" or "min" or "sum" or "last") then
+    if  agg ~= "avg" and agg ~= "max" and agg ~= "min" and agg ~= "sum" and agg ~= "last" then
 	error('"' .. agg .. '" unknow aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last"')
     end
 end
@@ -35,7 +35,7 @@ function process_message()
 end
 
 function timer_event(ns)
-    for agg in string.gmatch(aggregation, "[%S]+") do
+    for index, agg in pairs(aggs) do
 	for name, cb in pairs(data) do
 	    local value = 0
 	    if agg == "avg" then
