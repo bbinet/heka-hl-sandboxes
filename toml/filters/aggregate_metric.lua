@@ -6,8 +6,8 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 local data = { }
 
 for agg in string.gmatch(aggregation, "[%S]+") do
-    if  agg ~= "avg" and agg ~= "max" and agg ~= "min" and agg ~= "sum" and agg ~= "last" then
-	error('"' .. agg .. '" unknow aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last"')
+    if  agg ~= "avg" and agg ~= "max" and agg ~= "min" and agg ~= "sum" and agg ~= "last" and agg ~= "count" then
+	error('"' .. agg .. '" unknow aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last", "count"')
     end
 end
 
