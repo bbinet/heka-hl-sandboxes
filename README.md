@@ -56,6 +56,7 @@ __filters/format_metric_name.lua:__ This sandbox will be concatenate field with 
 
 * fields(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments must correspond to a field name. The order of these arguments is important!
 * separator(string): the string which will separate fields value
+* emit_timestamp_in_sec(boolean): convert timestamp in second instead of nanosecond
 * type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
 
 __filters/gather_last_metrics.lua:__ This sandbox will be group different metric in the same message
