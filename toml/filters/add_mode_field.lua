@@ -1,12 +1,10 @@
 require "string"
 
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
-local to_discard = { }
+local trackers_mode = { }
 
 function process_message()
-    local fields = {
-	park = false
-    }
+    local fields = { }
     while true do
 	typ, key, value = read_next_field()
 	if not typ then break end
@@ -14,21 +12,13 @@ function process_message()
 	    fields[key] = value
 	end
     end
-    local tracker = string.match(fields.name, "^.*tracker(..).*$")
 
+    local tracker = string.match(fields.name, "^trserver_tracker(%d%d).*$")
     if tracker ~= nil then
-	if string.find(fields.name, "^.*mode$") then
-	    if tonumber(fields.value) == 2 then
-		if to_discard[tracker] then
-		    fields['park'] = true
-		end
-		to_discard[tracker] = true
-	    elseif to_discard[tracker] then
-		to_discard[tracker] = false
-	    end
-	elseif to_discard[tracker] then
-	    fields['park'] = true
+	if string.find(fields.name, "^trserver_tracker%d%d_mode$") then
+	    trackers_mode[tracker] = tonumber(fields.value)
 	end
+	fields['mode'] = trackers_mode[tracker]
     end
 
     inject_message({

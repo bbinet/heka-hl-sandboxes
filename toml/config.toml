@@ -1,8 +1,8 @@
-[SetParkFilter]
+[SetModeFilter]
 type = "SandboxFilter"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/add_park_field.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/add_mode_field.lua"
 message_matcher = "Type == 'heka.statmetric'"
-    [SetParkFilter.config]
+    [SetModeFilter.config]
     type_output = "dispatch"
 
 [MainDispatchFilter]
