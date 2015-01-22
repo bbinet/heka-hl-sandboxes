@@ -1,0 +1,59 @@
+[hekad]
+max_message_loops = 5
+max_timer_inject = 100
+
+[PlatformDevs]
+type = "SandboxManagerFilter"
+message_signer = "PlatformDevs"
+max_filters = 100
+[TCP:5565]
+type = "TcpInput"
+parser_type = "message.proto"
+decoder = "ProtobufDecoder"
+address = ":5565"
+    [TCP:5565.signer.PlatformDevs_0]
+    hmac_key = "Platform devs signing key"
+
+[TrServerDecoder]
+type = "SandboxDecoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/decoders/trserver_decode_metrics.lua"
+    [TrServerDecoder.config]
+    type_output = "heka.statmetric"
+[TrServerInput]
+type = "UdpInput"
+address = "0.0.0.0:8125"
+parser_type = "regexp"
+delimiter = "\n"
+decoder = "TrServerDecoder"
+
+[Statmetric-influx-preEncoder]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/format_metric_name.lua"
+message_matcher = "Type == 'heka.sandbox.output'"
+    [Statmetric-influx-preEncoder.config]
+    fields = "uuid hostname name"
+    separator = "."
+    emit_timestamp_in_sec = true
+    type_output = "influx"
+[Statmetric-influx-encoder]
+type = "SandboxEncoder"
+filename = "lua_encoders/statmetric_influx.lua"
+[InfluxOutput]
+type = "HttpOutput"
+message_matcher = "Type == 'heka.sandbox.influx'"
+address = "http://localhost:8086/db/metrics/series"
+username = "admin"
+password = "admin_password"
+encoder = "Statmetric-influx-encoder"
+
+[ServerEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/metrics_encode_json.lua"
+[ServerOutput]
+type = "HttpOutput"
+message_matcher = "Type == 'heka.sandbox.trwebclient'"
+address = "http://localhost:8888/heka"
+encoder = "ServerEncoder"
+http_timeout = 2000
+[ServerOutput.headers]
+Content-Type = ["application/json"]
