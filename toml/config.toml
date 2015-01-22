@@ -1,6 +1,6 @@
 [IddleFilter]
 type = "SandboxFilter"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/park_mode_metrics.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/park_dispatch_metric.lua"
 message_matcher = "Type == 'heka.statmetric'"
     [IddleFilter.config]
     type_output = "dispatch"
