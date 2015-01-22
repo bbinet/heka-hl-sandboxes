@@ -64,7 +64,7 @@ __filters/gather_last_metrics.lua:__ This sandbox will be group different metric
 
 * type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
 
-__filters/add_field_park.lua:__ This sandbox will redirect metric if the tracker is in park mode
+__filters/add_park_field.lua:__ This sandbox will redirect metric if the tracker is in park mode
 
 * type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
 
