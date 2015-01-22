@@ -60,7 +60,7 @@ Content-Type = ["application/json"]
 
 [LogFileEncoder]
 type = "SandboxEncoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/log_parse.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/encode_header.lua"
 [LogFileOutput]
 type = "FileOutput"
 path = "log_file.log"

@@ -7,7 +7,7 @@ function process_message()
     data = data .. ' ' .. read_message('Fields[hostname]')
     data = data .. ' ' .. read_message('Fields[type]')
     data = data .. ' ' .. 0 ..':' .. read_message('Fields[version]')
-    data = '[' .. data .. ']' .. read_message('Fields[log]')
+    data = '[' .. data .. ']' .. read_message('Fields[log]') .. '\n'
 
     inject_payload('txt', 'log_parse', string.format(data))
 
