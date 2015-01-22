@@ -64,6 +64,10 @@ __filters/gather_last_metrics.lua:__ This sandbox will be group different metric
 
 * type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
 
+__filters/add_mode_field.lua:__ This sandbox will add a field with the mode of the tracker
+
+* type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+
 __encoders/metrics_encode_json.lua:__ This sandbox parse data from fields to a JSON object
 
 Config
