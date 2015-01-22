@@ -11,18 +11,22 @@ for value in string.gmatch(matcher, "[%S]+") do
 end
 
 function process_message()
-    local name = read_message('Fields[name]')
+    local fields = { }
+    while true do
+	typ, key, value = read_next_field()
+	if not typ then break end
+	if typ ~= 1 then --exclude bytes
+	    fields[key] = value
+	end
+    end
 
     for index, item in ipairs(matchers) do
-	if string.find(name, "^" .. item.regex .. "$") ~= nil then
+	if string.find(read_message('Fields[name]'), "^" .. item.regex .. "$") ~= nil then
 	    inject_message({
 		Type = item.type_output,
 		Timestamp = read_message('Timestamp'),
 		Payload = read_message('Payload'),
-		Fields = {
-		    name = name,
-		    value = read_message('Fields[value]')
-		}
+		Fields = fields
 	    })
 	    break
 	end
