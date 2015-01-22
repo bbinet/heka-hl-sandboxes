@@ -1,7 +1,7 @@
 require "string"
 
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
-local type_output_discard = read_config('type_output_discard') or error('you must initialize "type_output_discard" option')
+local park_type_output = read_config('park_type_output') or error('you must initialize "park_type_output" option')
 local to_discard = { }
 
 function process_message()
@@ -14,14 +14,14 @@ function process_message()
 	if string.find(name, "^.*mode$") then
 	    if tonumber(value) == 2 then
 		if to_discard[tracker] then
-		    typ = type_output_discard
+		    typ = park_type_output
 		end
 		to_discard[tracker] = true
 	    elseif to_discard[tracker] then
 		to_discard[tracker] = false
 	    end
 	elseif to_discard[tracker] then
-	    typ = type_output_discard
+	    typ = park_type_output
 	end
     end
 

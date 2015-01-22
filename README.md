@@ -67,7 +67,7 @@ __filters/gather_last_metrics.lua:__ This sandbox will be group different metric
 __filters/park_dispatch_metric.lua:__ This sandbox will redirect metric if the tracker is in park mode
 
 * type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
-* type_output_discard(string): suffix name for next sandbox, for all metrics discard by park mode
+* park_type_output(string): suffix name for next sandbox, for all metrics discard by park mode
 
 __encoders/metrics_encode_json.lua:__ This sandbox parse data from fields to a JSON object
 
