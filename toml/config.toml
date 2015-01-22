@@ -1,10 +1,9 @@
 [ParkDispatchFilter]
 type = "SandboxFilter"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/park_dispatch_metric.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/add_field_park.lua"
 message_matcher = "Type == 'heka.statmetric'"
     [ParkDispatchFilter.config]
     type_output = "dispatch"
-    park_type_output = "dispatch.discard"
 
 [MainDispatchFilter]
 type = "SandboxFilter"
