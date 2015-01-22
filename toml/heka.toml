@@ -57,3 +57,12 @@ encoder = "ServerEncoder"
 http_timeout = 2000
 [ServerOutput.headers]
 Content-Type = ["application/json"]
+
+[LogFileEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/log_parse.lua"
+[LogFileOutput]
+type = "FileOutput"
+path = "log_file.log"
+message_matcher = "Type == 'heka.sandbox.log.output'"
+encoder = "LogFileEncoder"
