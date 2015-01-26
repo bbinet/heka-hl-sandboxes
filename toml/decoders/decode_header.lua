@@ -13,14 +13,17 @@ function process_message()
     local payload = read_message('Payload')
     local time, date, uuid, hostname, log_type, log_version, log = string.match(payload, table.concat(regex, '%s'))
 
+    if log_type ~= "metric" and log_type ~= "event" and log_type ~= "alert" then
+        return 0 --TODO: print error message
+    end
+
     inject_message({
-        Type = type_output .. '.' .. log_version,
+        Type = type_output .. '.' .. log_type .. '.' .. log_version,
         Timestamp = date,
         Payload = log,
         Fields = {
             uuid = uuid,
-            hostname = hostname,
-            log_type = log_type,
+            hostname = hostname
         }
     })
 
