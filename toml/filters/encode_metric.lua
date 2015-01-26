@@ -6,8 +6,7 @@ function process_message()
     local value = read_message('Fields[value]')
     local fields = {
 	type = "metric",
-	encoder_version = metric_version,
-	log = name .. ' ' .. value
+	encoder_version = metric_version
     }
 
     while true do
@@ -20,7 +19,7 @@ function process_message()
 
     inject_message({
 	Type = type_output,
-	Payload = read_message('Payload'),
+	Payload = name .. ' ' .. value,
 	Timestamp = read_message('Timestamp'),
 	Fields = fields
     })
