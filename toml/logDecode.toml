@@ -1,0 +1,18 @@
+[DecodeLogMetric]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/decode_metric.lua"
+message_matcher = "Type == 'login.0'"
+    [DecodeLogMetric.config]
+    type_output = "login"
+
+[LogFileDecoder]
+type = "SandboxDecoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/decoders/decode_header.lua"
+    [LogFileDecoder.config]
+    type_output = "login"
+[LogFileInput]
+type = "UdpInput"
+address = "0.0.0.0:8130"
+parser_type = "regexp"
+delimiter = "\n"
+decoder = "LogFileDecoder"

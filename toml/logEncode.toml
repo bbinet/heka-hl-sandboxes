@@ -1,0 +1,15 @@
+[LogMetricsFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/encode_metric.lua"
+message_matcher = "Type == 'heka.sandbox.log.metric'"
+    [LogMetricsFilter.config]
+    type_output = "log.output"
+
+[LogFileEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/encode_header.lua"
+[LogFileOutput]
+type = "UdpOutput"
+address = "localhost:8130"
+message_matcher = "Type == 'heka.sandbox.log.output'"
+encoder = "LogFileEncoder"

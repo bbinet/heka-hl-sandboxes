@@ -57,24 +57,3 @@ encoder = "ServerEncoder"
 http_timeout = 2000
 [ServerOutput.headers]
 Content-Type = ["application/json"]
-
-[LogFileEncoder]
-type = "SandboxEncoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/encode_header.lua"
-[LogFileOutput]
-type = "UdpOutput"
-address = "localhost:8130"
-message_matcher = "Type == 'heka.sandbox.log.output'"
-encoder = "LogFileEncoder"
-
-[LogFileDecoder]
-type = "SandboxDecoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/decoders/decode_header.lua"
-    [LogFileDecoder.config]
-    type_output = "login"
-[LogFileInput]
-type = "UdpInput"
-address = "0.0.0.0:8130"
-parser_type = "regexp"
-delimiter = "\n"
-decoder = "LogFileDecoder"
