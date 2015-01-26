@@ -5,7 +5,7 @@ function process_message()
     local fields = {
 	type = "event",
 	encoder_version = event_version,
-	log = '[' .. read_message('Fields[text]') .. ']'
+	log = read_message('Fields[text]')
     }
 
     while true do

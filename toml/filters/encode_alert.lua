@@ -7,7 +7,7 @@ function process_message()
     local fields = {
 	type = "alert",
 	encoder_version = alert_version,
-	log = '[' .. message .. ' ' .. level .. ']'
+	log = message .. ' ' .. level
     }
 
     while true do

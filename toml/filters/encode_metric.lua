@@ -7,7 +7,7 @@ function process_message()
     local fields = {
 	type = "metric",
 	encoder_version = metric_version,
-	log = '[' .. name .. ' ' .. value .. ']'
+	log = name .. ' ' .. value
     }
 
     while true do
