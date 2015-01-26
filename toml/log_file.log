@@ -1,5 +1,10 @@
-[150122 16:34:13 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0:0][trserver_tracker01_roll_angle 86.27218]
-[150122 16:34:13 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0:0][trserver_tracker01_mode 0]
-[150122 16:34:13 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0:0][trserver_sun_tilt 29.308662]
-[150122 16:34:13 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0:0][trserver_sun_roll 91.193162]
-[150122 16:34:13 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0:0][trserver_tracker01_tilt_angle 59.14791]
+[14:43:53 1.422283433319e+18 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0]trserver_tracker01_roll_angle 86.27218
+[14:43:53 1.422283433319e+18 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0]trserver_tracker01_mode 0
+[14:43:53 1.422283433319e+18 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0]trserver_sun_tilt 49.229964285714
+[14:43:53 1.422283433319e+18 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0]trserver_sun_roll 68.592631428571
+[14:43:53 1.422283433319e+18 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0]trserver_tracker01_tilt_angle 59.14791
+[14:43:58 1.4222834383189e+18 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0]trserver_tracker01_roll_angle 86.27218
+[14:43:58 1.4222834383189e+18 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0]trserver_tracker01_mode 0
+[14:43:58 1.4222834383189e+18 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0]trserver_sun_tilt 49.212476
+[14:43:58 1.4222834383189e+18 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0]trserver_sun_roll 68.616876
+[14:43:58 1.4222834383189e+18 d539a1ab-1742-43c5-982e-02fab58283fa hl-mc-1-dev metric:0]trserver_tracker01_tilt_angle 59.14791
