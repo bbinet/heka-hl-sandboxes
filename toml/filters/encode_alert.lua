@@ -1,11 +1,12 @@
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
+local alert_version = 0
 
 function process_message()
     local message = read_message('Fields[message]')
     local level = read_message('Fields[level]')
     local fields = {
 	type = "alert",
-	version = 0,
+	encoder_version = alert_version,
 	log = '[' .. message .. ' ' .. level .. ']'
     }
 

@@ -1,11 +1,12 @@
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
+local metric_version = 0
 
 function process_message()
     local name = read_message('Fields[name]')
     local value = read_message('Fields[value]')
     local fields = {
 	type = "metric",
-	version = 0,
+	encoder_version = metric_version,
 	log = '[' .. name .. ' ' .. value .. ']'
     }
 

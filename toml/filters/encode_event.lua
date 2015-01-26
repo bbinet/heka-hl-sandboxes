@@ -1,9 +1,10 @@
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
+local event_version = 0
 
 function process_message()
     local fields = {
 	type = "event",
-	version = 0,
+	encoder_version = event_version,
 	log = '[' .. read_message('Fields[text]') .. ']'
     }
 
