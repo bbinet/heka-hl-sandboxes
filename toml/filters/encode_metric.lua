@@ -2,8 +2,6 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 local metric_version = 0
 
 function process_message()
-    local name = read_message('Fields[name]')
-    local value = read_message('Fields[value]')
     local fields = {
 	type = "metric",
 	encoder_version = metric_version
@@ -19,7 +17,7 @@ function process_message()
 
     inject_message({
 	Type = type_output,
-	Payload = name .. ' ' .. value,
+	Payload = read_message('Fields[name]') .. ' ' .. read_message('Fields[value]'),
 	Timestamp = read_message('Timestamp'),
 	Fields = fields
     })
