@@ -3,12 +3,13 @@ local alert_version = 0
 
 function process_message()
     local message = read_message('Fields[message]')
-    local level = read_message('Fields[level]')
     local fields = {
 	type = "alert",
-	encoder_version = alert_version,
-	log = message .. ' ' .. level
+	encoder_version = alert_version
     }
+
+    message = string.format("%q", message)
+    messages = '"' .. message .. '"'
 
     while true do
 	typ, name, value = read_next_field()
@@ -20,7 +21,7 @@ function process_message()
 
     inject_message({
 	Type = type_output,
-	Payload = read_message('Payload'),
+	Payload = read_message('Severity') .. ' ' .. messages,
 	Timestamp = read_message('Timestamp'),
 	Fields = fields
     })
