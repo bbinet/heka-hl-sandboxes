@@ -8,7 +8,7 @@ function process_message()
     data[#data+1] = read_message('Timestamp')
     data[#data+1] = read_message('Fields[uuid]')
     data[#data+1] = read_message('Fields[hostname]')
-    data[#data+1] = read_message('Fields[type]') .. ':' .. 0 .. ':' .. read_message('Fields[version]')
+    data[#data+1] = read_message('Fields[type]') .. ':' .. read_message('Fields[version]')
     data = table.concat(data, " ")
     data = '[' .. data .. ']' .. read_message('Fields[log]') .. '\n'
 
