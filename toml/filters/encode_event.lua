@@ -11,7 +11,7 @@ function process_message()
     while true do
 	typ, name, value = read_next_field()
 	if not typ then break end
-	if typ ~= 1 then --exculde bytes
+	if typ ~= 1 then --exclude bytes
 	    fields[name] = value
 	end
     end
