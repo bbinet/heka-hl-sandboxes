@@ -9,10 +9,8 @@ function process_message()
     data[#data+1] = read_message('Fields[uuid]')
     data[#data+1] = read_message('Fields[hostname]')
     data[#data+1] = read_message('Fields[type]') .. ':' .. read_message('Fields[encoder_version]')
-    data = table.concat(data, " ")
-    data = '[' .. data .. ']' .. read_message('Fields[log]') .. '\n'
 
-    inject_payload('txt', 'log_parse', string.format(data))
+    inject_payload('txt', 'log_parse', '[' .. table.concat(data, " ") .. ']' .. read_message('Payload') .. '\n')
 
     return 0
 end
