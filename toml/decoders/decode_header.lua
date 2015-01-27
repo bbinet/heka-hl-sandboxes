@@ -12,9 +12,9 @@ regex[#regex+1] = "(.*)$"               --log
 
 function process_message()
     local payload = read_message('Payload')
-    local time, date, uuid, hostname, log_type, log_version, log = string.match(payload, table.concat(regex, '%s'))
+    local time, date, uuid, hostname, typ, version, log = string.match(payload, table.concat(regex, '%s'))
 
-    if log_type ~= "metric" and log_type ~= "event" and log_type ~= "alert" then
+    if typ ~= "metric" and typ ~= "event" and typ ~= "alert" then
         return 0 --TODO: print error message
     end
 
@@ -25,8 +25,8 @@ function process_message()
         Fields = {
             uuid = uuid,
             hostname = hostname,
-            log_type = log_type,
-            log_version = log_version
+            type = typ,
+            version = version
         }
     })
 
