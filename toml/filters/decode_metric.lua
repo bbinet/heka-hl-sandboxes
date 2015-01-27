@@ -4,7 +4,7 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 
 function process_message()
     local payload = read_message('Payload')
-    local name, value = string.match(payload, "^(.+)%s([%d.]+)$")
+    local name, value = string.match(payload, "^([%w._-]+) (%d+.?%d+)$")
     local fields = {
 	name = name,
 	value = tonumber(value)
