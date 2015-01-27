@@ -5,7 +5,7 @@ require "os"
 function process_message()
     local data = { }
     data[#data+1] = os.date("%X", read_message('Timestamp')/1e9)
-    data[#data+1] = read_message('Timestamp')
+    data[#data+1] = string.format("%d", read_message('Timestamp'))
     data[#data+1] = read_message('Fields[uuid]')
     data[#data+1] = read_message('Fields[hostname]')
     data[#data+1] = read_message('Fields[type]') .. ':' .. read_message('Fields[encoder_version]')
