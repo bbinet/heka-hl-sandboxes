@@ -8,9 +8,6 @@ function process_message()
 	encoder_version = alert_version
     }
 
-    message = string.format("%q", message)
-    messages = '"' .. message .. '"'
-
     while true do
 	typ, name, value = read_next_field()
 	if not typ then break end
@@ -21,7 +18,7 @@ function process_message()
 
     inject_message({
 	Type = type_output,
-	Payload = read_message('Severity') .. ' ' .. messages,
+	Payload = read_message('Severity') .. '"' .. string.format("%q", message) .. '"',
 	Timestamp = read_message('Timestamp'),
 	Fields = fields
     })
