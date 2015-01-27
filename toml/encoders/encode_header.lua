@@ -10,7 +10,7 @@ function process_message()
     data[#data+1] = read_message('Fields[hostname]')
     data[#data+1] = read_message('Fields[type]') .. ':' .. read_message('Fields[encoder_version]')
 
-    inject_payload('txt', 'log_parse', '[' .. table.concat(data, " ") .. ']' .. read_message('Payload') .. '\n')
+    inject_payload('txt', 'log_parse', '[' .. table.concat(data, " ") .. '] ' .. read_message('Payload') .. '\n')
 
     return 0
 end
