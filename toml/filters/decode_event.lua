@@ -4,9 +4,8 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 
 function process_message()
     local payload = read_message('Payload')
-    local message = string.match(payload, '^"(.+)"$')
     local fields = {
-	message = message
+	message = string.match(string.gsub(payload, '\\', ''), '^"(.*)"$')
     }
 
     while true do
