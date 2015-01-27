@@ -1,7 +1,7 @@
 [DecodeLogMetric]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/decode_metric.lua"
-message_matcher = "Type == 'log.input.metric.0'"
+message_matcher = "Type == 'log.input'"
     [DecodeLogMetric.config]
     type_output = "login"
 

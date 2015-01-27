@@ -19,12 +19,14 @@ function process_message()
     end
 
     inject_message({
-        Type = type_output .. '.' .. log_type .. '.' .. log_version,
+        Type = type_output,
         Timestamp = date,
         Payload = log,
         Fields = {
             uuid = uuid,
-            hostname = hostname
+            hostname = hostname,
+            log_type = log_type,
+            log_version = log_version
         }
     })
 
