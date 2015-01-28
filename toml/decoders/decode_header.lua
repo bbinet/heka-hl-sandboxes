@@ -27,7 +27,7 @@ function process_message()
             uuid = uuid,
             hostname = hostname,
             decoder_type = typ,
-            decoder_version = version
+            decoder_version = tonumber(version)
         }
     })
 

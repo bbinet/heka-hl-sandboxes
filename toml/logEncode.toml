@@ -8,14 +8,14 @@ message_matcher = "Type == 'heka.sandbox.log.metric'"
 [EncodeAlertFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/encode_alert.lua"
-message_matcher = "Type == 'heka.sandbox.log.metric'"
+message_matcher = "Type == 'heka.sandbox.log.alert'"
     [EncodeAlertFilter.config]
     type_output = "log.output"
 
 [EncodeEventFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/encode_event.lua"
-message_matcher = "Type == 'heka.sandbox.log.metric'"
+message_matcher = "Type == 'heka.sandbox.log.event'"
     [EncodeEventFilter.config]
     type_output = "log.output"
 
