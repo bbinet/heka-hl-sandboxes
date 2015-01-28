@@ -8,6 +8,10 @@ function process_message()
 	msg = string.match(string.gsub(payload, '\\', ''), '^"(.*)"$')
     }
 
+    if fields.msg == nil then --TODO: print error message
+	return 0
+    end
+
     while true do
 	typ, name, value = read_next_field()
 	if not typ then break end
