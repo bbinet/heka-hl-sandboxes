@@ -6,7 +6,7 @@ function process_message()
     local payload = read_message('Payload')
     local severity, message = string.match(string.gsub(payload, '\\', ''), '^(%d+) "(.*)"$')
     local fields = {
-	message = message
+	msg = message
     }
 
     while true do
