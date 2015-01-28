@@ -51,7 +51,7 @@ message_matcher = "Type == 'heka.sandbox.addFields'"
     fields = "uuid hostname"
     uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
     hostname = "hl-mc-1-dev"
-    type_output = "output"
+    type_output = "log.metric"
 
 [TrwebclientDispatcherFilter]
 type = "SandboxFilter"

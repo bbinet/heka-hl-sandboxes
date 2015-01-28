@@ -30,45 +30,75 @@ Configuration for each sandbox
 
 __decoder/trserver_decode_metrics.lua:__ This sandbox catch metrics from trserver and parse it into the fields
 
-* type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+* type_output(string): __name__ for the next sandbox.
+
+__decoder/decode_header.lua:__ This sandbox will parse message from log file and send to the right decoder filter (metric, event, alert)
+
+* type_output(string): __name__ for the next sandbox.
+
+__filters/decode_alert.lua:__ This sandbox will parse alert log into the right field
+
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
+
+__filters/decode_event.lua:__ This sandbox will parse event log into the right field
+
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
+
+__filters/decode_metric.lua:__ This sandbox will parse metric log into the right field
+
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
 
 __filters/regex_metric_dispatch.lua:__ This sandbox will send dispatch each metric in function of this metric name to the sandbox corresponding
 
 * matchers(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments will prefix the following parameters. The order of these arguments is important!
 * arg1_regex(string): regular expression to catch metric (http://lua-users.org/wiki/PatternsTutorial)
-* arg1_type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+* arg1_type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
 * arg2_regex(string): regular expression to catch metric (http://lua-users.org/wiki/PatternsTutorial)
-* arg2_type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+* arg2_type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
 
 __filters/aggregate_metric.lua:__ This sandbox will aggregate the value in function of the aggregation type
 
 * ticker_interval(int): Frequency (in seconds) that a timer event will be sent to the filter.
 * aggregation(string): value allow are: "avg", "last", "min", "max", "sum". This value can be multiple with a whitespace as delimiter.
-* type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
 
 __filters/add_static_fields.lua:__ This sandbox will be add new Fields to the message
 
 * fields(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments will be the name of the field added.
 * arg1(string): value of the field arg1
 * arg2(string): value of the field arg2
-* type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
 
 __filters/format_metric_name.lua:__ This sandbox will be concatenate field with the separator defined
 
 * fields(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments must correspond to a field name. The order of these arguments is important!
 * separator(string): the string which will separate fields value
 * emit_timestamp_in_sec(boolean): convert timestamp in second instead of nanosecond
-* type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
 
 __filters/gather_last_metrics.lua:__ This sandbox will be group different metric in the same message
 
-* type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
 
 __filters/add_mode_field.lua:__ This sandbox will add a field with the mode of the tracker
 
-* type_output(string): suffix name for the next sandbox. The base name is heka.sandbox.
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
 
-__encoders/metrics_encode_json.lua:__ This sandbox parse data from fields to a JSON object
+__filters/encode_alert.lua:__ This sandbox will dump alert message into the payload
+
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
+
+__filters/encode_event.lua:__ This sandbox will dump event message into the payload
+
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
+
+__filters/encode_metric.lua:__ This sandbox will dump metric message into the payload
+
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
+
+__encoders/encode_header.lua:__ This sandbox will dump metric, alert or event data into the payload
+
+__encoders/metrics_encode_json.lua:__ This sandbox dump data from fields to a JSON object
 
 Config
 ------

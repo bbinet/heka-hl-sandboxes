@@ -1,0 +1,29 @@
+[EncodeMetricFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/encode_metric.lua"
+message_matcher = "Type == 'heka.sandbox.log.metric'"
+    [EncodeMetricFilter.config]
+    type_output = "log.output"
+
+[EncodeAlertFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/encode_alert.lua"
+message_matcher = "Type == 'heka.sandbox.log.alert'"
+    [EncodeAlertFilter.config]
+    type_output = "log.output"
+
+[EncodeEventFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/encode_event.lua"
+message_matcher = "Type == 'heka.sandbox.log.event'"
+    [EncodeEventFilter.config]
+    type_output = "log.output"
+
+[LogFileEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/encode_header.lua"
+[LogFileOutput]
+type = "FileOutput"
+message_matcher = "Type == 'heka.sandbox.log.output'"
+path = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/log/file.log"
+encoder = "LogFileEncoder"
