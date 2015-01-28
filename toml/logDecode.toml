@@ -11,8 +11,9 @@ filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/decoders/decode_h
     [LogFileDecoder.config]
     type_output = "log.input"
 [LogFileInput]
-type = "UdpInput"
-address = "0.0.0.0:8130"
+type = "LogstreamerInput"
+log_directory = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/log"
+file_match = "file.log"
 parser_type = "regexp"
 delimiter = "\n"
 decoder = "LogFileDecoder"
