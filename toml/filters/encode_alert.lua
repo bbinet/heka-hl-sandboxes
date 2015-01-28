@@ -2,7 +2,6 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 local alert_version = 0
 
 function process_message()
-    local message = read_message('Fields[msg]')
     local fields = {
 	type = "alert",
 	encoder_version = alert_version
@@ -18,7 +17,7 @@ function process_message()
 
     inject_message({
 	Type = type_output,
-	Payload = read_message('Severity') .. '"' .. string.format("%q", message) .. '"',
+	Payload = read_message('Severity') .. '"' .. string.format("%q", read_message('Fields[msg]')) .. '"',
 	Timestamp = read_message('Timestamp'),
 	Fields = fields
     })
