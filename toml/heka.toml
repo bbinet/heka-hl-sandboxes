@@ -25,35 +25,3 @@ address = "0.0.0.0:8125"
 parser_type = "regexp"
 delimiter = "\n"
 decoder = "TrServerDecoder"
-
-[Statmetric-influx-preEncoder]
-type = "SandboxFilter"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/format_metric_name.lua"
-message_matcher = "Type == 'heka.sandbox.output'"
-    [Statmetric-influx-preEncoder.config]
-    fields = "uuid hostname name"
-    separator = "."
-    emit_timestamp_in_sec = true
-    type_output = "influx"
-[Statmetric-influx-encoder]
-type = "SandboxEncoder"
-filename = "lua_encoders/statmetric_influx.lua"
-[InfluxOutput]
-type = "HttpOutput"
-message_matcher = "Type == 'heka.sandbox.influx'"
-address = "http://localhost:8086/db/metrics/series"
-username = "admin"
-password = "admin_password"
-encoder = "Statmetric-influx-encoder"
-
-[ServerEncoder]
-type = "SandboxEncoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/metrics_encode_json.lua"
-[ServerOutput]
-type = "HttpOutput"
-message_matcher = "Type == 'heka.sandbox.trwebclient'"
-address = "http://localhost:8888/heka"
-encoder = "ServerEncoder"
-http_timeout = 2000
-[ServerOutput.headers]
-Content-Type = ["application/json"]
