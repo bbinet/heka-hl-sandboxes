@@ -26,8 +26,8 @@ function process_message()
         Fields = {
             uuid = uuid,
             hostname = hostname,
-            type = typ,
-            version = version
+            decoder_type = typ,
+            decoder_version = version
         }
     })
 

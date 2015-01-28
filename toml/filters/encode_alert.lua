@@ -3,7 +3,7 @@ local alert_version = 0
 
 function process_message()
     local fields = {
-	type = "alert",
+	encoder_type = "alert",
 	encoder_version = alert_version
     }
 

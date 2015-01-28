@@ -8,7 +8,7 @@ function process_message()
         read_message('Fields[hostname]'),
         read_message('Fields[uuid]'),
         string.format("%d", read_message('Timestamp')),
-        read_message('Fields[type]') .. ':' .. read_message('Fields[encoder_version]')
+        read_message('Fields[encoder_type]') .. ':' .. read_message('Fields[encoder_version]')
     }
 
     for k, v in pairs(data) do --TODO: print error message

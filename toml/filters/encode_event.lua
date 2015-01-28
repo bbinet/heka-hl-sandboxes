@@ -5,7 +5,7 @@ local event_version = 0
 
 function process_message()
     local fields = {
-	type = "event",
+	encoder_type = "event",
 	encoder_version = event_version
     }
 

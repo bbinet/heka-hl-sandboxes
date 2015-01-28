@@ -3,7 +3,7 @@ local metric_version = 0
 
 function process_message()
     local fields = {
-	type = "metric",
+	encoder_type = "metric",
 	encoder_version = metric_version
     }
 
