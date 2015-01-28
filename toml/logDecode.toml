@@ -1,8 +1,22 @@
-[DecodeLogMetric]
+[DecodeLogMetricFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/decode_metric.lua"
 message_matcher = "Type == 'log.input'"
-    [DecodeLogMetric.config]
+    [DecodeLogMetricFilter.config]
+    type_output = "login"
+
+[DecodeLogAlertFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/decode_alert.lua"
+message_matcher = "Type == 'log.input'"
+    [DecodeLogAlertFilter.config]
+    type_output = "login"
+
+[DecodeLogEventFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/decode_event.lua"
+message_matcher = "Type == 'log.input'"
+    [DecodeLogEventFilter.config]
     type_output = "login"
 
 [LogFileDecoder]
