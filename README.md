@@ -10,6 +10,9 @@ To get heka configuration do following step
 
     $ git clone git@bitbucket.org:helioslite/heka-hl-sandboxes.git
 
+Actual configuration from heka-hl-sandboxes
+![alt text](https://bitbucket.org/helioslite/heka-hl-sandboxes/raw/master/heka_detailed.png)
+
 Run
 ---
 
