@@ -1,6 +1,6 @@
 [TrwebclientDispatcherFilter]
 type = "SandboxFilter"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/regex_dispatch_metric.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/regex_dispatch_metric.lua"
 message_matcher = "Type == 'heka.statmetric'"
     [TrwebclientDispatcherFilter.config]
     matchers = "label1"
@@ -9,7 +9,7 @@ message_matcher = "Type == 'heka.statmetric'"
 
 [60sLastFilter]
 type = "SandboxFilter"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/aggregate_metric.lua"
 message_matcher = "Type == 'heka.sandbox.collect'"
 ticker_interval = 1
     [60sLastFilter.config]
@@ -18,7 +18,7 @@ ticker_interval = 1
 
 [GroupMetricsFilter]
 type = "SandboxFilter"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/gather_last_metrics.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/gather_last_metrics.lua"
 message_matcher = "Type == 'heka.sandbox.group'"
 ticker_interval = 1
     [GroupMetricsFilter.config]
@@ -26,7 +26,7 @@ ticker_interval = 1
 
 [ServerEncoder]
 type = "SandboxEncoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/metrics_encode_json.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/encoders/metrics_encode_json.lua"
 [ServerOutput]
 type = "HttpOutput"
 message_matcher = "Type == 'heka.sandbox.trwebclient'"
