@@ -16,7 +16,7 @@ address = ":5565"
 
 [TrServerDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/decoders/trserver_decode_metrics.lua"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/decoders/trserver_decode_metrics.lua"
     [TrServerDecoder.config]
     type_output = "heka.statmetric"
 [TrServerInput]
