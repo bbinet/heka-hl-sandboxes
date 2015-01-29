@@ -1,0 +1,37 @@
+[TrwebclientDispatcherFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/regex_dispatch_metric.lua"
+message_matcher = "Type == 'heka.statmetric'"
+    [TrwebclientDispatcherFilter.config]
+    matchers = "label1"
+    label1_regex = ".*"
+    label1_type_output = "collect"
+
+[60sLastFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/aggregate_metric.lua"
+message_matcher = "Type == 'heka.sandbox.collect'"
+ticker_interval = 1
+    [60sLastFilter.config]
+    aggregation = "last"
+    type_output = "group"
+
+[GroupMetricsFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/gather_last_metrics.lua"
+message_matcher = "Type == 'heka.sandbox.group'"
+ticker_interval = 1
+    [GroupMetricsFilter.config]
+    type_output = "trwebclient"
+
+[ServerEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/metrics_encode_json.lua"
+[ServerOutput]
+type = "HttpOutput"
+message_matcher = "Type == 'heka.sandbox.trwebclient'"
+address = "http://localhost:8888/heka"
+encoder = "ServerEncoder"
+http_timeout = 2000
+[ServerOutput.headers]
+Content-Type = ["application/json"]

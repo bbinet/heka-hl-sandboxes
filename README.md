@@ -122,16 +122,7 @@ Decoder which recept metrics from trserver and parse it
         [TrServerDecoder.config]
         type_output = "heka.statmetric"
 
-Filter which prepare metrics to be send to influxdb with influx encoder
-
-    [Statmetric-influx-preEncoder]
-    type = "SandboxFilter"
-    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/format_metric_name.lua"
-    message_matcher = "Type == 'heka.sandbox.output'"
-        [Statmetric-influx-preEncoder.config]
-        fields = "uuid hostname name"
-        separator = "."
-        type_output = "influx"
+To change the trwebclient configuration, edit `path/to/heka-hl-sandboxes/toml/trwebclient-stream.toml` file
 
 Encoder which encode data in json format
 
@@ -140,7 +131,7 @@ Encoder which encode data in json format
     filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/encoders/metrics_encode_json.lua"
 
 
-To change the heka filter configuration, edit `path/to/heka-hl-sandboxes/toml/config.toml`
+To change the heka filter configuration in order to send data to influxDB, edit `path/to/heka-hl-sandboxes/toml/influx.toml`
 
 To group metrics in a same message add this sandbox as following
 
@@ -207,6 +198,17 @@ To do gust aggregation (max value of the 3s avg values in 1 minute)
         [Gust60sMaxFilter.config]
         aggregation = "max"
         type_output = "next_sandbox"
+
+Filter which prepare metrics to be send to influxdb with influx encoder
+
+    [Statmetric-influx-preEncoder]
+    type = "SandboxFilter"
+    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/heka-hl-sandboxes/toml/filters/format_metric_name.lua"
+    message_matcher = "Type == 'heka.sandbox.encode.influx'"
+        [Statmetric-influx-preEncoder.config]
+        fields = "uuid hostname name"
+        separator = "."
+        type_output = "influx"
 
 * `ticker_interval` as integer (unit= second)
 * `aggregation` as string (`"avg"`, `"sum"`, `"max"`, `"min"`, `"last"`)
