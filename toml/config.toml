@@ -26,7 +26,7 @@ ticker_interval = 3600
 [NoParkDispatchFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/regex_dispatch_metric.lua"
-message_matcher = "Type == 'heka.sandbox.dispatch' && Fields[mode] != 2"
+message_matcher = "Type == 'heka.sandbox.dispatch' && (Fields[mode] != 2 || Fields[mode] == NIL)"
     [NoParkDispatchFilter.config]
     matchers = "windMetric allMetrics"
     allMetrics_regex = ".*"
