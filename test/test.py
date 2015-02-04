@@ -21,14 +21,13 @@ class TestAddFields(unittest.TestCase):
 				type_output = "output"
 			""")
 			f.flush()
-		subprocess.Popen(['heka-sbmgr', '-action=load', '-config=PlatformTest.toml', '-script=/home/helioslite/heka-hl-sandboxes/filters/add_static_fields.lua', '-scriptconfig=add_fields.toml'])
+		subprocess.check_call(['heka-sbmgr', '-action=load', '-config=PlatformTest.toml', '-script=/home/helioslite/heka-hl-sandboxes/filters/add_static_fields.lua', '-scriptconfig=add_fields.toml'])
 		self.cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.cs.connect((TCP_IP, TCP_PORT))
 
 	def tearDown(self):
 		self.cs.close()
-		subprocess.Popen(['heka-sbmgr', '-action=unload', '-config=PlatformTest.toml', '-filtername=AddFieldsFilter'])
-		time.sleep(1)
+		subprocess.check_call(['heka-sbmgr', '-action=unload', '-config=PlatformTest.toml', '-filtername=AddFieldsFilter'])
 		proc.terminate() #put this command at the end of the final test
 		os.remove("add_fields.toml")
 		os.remove("output.log")
