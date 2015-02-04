@@ -4,13 +4,15 @@ import subprocess
 import os
 import time
 import json
+import tempfile
+import shutil
 
 TCP_IP = 'localhost'
 TCP_PORT = 5005
 
 class TestAddFields(unittest.TestCase):
 	def setUp(self):
-		with open('add_fields.toml', 'w') as f:
+		with open(temp_dir + '/add_fields.toml', 'w') as f:
 			f.write("""
 				[AddFieldsFilter]
 				type = "SandboxFilter"
@@ -21,7 +23,7 @@ class TestAddFields(unittest.TestCase):
 				type_output = "output"
 			""")
 			f.flush()
-		subprocess.check_call(['heka-sbmgr', '-action=load', '-config=PlatformTest.toml', '-script=' + os.path.abspath('..') + '/filters/add_static_fields.lua', '-scriptconfig=add_fields.toml'])
+		subprocess.check_call(['heka-sbmgr', '-action=load', '-config=PlatformTest.toml', '-script=' + os.path.abspath('..') + '/filters/add_static_fields.lua', '-scriptconfig=' + temp_dir + '/add_fields.toml'])
 		self.cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.cs.connect((TCP_IP, TCP_PORT))
 
@@ -29,7 +31,7 @@ class TestAddFields(unittest.TestCase):
 		self.cs.close()
 		subprocess.check_call(['heka-sbmgr', '-action=unload', '-config=PlatformTest.toml', '-filtername=AddFieldsFilter'])
 		proc.terminate() #put this command at the end of the final test
-		os.remove("add_fields.toml")
+		shutil.rmtree(temp_dir)
 		os.remove("output.log")
 
 	def test_sandboxes(self):
@@ -41,6 +43,7 @@ class TestAddFields(unittest.TestCase):
 			print line.lstrip(': |')
 
 if __name__ == '__main__':
+	temp_dir = tempfile.mkdtemp()
 	proc = subprocess.Popen(['hekad', '-config', 'heka.toml'], stderr=subprocess.PIPE)
 	time.sleep(1)
 	unittest.main()
