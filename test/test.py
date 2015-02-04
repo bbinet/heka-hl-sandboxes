@@ -43,5 +43,4 @@ class TestAddFields(unittest.TestCase):
 if __name__ == '__main__':
 	proc = subprocess.Popen(['hekad', '-config', 'heka.toml'], stderr=subprocess.PIPE)
 	time.sleep(1)
-	suite = unittest.TestLoader().loadTestsFromTestCase(TestAddFields)
-	unittest.TextTestRunner(verbosity=2).run(suite)
+	unittest.main()
