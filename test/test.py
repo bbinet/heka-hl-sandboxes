@@ -48,13 +48,14 @@ class TestAddFields(unittest.TestCase):
 		subprocess.check_call(['heka-sbmgr', '-action=unload', '-config=PlatformTest.toml', '-filtername=AddFieldsFilter'])
 		os.remove("output.log")
 
-	def test_sandboxes(self):
+	def test_sandbox(self):
 		time.sleep(1)
 		self.cs.send(json.dumps({'Timestamp': 10, 'Type': 'add.fields', 'Payload': 'titi', 'Fields': {'name': 'tata', 'value': 'toto'}})+'\n')
 		time.sleep(1)
 		fi = open('output.log', 'r')
 		for line in fi:
-			print line.lstrip(': |')
+			data = json.loads(line)
+			self.assertEqual(data['Fields']['uuid'], 'uuid_test')
 
 if __name__ == '__main__':
 	unittest.main()
