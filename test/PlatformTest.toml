@@ -1,0 +1,6 @@
+ip_address   = ":5006"
+[signer]
+    name         = "PlatformTest"
+    hmac_hash    = "md5"
+    hmac_key     = "Platform test"
+    version      = 0
