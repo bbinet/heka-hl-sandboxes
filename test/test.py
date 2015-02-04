@@ -1,9 +1,9 @@
 import unittest
 import socket
-from subprocess import Popen, PIPE
-from os import remove
-from time import sleep
-from json import dumps
+import subprocess
+import os
+import time
+import json
 
 TCP_IP = 'localhost'
 TCP_PORT = 5005
@@ -20,28 +20,28 @@ class TestAddFields(unittest.TestCase):
 		fo = open("add_fields.toml", "w")
 		fo.write(tomlConfig)
 		fo.close()
-		sleep(1)
 		Popen(['heka-sbmgr', '-action=load', '-config=PlatformTest.toml', '-script=/home/helioslite/heka-hl-sandboxes/filters/add_static_fields.lua', '-scriptconfig=add_fields.toml'])
 		self.cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.cs.connect((TCP_IP, TCP_PORT))
 
 	def tearDown(self):
 		self.cs.close()
-		Popen(['heka-sbmgr', '-action=unload', '-config=PlatformTest.toml', '-filtername=AddFieldsFilter'])
-		sleep(1)
+		subprocess.Popen(['heka-sbmgr', '-action=unload', '-config=PlatformTest.toml', '-filtername=AddFieldsFilter'])
+		time.sleep(1)
 		proc.terminate() #put this command at the end of the final test
-		remove("add_fields.toml")
-		remove("output.log")
+		os.remove("add_fields.toml")
+		os.remove("output.log")
 
 	def test_sandboxes(self):
-		sleep(1)
-		self.cs.send(dumps({'Timestamp': 10, 'Type': 'add.fields', 'Payload': 'titi', 'Fields': {'name': 'tata', 'value': 'toto'}})+'\n')
-		sleep(1)
+		time.sleep(1)
+		self.cs.send(json.dumps({'Timestamp': 10, 'Type': 'add.fields', 'Payload': 'titi', 'Fields': {'name': 'tata', 'value': 'toto'}})+'\n')
+		time.sleep(1)
 		fi = open('output.log', 'r')
 		for line in fi:
 			print line.lstrip(': |')
 
 if __name__ == '__main__':
-	proc = Popen(['hekad', '-config', 'heka.toml'], stderr=PIPE)
+	proc = subprocess.Popen(['hekad', '-config', 'heka.toml'], stderr=subprocess.PIPE)
+	time.sleep(1)
 	suite = unittest.TestLoader().loadTestsFromTestCase(TestAddFields)
 	unittest.TextTestRunner(verbosity=2).run(suite)
