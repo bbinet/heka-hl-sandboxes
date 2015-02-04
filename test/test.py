@@ -10,17 +10,18 @@ TCP_PORT = 5005
 
 class TestAddFields(unittest.TestCase):
 	def setUp(self):
-		tomlConfig = '\n'.join(('[AddFieldsFilter]',
-			'type = "SandboxFilter"',
-			'message_matcher = "Type == \'add.fields\'"',
-			'[AddFieldsFilter.config]',
-			'fields = "uuid"',
-			'uuid = "uuid_test"',
-			'type_output = "output"'))
-		fo = open("add_fields.toml", "w")
-		fo.write(tomlConfig)
-		fo.close()
-		Popen(['heka-sbmgr', '-action=load', '-config=PlatformTest.toml', '-script=/home/helioslite/heka-hl-sandboxes/filters/add_static_fields.lua', '-scriptconfig=add_fields.toml'])
+		with open('add_fields.toml', 'w') as f:
+			f.write("""
+				[AddFieldsFilter]
+				type = "SandboxFilter"
+				message_matcher = "Type == 'add.fields'"
+				[AddFieldsFilter.config]
+				fields = "uuid"
+				uuid = "uuid_test"
+				type_output = "output"
+			""")
+			f.flush()
+		subprocess.Popen(['heka-sbmgr', '-action=load', '-config=PlatformTest.toml', '-script=/home/helioslite/heka-hl-sandboxes/filters/add_static_fields.lua', '-scriptconfig=add_fields.toml'])
 		self.cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.cs.connect((TCP_IP, TCP_PORT))
 
