@@ -3,6 +3,7 @@ import socket
 from subprocess import Popen, PIPE
 from os import remove
 from time import sleep
+from json import dumps
 
 TCP_IP = 'localhost'
 TCP_PORT = 5005
@@ -34,11 +35,7 @@ class TestAddFields(unittest.TestCase):
 
 	def test_sandboxes(self):
 		sleep(1)
-		Timestamp = "10"
-		Type = "add.fields"
-		Payload = "toto"
-		Severity = "7"
-		self.cs.send(Timestamp + ' ' + Type + ' ' + Payload + ' ' + Severity + ' |name:tata\n')
+		self.cs.send(dumps({'Timestamp': 10, 'Type': 'add.fields', 'Payload': 'titi', 'Fields': {'name': 'tata', 'value': 'toto'}})+'\n')
 		sleep(1)
 		fi = open('output.log', 'r')
 		for line in fi:
