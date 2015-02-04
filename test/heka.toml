@@ -22,8 +22,10 @@ parser_type = "regexp"
 delimiter = "\n"
 decoder = "TestDecoder"
 
-[RstEncoder]
+[TestEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/test/testEncoder.lua"
 [FileOutput]
 message_matcher = "Type == 'heka.sandbox.output'"
-encoder = "RstEncoder"
+encoder = "TestEncoder"
 path = "%ENV[HEKA_PLUGINS_BASE_DIR]/test/output.log"
