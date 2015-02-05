@@ -66,13 +66,15 @@ type_output = "output"
             'Type': 'add.fields',
             'Payload': 'titi',
             'Fields': {
-                'name': 'tata',
-                'value': 'toto'
+                'name': 'name_test',
+                'value': 'value_test'
                 }
             })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
         data, _ = self.heka_input.recvfrom(5000)
         data = json.loads(data)
         self.assertEqual(data['Fields']['uuid'], 'uuid_test')
+        self.assertEqual(data['Fields']['name'], 'name_test')
+        self.assertEqual(data['Fields']['value'], 'value_test')
 
 if __name__ == '__main__':
     unittest.main()
