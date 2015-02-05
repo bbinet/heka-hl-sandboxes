@@ -16,7 +16,7 @@ address = ":5006"
 [TestDecoder]
 type = "SandboxDecoder"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/test/testDecoder.lua"
-[TcpInput]
+[UdpInput]
 address = ":5005"
 parser_type = "regexp"
 delimiter = "\n"
@@ -25,7 +25,7 @@ decoder = "TestDecoder"
 [TestEncoder]
 type = "SandboxEncoder"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/test/testEncoder.lua"
-[TcpOutput]
+[UdpOutput]
 message_matcher = "Type == 'heka.sandbox.output'"
 address = ":5007"
 encoder = "TestEncoder"
