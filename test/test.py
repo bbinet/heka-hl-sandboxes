@@ -80,5 +80,91 @@ uuid = "uuid_test"
         self.assertEqual(data['Fields']['uuid'], 'uuid_test')
         self.assertEqual(data['Fields']['name'], 'name_test')
 
+
+class TestAddModeField(HekaTestCase):
+
+    sandbox = '../filters/add_mode_field.lua'
+    unload_sandboxes = ['TestFilter']
+    config = """
+[TestFilter]
+type = "SandboxFilter"
+message_matcher = "Type == 'test'"
+[TestFilter.config]
+type_output = "output"
+"""
+
+    def test_sandbox(self):
+        # send message before the first mode message
+        # equivalent to a message without tracker attachment
+        self.heka_output.sendto(json.dumps({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'trserver_tracker01_roll_angle',
+                'value': '15'
+                }
+            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
+        data, _ = self.heka_input.recvfrom(5000)
+        data = json.loads(data)
+        self.assertFalse('mode' in data['Fields'])
+
+        # send message with mode: 0
+        self.heka_output.sendto(json.dumps({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'trserver_tracker01_mode',
+                'value': '0'
+                }
+            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
+        data, _ = self.heka_input.recvfrom(5000)
+        data = json.loads(data)
+        self.assertEqual(data['Fields']['mode'], 0)
+
+        # send first message
+        self.heka_output.sendto(json.dumps({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'trserver_tracker01_roll_angle',
+                'value': '15'
+                }
+            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
+        data, _ = self.heka_input.recvfrom(5000)
+        data = json.loads(data)
+        self.assertEqual(data['Fields']['mode'], 0)
+
+        # send message with mode: 2
+        self.heka_output.sendto(json.dumps({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'trserver_tracker01_mode',
+                'value': '2'
+                }
+            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
+        data, _ = self.heka_input.recvfrom(5000)
+        data = json.loads(data)
+        self.assertEqual(data['Fields']['mode'], 2)
+
+        # send first message
+        self.heka_output.sendto(json.dumps({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'trserver_tracker01_roll_angle',
+                'value': '15'
+                }
+            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
+        data, _ = self.heka_input.recvfrom(5000)
+        data = json.loads(data)
+        self.assertEqual(data['Fields']['mode'], 2)
+
+
 if __name__ == '__main__':
     unittest.main()
