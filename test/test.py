@@ -100,7 +100,7 @@ type_output = "output"
 """
 
     def test_sandbox(self):
-        # send message before the first mode message
+        # send message from tracker01_roll_angle before the first mode message
         # equivalent to a message without tracker attachment
         HekaTestCase.send_msg(self, {
             'Timestamp': 10,
@@ -108,7 +108,7 @@ type_output = "output"
             'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_roll_angle',
-                'value': '15'
+                'value': 15
                 }
             })
         data = json.loads(HekaTestCase.receive_msg(self))
@@ -121,24 +121,40 @@ type_output = "output"
             'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_mode',
-                'value': '0'
+                'value': 0
                 }
             })
         data = json.loads(HekaTestCase.receive_msg(self))
         self.assertEqual(data['Fields']['mode'], 0)
 
-        # send first message
+        # send first message from tracker01_roll_angle
         HekaTestCase.send_msg(self, {
             'Timestamp': 10,
             'Type': 'test',
             'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_roll_angle',
-                'value': '15'
+                'value': 15
                 }
             })
         data = json.loads(HekaTestCase.receive_msg(self))
         self.assertEqual(data['Fields']['mode'], 0)
+
+        # send first message from tracker02_roll_angle
+        # we should don't have any impact by the change mode of tracker 01
+        # which should be unstage
+        HekaTestCase.send_msg(self, {
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'trserver_tracker02_roll_angle',
+                'value': 15
+                }
+            })
+        data = HekaTestCase.receive_msg(self)
+        data = json.loads(data)
+        self.assertFalse('mode' in data['Fields'])
 
         # send message with mode: 2
         HekaTestCase.send_msg(self, {
@@ -147,24 +163,27 @@ type_output = "output"
             'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_mode',
-                'value': '2'
+                'value': 2
                 }
             })
         data = json.loads(HekaTestCase.receive_msg(self))
         self.assertEqual(data['Fields']['mode'], 2)
 
-        # send first message
+        # send first message from tracker01_roll_angle
+        # and test if other fields are untouched
         HekaTestCase.send_msg(self, {
             'Timestamp': 10,
             'Type': 'test',
             'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_roll_angle',
-                'value': '15'
+                'value': 15
                 }
             })
         data = json.loads(HekaTestCase.receive_msg(self))
         self.assertEqual(data['Fields']['mode'], 2)
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_roll_angle')
+        self.assertEqual(data['Fields']['value'], 15)
 
 
 if __name__ == '__main__':
