@@ -23,6 +23,13 @@ def tearDownModule():
 
 class HekaTestCase(unittest.TestCase):
 
+    def send_msg(self, msg):
+        self.heka_output.sendto(json.dumps(msg)+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
+
+    def receive_msg(self):
+        data, _ = self.heka_input.recvfrom(5000)
+        return data
+
     def setUp(self):
         self.tmpdir = tempfile.mkdtemp()
         self.tmpconfig = os.path.join(self.tmpdir, 'config.toml')
@@ -67,16 +74,15 @@ uuid = "uuid_test"
 """
 
     def test_sandbox(self):
-        self.heka_output.sendto(json.dumps({
+        HekaTestCase.send_msg(self, {
             'Timestamp': 10,
             'Type': 'test',
             'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test',
                 }
-            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
-        data, _ = self.heka_input.recvfrom(5000)
-        data = json.loads(data)
+            })
+        data = json.loads(HekaTestCase.receive_msg(self))
         self.assertEqual(data['Fields']['uuid'], 'uuid_test')
         self.assertEqual(data['Fields']['name'], 'name_test')
 
@@ -96,7 +102,7 @@ type_output = "output"
     def test_sandbox(self):
         # send message before the first mode message
         # equivalent to a message without tracker attachment
-        self.heka_output.sendto(json.dumps({
+        HekaTestCase.send_msg(self, {
             'Timestamp': 10,
             'Type': 'test',
             'Payload': 'payload_test',
@@ -104,13 +110,12 @@ type_output = "output"
                 'name': 'trserver_tracker01_roll_angle',
                 'value': '15'
                 }
-            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
-        data, _ = self.heka_input.recvfrom(5000)
-        data = json.loads(data)
+            })
+        data = json.loads(HekaTestCase.receive_msg(self))
         self.assertFalse('mode' in data['Fields'])
 
         # send message with mode: 0
-        self.heka_output.sendto(json.dumps({
+        HekaTestCase.send_msg(self, {
             'Timestamp': 10,
             'Type': 'test',
             'Payload': 'payload_test',
@@ -118,13 +123,12 @@ type_output = "output"
                 'name': 'trserver_tracker01_mode',
                 'value': '0'
                 }
-            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
-        data, _ = self.heka_input.recvfrom(5000)
-        data = json.loads(data)
+            })
+        data = json.loads(HekaTestCase.receive_msg(self))
         self.assertEqual(data['Fields']['mode'], 0)
 
         # send first message
-        self.heka_output.sendto(json.dumps({
+        HekaTestCase.send_msg(self, {
             'Timestamp': 10,
             'Type': 'test',
             'Payload': 'payload_test',
@@ -132,13 +136,12 @@ type_output = "output"
                 'name': 'trserver_tracker01_roll_angle',
                 'value': '15'
                 }
-            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
-        data, _ = self.heka_input.recvfrom(5000)
-        data = json.loads(data)
+            })
+        data = json.loads(HekaTestCase.receive_msg(self))
         self.assertEqual(data['Fields']['mode'], 0)
 
         # send message with mode: 2
-        self.heka_output.sendto(json.dumps({
+        HekaTestCase.send_msg(self, {
             'Timestamp': 10,
             'Type': 'test',
             'Payload': 'payload_test',
@@ -146,13 +149,12 @@ type_output = "output"
                 'name': 'trserver_tracker01_mode',
                 'value': '2'
                 }
-            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
-        data, _ = self.heka_input.recvfrom(5000)
-        data = json.loads(data)
+            })
+        data = json.loads(HekaTestCase.receive_msg(self))
         self.assertEqual(data['Fields']['mode'], 2)
 
         # send first message
-        self.heka_output.sendto(json.dumps({
+        HekaTestCase.send_msg(self, {
             'Timestamp': 10,
             'Type': 'test',
             'Payload': 'payload_test',
@@ -160,9 +162,8 @@ type_output = "output"
                 'name': 'trserver_tracker01_roll_angle',
                 'value': '15'
                 }
-            })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
-        data, _ = self.heka_input.recvfrom(5000)
-        data = json.loads(data)
+            })
+        data = json.loads(HekaTestCase.receive_msg(self))
         self.assertEqual(data['Fields']['mode'], 2)
 
 
