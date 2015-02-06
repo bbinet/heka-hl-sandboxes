@@ -20,7 +20,9 @@ def tearDownModule():
     global PROC
     PROC.terminate()
 
+
 class HekaTestCase(unittest.TestCase):
+
     def setUp(self):
         self.tmpdir = tempfile.mkdtemp()
         self.tmpconfig = os.path.join(self.tmpdir, 'config.toml')
@@ -39,42 +41,44 @@ class HekaTestCase(unittest.TestCase):
         self.heka_input.bind((HEKA_IP, HEKA_INPUT_PORT))
 
     def tearDown(self):
-        for u in self.unload:
+        for u in self.unload_sandboxes:
             subprocess.check_call([
             'heka-sbmgr',
             '-action=unload',
             '-config=PlatformTest.toml',
             '-filtername=' + u])
         shutil.rmtree(self.tmpdir)
+        self.heka_output.close()
+        self.heka_input.close()
+
 
 class TestAddFields(HekaTestCase):
+
     sandbox = '../filters/add_static_fields.lua'
+    unload_sandboxes = ['TestFilter']
     config = """
-[AddFieldsFilter]
+[TestFilter]
 type = "SandboxFilter"
-message_matcher = "Type == 'add.fields'"
-[AddFieldsFilter.config]
+message_matcher = "Type == 'test'"
+[TestFilter.config]
+type_output = "output"
 fields = "uuid"
 uuid = "uuid_test"
-type_output = "output"
 """
-    unload = ['AddFieldsFilter']
 
     def test_sandbox(self):
         self.heka_output.sendto(json.dumps({
             'Timestamp': 10,
-            'Type': 'add.fields',
-            'Payload': 'titi',
+            'Type': 'test',
+            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test',
-                'value': 'value_test'
                 }
             })+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
         data, _ = self.heka_input.recvfrom(5000)
         data = json.loads(data)
         self.assertEqual(data['Fields']['uuid'], 'uuid_test')
         self.assertEqual(data['Fields']['name'], 'name_test')
-        self.assertEqual(data['Fields']['value'], 'value_test')
 
 if __name__ == '__main__':
     unittest.main()
