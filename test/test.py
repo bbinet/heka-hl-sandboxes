@@ -28,7 +28,7 @@ class HekaTestCase(unittest.TestCase):
 
     def receive_msg(self):
         data, _ = self.heka_input.recvfrom(5000)
-        return data
+        return json.loads(data)
 
     def setUp(self):
         self.tmpdir = tempfile.mkdtemp()
@@ -82,7 +82,7 @@ uuid = "uuid_test"
                 'name': 'name_test',
                 }
             })
-        data = json.loads(self.receive_msg())
+        data = self.receive_msg()
         self.assertEqual(data['Fields']['uuid'], 'uuid_test')
         self.assertEqual(data['Fields']['name'], 'name_test')
 
@@ -111,7 +111,7 @@ type_output = "output"
                 'value': 15
                 }
             })
-        data = json.loads(self.receive_msg())
+        data = self.receive_msg()
         self.assertFalse('mode' in data['Fields'])
 
         # send message with mode: 0
@@ -124,7 +124,7 @@ type_output = "output"
                 'value': 0
                 }
             })
-        data = json.loads(self.receive_msg())
+        data = self.receive_msg()
         self.assertEqual(data['Fields']['mode'], 0)
 
         # send first message from tracker01_roll_angle
@@ -137,7 +137,7 @@ type_output = "output"
                 'value': 15
                 }
             })
-        data = json.loads(self.receive_msg())
+        data = self.receive_msg()
         self.assertEqual(data['Fields']['mode'], 0)
 
         # send first message from tracker02_roll_angle
@@ -153,7 +153,6 @@ type_output = "output"
                 }
             })
         data = self.receive_msg()
-        data = json.loads(data)
         self.assertFalse('mode' in data['Fields'])
 
         # send message with mode: 2
@@ -166,7 +165,7 @@ type_output = "output"
                 'value': 2
                 }
             })
-        data = json.loads(self.receive_msg())
+        data = self.receive_msg()
         self.assertEqual(data['Fields']['mode'], 2)
 
         # send first message from tracker01_roll_angle
@@ -180,7 +179,7 @@ type_output = "output"
                 'value': 15
                 }
             })
-        data = json.loads(self.receive_msg())
+        data = self.receive_msg()
         self.assertEqual(data['Fields']['mode'], 2)
         self.assertEqual(data['Fields']['name'], 'trserver_tracker01_roll_angle')
         self.assertEqual(data['Fields']['value'], 15)
