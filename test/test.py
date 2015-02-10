@@ -33,16 +33,17 @@ class HekaTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.tmpdir = tempfile.mkdtemp()
-        self.tmpconfig = os.path.join(self.tmpdir, 'config.toml')
-        with open(self.tmpconfig, 'w') as f:
-            f.write(self.config)
-            f.flush()
-        subprocess.check_call([
-            'heka-sbmgr',
-            '-action=load',
-            '-config=PlatformTest.toml',
-            '-script=' + self.sandbox,
-            '-scriptconfig=' + self.tmpconfig])
+        for key in self.sandboxes:
+            self.tmpconfig = os.path.join(self.tmpdir, key + '.toml')
+            with open(self.tmpconfig, 'w') as f:
+                f.write(self.sandboxes[key])
+                f.flush()
+            subprocess.check_call([
+                'heka-sbmgr',
+                '-action=load',
+                '-config=PlatformTest.toml',
+                '-script=' + self.sandbox,
+                '-scriptconfig=' + self.tmpconfig])
         time.sleep(1)
         self.heka_output = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.heka_input = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -50,12 +51,12 @@ class HekaTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        for u in self.unload_sandboxes:
+        for key in self.sandboxes:
             subprocess.check_call([
             'heka-sbmgr',
             '-action=unload',
             '-config=PlatformTest.toml',
-            '-filtername=' + u])
+            '-filtername=' + key])
         shutil.rmtree(self.tmpdir)
         self.heka_output.close()
         self.heka_input.close()
@@ -64,8 +65,7 @@ class HekaTestCase(unittest.TestCase):
 class TestAddFields(HekaTestCase):
 
     sandbox = '../filters/add_static_fields.lua'
-    unload_sandboxes = ['TestFilter']
-    config = """
+    sandboxes = {'TestFilter': """
 [TestFilter]
 type = "SandboxFilter"
 message_matcher = "Type == 'test'"
@@ -73,7 +73,7 @@ message_matcher = "Type == 'test'"
 type_output = "output"
 fields = "uuid"
 uuid = "uuid_test"
-"""
+"""}
 
     def test_sandbox(self):
         self.send_msg({
@@ -92,14 +92,13 @@ uuid = "uuid_test"
 class TestAddModeField(HekaTestCase):
 
     sandbox = '../filters/add_mode_field.lua'
-    unload_sandboxes = ['TestFilter']
-    config = """
+    sandboxes = {'TestFilter': """
 [TestFilter]
 type = "SandboxFilter"
 message_matcher = "Type == 'test'"
 [TestFilter.config]
 type_output = "output"
-"""
+"""}
 
     def test_sandbox(self):
         # send message from tracker01_roll_angle before the first mode message
@@ -190,8 +189,7 @@ type_output = "output"
 class TestRegexDispatchMetric(HekaTestCase):
 
     sandbox = '../filters/regex_dispatch_metric.lua'
-    unload_sandboxes = ['TestFilter']
-    config = """
+    sandboxes = {'TestFilter': """
 [TestFilter]
 type = "SandboxFilter"
 message_matcher = "Type == 'test'"
@@ -201,7 +199,7 @@ windMetric_regex = "wind.*"
 windMetric_type_output = "output.wind"
 allMetric_regex = ".*"
 allMetric_type_output = "output.all"
-"""
+"""}
 
     def test_sandbox(self):
         self.send_msg({
@@ -241,6 +239,111 @@ allMetric_type_output = "output.all"
             })
         data = self.receive_msg()
         self.assertEqual(data['Type'], 'heka.sandbox.output.all', 'Type field should be: "heka.sandbox.output.output"')
+
+
+class TestAggregatehMetric(HekaTestCase):
+
+    sandbox = '../filters/aggregate_metric.lua'
+    sandboxes = {'TestMaxFilter': """
+[TestMaxFilter]
+type = "SandboxFilter"
+filename = "../filters/aggregate_metric.lua"
+message_matcher = "Type == 'test.max'"
+ticker_interval = 3
+[TestMaxFilter.config]
+aggregation = "max"
+type_output = "output"
+    """, 'TestMinFilter': """
+[TestMinFilter]
+type = "SandboxFilter"
+filename = "../filters/aggregate_metric.lua"
+message_matcher = "Type == 'test.min'"
+ticker_interval = 3
+[TestMinFilter.config]
+aggregation = "min"
+type_output = "output"
+"""}
+
+    def test_sandbox_max(self):
+
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.max',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 1
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.max',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 2
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.max',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 5
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.max',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 1
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Fields']['value'], 5, 'value field should be with "max" aggregation: 5')
+
+    def test_sandbox_min(self):
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.min',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 1
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.min',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 2
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.min',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 5
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.min',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 0
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Fields']['value'], 0, 'value field should be with "min" aggregation: 0')
 
 
 if __name__ == '__main__':
