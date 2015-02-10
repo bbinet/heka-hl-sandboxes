@@ -185,5 +185,61 @@ type_output = "output"
         self.assertEqual(data['Fields']['value'], 15)
 
 
+class TestRegexDispatchMetric(HekaTestCase):
+
+    sandbox = '../filters/regex_dispatch_metric.lua'
+    unload_sandboxes = ['TestFilter']
+    config = """
+[TestFilter]
+type = "SandboxFilter"
+message_matcher = "Type == 'test'"
+[TestFilter.config]
+matchers = "windMetric allMetric"
+windMetric_regex = "wind.*"
+windMetric_type_output = "output.wind"
+allMetric_regex = ".*"
+allMetric_type_output = "output.all"
+"""
+
+    def test_sandbox(self):
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'wind_test',
+                'value': 10
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Fields']['name'], 'wind_test')
+        self.assertEqual(data['Fields']['value'], 10)
+        self.assertEqual(data['Type'], 'heka.sandbox.output.wind')
+
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'other_wind_test',
+                'value': 12
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Type'], 'heka.sandbox.output.all')
+
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'other_metric',
+                'value': 7
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Type'], 'heka.sandbox.output.all')
+
+
 if __name__ == '__main__':
     unittest.main()

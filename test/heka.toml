@@ -26,6 +26,6 @@ decoder = "TestDecoder"
 type = "SandboxEncoder"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/test/testEncoder.lua"
 [UdpOutput]
-message_matcher = "Type == 'heka.sandbox.output'"
+message_matcher = "Type == 'heka.sandbox.output' || Type == 'heka.sandbox.output.wind' || Type == 'heka.sandbox.output.all'"
 address = ":5007"
 encoder = "TestEncoder"
