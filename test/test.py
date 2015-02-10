@@ -33,16 +33,16 @@ class HekaTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.tmpdir = tempfile.mkdtemp()
-        for key in self.sandboxes:
-            self.tmpconfig = os.path.join(self.tmpdir, key + '.toml')
+        for item in self.sandboxes:
+            self.tmpconfig = os.path.join(self.tmpdir, item + '.toml')
             with open(self.tmpconfig, 'w') as f:
-                f.write(self.sandboxes[key])
+                f.write(self.sandboxes[item]['toml'])
                 f.flush()
             subprocess.check_call([
                 'heka-sbmgr',
                 '-action=load',
                 '-config=PlatformTest.toml',
-                '-script=' + self.sandbox,
+                '-script=' + self.sandboxes[item]['file'],
                 '-scriptconfig=' + self.tmpconfig])
         time.sleep(1)
         self.heka_output = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -51,12 +51,12 @@ class HekaTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        for key in self.sandboxes:
+        for item in self.sandboxes:
             subprocess.check_call([
             'heka-sbmgr',
             '-action=unload',
             '-config=PlatformTest.toml',
-            '-filtername=' + key])
+            '-filtername=' + item])
         shutil.rmtree(self.tmpdir)
         self.heka_output.close()
         self.heka_input.close()
@@ -64,8 +64,9 @@ class HekaTestCase(unittest.TestCase):
 
 class TestAddFields(HekaTestCase):
 
-    sandbox = '../filters/add_static_fields.lua'
-    sandboxes = {'TestFilter': """
+    sandboxes = {'TestFilter': {
+        'file': '../filters/add_static_fields.lua',
+        'toml': """
 [TestFilter]
 type = "SandboxFilter"
 message_matcher = "Type == 'test'"
@@ -73,7 +74,7 @@ message_matcher = "Type == 'test'"
 type_output = "output"
 fields = "uuid"
 uuid = "uuid_test"
-"""}
+"""}}
 
     def test_sandbox(self):
         self.send_msg({
@@ -91,14 +92,15 @@ uuid = "uuid_test"
 
 class TestAddModeField(HekaTestCase):
 
-    sandbox = '../filters/add_mode_field.lua'
-    sandboxes = {'TestFilter': """
+    sandboxes = {'TestFilter': {
+        'file': '../filters/add_mode_field.lua',
+        'toml': """
 [TestFilter]
 type = "SandboxFilter"
 message_matcher = "Type == 'test'"
 [TestFilter.config]
 type_output = "output"
-"""}
+"""}}
 
     def test_sandbox(self):
         # send message from tracker01_roll_angle before the first mode message
@@ -188,8 +190,9 @@ type_output = "output"
 
 class TestRegexDispatchMetric(HekaTestCase):
 
-    sandbox = '../filters/regex_dispatch_metric.lua'
-    sandboxes = {'TestFilter': """
+    sandboxes = {'TestFilter': {
+        'file': '../filters/regex_dispatch_metric.lua',
+        'toml': """
 [TestFilter]
 type = "SandboxFilter"
 message_matcher = "Type == 'test'"
@@ -199,7 +202,7 @@ windMetric_regex = "wind.*"
 windMetric_type_output = "output.wind"
 allMetric_regex = ".*"
 allMetric_type_output = "output.all"
-"""}
+"""}}
 
     def test_sandbox(self):
         self.send_msg({
@@ -243,8 +246,9 @@ allMetric_type_output = "output.all"
 
 class TestAggregatehMetric(HekaTestCase):
 
-    sandbox = '../filters/aggregate_metric.lua'
-    sandboxes = {'TestMaxFilter': """
+    sandboxes = {'TestMaxFilter': {
+        'file': '../filters/aggregate_metric.lua',
+        'toml': """
 [TestMaxFilter]
 type = "SandboxFilter"
 filename = "../filters/aggregate_metric.lua"
@@ -253,7 +257,9 @@ ticker_interval = 3
 [TestMaxFilter.config]
 aggregation = "max"
 type_output = "output"
-    """, 'TestMinFilter': """
+    """}, 'TestMinFilter': {
+        'file': '../filters/aggregate_metric.lua',
+        'toml': """
 [TestMinFilter]
 type = "SandboxFilter"
 filename = "../filters/aggregate_metric.lua"
@@ -262,7 +268,9 @@ ticker_interval = 3
 [TestMinFilter.config]
 aggregation = "min"
 type_output = "output"
-    """, 'TestCountFilter': """
+    """}, 'TestCountFilter': {
+        'file': '../filters/aggregate_metric.lua',
+        'toml': """
 [TestCountFilter]
 type = "SandboxFilter"
 filename = "../filters/aggregate_metric.lua"
@@ -271,7 +279,9 @@ ticker_interval = 3
 [TestCountFilter.config]
 aggregation = "count"
 type_output = "output"
-    """, 'TestLastFilter': """
+    """}, 'TestLastFilter': {
+        'file': '../filters/aggregate_metric.lua',
+        'toml': """
 [TestLastFilter]
 type = "SandboxFilter"
 filename = "../filters/aggregate_metric.lua"
@@ -280,7 +290,9 @@ ticker_interval = 3
 [TestLastFilter.config]
 aggregation = "last"
 type_output = "output"
-    """, 'TestSumFilter': """
+    """}, 'TestSumFilter': {
+        'file': '../filters/aggregate_metric.lua',
+        'toml': """
 [TestSumFilter]
 type = "SandboxFilter"
 filename = "../filters/aggregate_metric.lua"
@@ -289,7 +301,9 @@ ticker_interval = 3
 [TestSumFilter.config]
 aggregation = "sum"
 type_output = "output"
-    """, 'TestAvgFilter': """
+    """}, 'TestAvgFilter': {
+        'file': '../filters/aggregate_metric.lua',
+        'toml': """
 [TestAvgFilter]
 type = "SandboxFilter"
 filename = "../filters/aggregate_metric.lua"
@@ -298,7 +312,7 @@ ticker_interval = 3
 [TestAvgFilter.config]
 aggregation = "avg"
 type_output = "output"
-"""}
+"""}}
 
     def test_sandbox_max(self):
 
@@ -544,15 +558,16 @@ type_output = "output"
 
 class TestGatherLastMetric(HekaTestCase):
 
-    sandbox = '../filters/gather_last_metrics.lua'
-    sandboxes = {'TestFilter': """
+    sandboxes = {'TestFilter': {
+        'file': '../filters/gather_last_metrics.lua',
+        'toml': """
 [TestFilter]
 type = "SandboxFilter"
 message_matcher = "Type == 'test'"
 ticker_interval = 2
 [TestFilter.config]
 type_output = "output"
-"""}
+"""}}
 
     def test_sandbox(self):
         self.send_msg({
@@ -586,6 +601,46 @@ type_output = "output"
         self.assertEqual(data['Fields']['name_test_1'], 10, 'name_test_1 field should be set to: 10')
         self.assertEqual(data['Fields']['name_test_2'], 12, 'name_test_2 field should be set to: 12')
         self.assertEqual(data['Fields']['name_test_3'], 7, 'name_test_3 field should be set to: 7')
+
+
+class TestGatherLastMetric(HekaTestCase):
+
+    sandboxes = {
+        'TestAddFields': {
+            'file': '../filters/add_static_fields.lua',
+            'toml': """
+[TestAddFields]
+type = "SandboxFilter"
+message_matcher = "Type == 'test'"
+[TestAddFields.config]
+type_output = "gather.metrics"
+fields = "uuid"
+uuid = "uuid_test"
+"""},
+        'TestGatherFields': {
+            'file': '../filters/format_metric_name.lua',
+            'toml': """
+[TestGatherFields]
+type = "SandboxFilter"
+message_matcher = "Type == 'heka.sandbox.gather.metrics'"
+[TestGatherFields.config]
+fields = "uuid name value"
+separator = "-"
+type_output = "output"
+"""}}
+
+    def test_sandbox(self):
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 10
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Fields']['name'], 'uuid_test-name_test-10', 'name field should be set to: uuid_test-name_test-10')
 
 
 if __name__ == '__main__':
