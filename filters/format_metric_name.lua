@@ -2,17 +2,8 @@ require "string"
 require "table"
 
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
-local emit_timestamp_in_sec = read_config('emit_timestamp_in_sec') or false
 local fields = read_config('fields') or error('you must initialize "fields" option')
 local separator = read_config('separator') or error('you must initialize "separator" option')
-local timestamp = 1
-
-
-if emit_timestamp_in_sec == true then
-    timestamp = 1e9
-elseif emit_timestamp_in_sec ~= false then
-    error('you must initialize "emit_timestamp_in_sec" option: allowed value "true", default: "false"')
-end
 
 function process_message()
     local parts = { }
@@ -23,14 +14,22 @@ function process_message()
 	parts[#parts+1] = read_message('Fields[' .. part .. ']')
     end
 
+    local fields = {}
+    while true do
+	typ, key, value = read_next_field()
+	if not typ then break end
+	if typ ~= 1 then --exclude bytes
+	    fields[key] = value
+	end
+    end
+    fields['name'] = table.concat(parts, separator)
+
     local data = {
 	Type = type_output,
 	Payload = read_message('Payload'),
-	Fields = {
-	    timestamp = read_message('Timestamp') / timestamp
-	}
+	Timestamp = read_message('Timestamp'),
+	Fields = fields
     }
-    data.Fields[table.concat(parts, separator)] = read_message('Fields[value]')
 
     inject_message(data)
 
