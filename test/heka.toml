@@ -1,6 +1,6 @@
 [PlatformTest]
 type = "SandboxManagerFilter"
-working_directory = "%ENV[HEKA_PLUGINS_BASE_DIR]"
+working_directory = "%ENV[HEKA_PLUGINS_BASE_DIR]/test"
 message_signer = "PlatformTest"
 max_filters = 100
 [ProtobufDecoder]

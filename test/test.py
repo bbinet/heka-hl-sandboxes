@@ -30,7 +30,8 @@ class HekaTestCase(unittest.TestCase):
         data, _ = self.heka_input.recvfrom(5000)
         return json.loads(data)
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         self.tmpdir = tempfile.mkdtemp()
         self.tmpconfig = os.path.join(self.tmpdir, 'config.toml')
         with open(self.tmpconfig, 'w') as f:
@@ -40,14 +41,15 @@ class HekaTestCase(unittest.TestCase):
             'heka-sbmgr',
             '-action=load',
             '-config=PlatformTest.toml',
-            '-script=' + os.path.abspath(self.sandbox),
+            '-script=' + self.sandbox,
             '-scriptconfig=' + self.tmpconfig])
         time.sleep(1)
         self.heka_output = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.heka_input = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.heka_input.bind((HEKA_IP, HEKA_INPUT_PORT))
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(self):
         for u in self.unload_sandboxes:
             subprocess.check_call([
             'heka-sbmgr',
