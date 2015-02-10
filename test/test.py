@@ -83,8 +83,8 @@ uuid = "uuid_test"
                 }
             })
         data = self.receive_msg()
-        self.assertEqual(data['Fields']['uuid'], 'uuid_test')
-        self.assertEqual(data['Fields']['name'], 'name_test')
+        self.assertEqual(data['Fields']['uuid'], 'uuid_test', 'uuid field should be add to the current message with uuid_test value')
+        self.assertEqual(data['Fields']['name'], 'name_test', 'name field should be keep the same value: "name_test"')
 
 
 class TestAddModeField(HekaTestCase):
@@ -112,7 +112,7 @@ type_output = "output"
                 }
             })
         data = self.receive_msg()
-        self.assertFalse('mode' in data['Fields'])
+        self.assertFalse('mode' in data['Fields'], 'mode field should not be present since no previous message has been sent with a mode name')
 
         # send message with mode: 0
         self.send_msg({
@@ -125,7 +125,7 @@ type_output = "output"
                 }
             })
         data = self.receive_msg()
-        self.assertEqual(data['Fields']['mode'], 0)
+        self.assertEqual(data['Fields']['mode'], 0, 'mode should be set to 0 with the current message which is a mode metric set to 0')
 
         # send first message from tracker01_roll_angle
         self.send_msg({
@@ -138,7 +138,7 @@ type_output = "output"
                 }
             })
         data = self.receive_msg()
-        self.assertEqual(data['Fields']['mode'], 0)
+        self.assertEqual(data['Fields']['mode'], 0, 'mode should be set to 0 when a previous message with mode 0 has been sent before')
 
         # send first message from tracker02_roll_angle
         # we should don't have any impact by the change mode of tracker 01
@@ -153,7 +153,7 @@ type_output = "output"
                 }
             })
         data = self.receive_msg()
-        self.assertFalse('mode' in data['Fields'])
+        self.assertFalse('mode' in data['Fields'], 'mode field should not be present since no previous message has been sent with a mode name')
 
         # send message with mode: 2
         self.send_msg({
@@ -166,7 +166,7 @@ type_output = "output"
                 }
             })
         data = self.receive_msg()
-        self.assertEqual(data['Fields']['mode'], 2)
+        self.assertEqual(data['Fields']['mode'], 2, 'mode should be set to 2 with the current message which is a mode metric set to 2')
 
         # send first message from tracker01_roll_angle
         # and test if other fields are untouched
@@ -180,9 +180,9 @@ type_output = "output"
                 }
             })
         data = self.receive_msg()
-        self.assertEqual(data['Fields']['mode'], 2)
-        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_roll_angle')
-        self.assertEqual(data['Fields']['value'], 15)
+        self.assertEqual(data['Fields']['mode'], 2, 'mode should be set to 2 when a previous message with mode 2 has been sent before')
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_roll_angle', 'name field should be keep the same value: "trserver_tracker01_roll_angle"')
+        self.assertEqual(data['Fields']['value'], 15, 'value field should be keep the same value: 15')
 
 
 class TestRegexDispatchMetric(HekaTestCase):
@@ -212,9 +212,9 @@ allMetric_type_output = "output.all"
                 }
             })
         data = self.receive_msg()
-        self.assertEqual(data['Fields']['name'], 'wind_test')
-        self.assertEqual(data['Fields']['value'], 10)
-        self.assertEqual(data['Type'], 'heka.sandbox.output.wind')
+        self.assertEqual(data['Fields']['name'], 'wind_test', 'name field should be keep the same value: "wind_test"')
+        self.assertEqual(data['Fields']['value'], 10, 'value field should be keep the same value: 10')
+        self.assertEqual(data['Type'], 'heka.sandbox.output.wind', 'Type field should be: "heka.sandbox.output.wind"')
 
         self.send_msg({
             'Timestamp': 10,
@@ -226,7 +226,7 @@ allMetric_type_output = "output.all"
                 }
             })
         data = self.receive_msg()
-        self.assertEqual(data['Type'], 'heka.sandbox.output.all')
+        self.assertEqual(data['Type'], 'heka.sandbox.output.all', 'Type field should be: "heka.sandbox.output.output"')
 
         self.send_msg({
             'Timestamp': 10,
@@ -238,7 +238,7 @@ allMetric_type_output = "output.all"
                 }
             })
         data = self.receive_msg()
-        self.assertEqual(data['Type'], 'heka.sandbox.output.all')
+        self.assertEqual(data['Type'], 'heka.sandbox.output.all', 'Type field should be: "heka.sandbox.output.output"')
 
 
 if __name__ == '__main__':
