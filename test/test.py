@@ -542,5 +542,51 @@ type_output = "output"
         self.assertEqual(data['Fields']['value'], 2.75, 'value field should be with "avg" aggregation: 2.75')
 
 
+class TestGatherLastMetric(HekaTestCase):
+
+    sandbox = '../filters/gather_last_metrics.lua'
+    sandboxes = {'TestFilter': """
+[TestFilter]
+type = "SandboxFilter"
+message_matcher = "Type == 'test'"
+ticker_interval = 2
+[TestFilter.config]
+type_output = "output"
+"""}
+
+    def test_sandbox(self):
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test_1',
+                'value': 10
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test_2',
+                'value': 12
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test_3',
+                'value': 7
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Fields']['name_test_1'], 10, 'name_test_1 field should be set to: 10')
+        self.assertEqual(data['Fields']['name_test_2'], 12, 'name_test_2 field should be set to: 12')
+        self.assertEqual(data['Fields']['name_test_3'], 7, 'name_test_3 field should be set to: 7')
+
+
 if __name__ == '__main__':
     unittest.main()
