@@ -262,6 +262,42 @@ ticker_interval = 3
 [TestMinFilter.config]
 aggregation = "min"
 type_output = "output"
+    """, 'TestCountFilter': """
+[TestCountFilter]
+type = "SandboxFilter"
+filename = "../filters/aggregate_metric.lua"
+message_matcher = "Type == 'test.count'"
+ticker_interval = 3
+[TestCountFilter.config]
+aggregation = "count"
+type_output = "output"
+    """, 'TestLastFilter': """
+[TestLastFilter]
+type = "SandboxFilter"
+filename = "../filters/aggregate_metric.lua"
+message_matcher = "Type == 'test.last'"
+ticker_interval = 3
+[TestLastFilter.config]
+aggregation = "last"
+type_output = "output"
+    """, 'TestSumFilter': """
+[TestSumFilter]
+type = "SandboxFilter"
+filename = "../filters/aggregate_metric.lua"
+message_matcher = "Type == 'test.sum'"
+ticker_interval = 3
+[TestSumFilter.config]
+aggregation = "sum"
+type_output = "output"
+    """, 'TestAvgFilter': """
+[TestAvgFilter]
+type = "SandboxFilter"
+filename = "../filters/aggregate_metric.lua"
+message_matcher = "Type == 'test.avg'"
+ticker_interval = 3
+[TestAvgFilter.config]
+aggregation = "avg"
+type_output = "output"
 """}
 
     def test_sandbox_max(self):
@@ -339,11 +375,171 @@ type_output = "output"
             'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test',
-                'value': 0
+                'value': 3
                 }
             })
         data = self.receive_msg()
-        self.assertEqual(data['Fields']['value'], 0, 'value field should be with "min" aggregation: 0')
+        self.assertEqual(data['Fields']['value'], 1, 'value field should be with "min" aggregation: 1')
+
+    def test_sandbox_count(self):
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.count',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 1
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.count',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 2
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.count',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 5
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.count',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 3
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Fields']['value'], 4, 'value field should be with "count" aggregation: 4')
+
+    def test_sandbox_last(self):
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.last',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 1
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.last',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 2
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.last',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 5
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.last',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 3
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Fields']['value'], 3, 'value field should be with "last" aggregation: 3')
+
+    def test_sandbox_sum(self):
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.sum',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 1
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.sum',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 2
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.sum',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 5
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.sum',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 3
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Fields']['value'], 11, 'value field should be with "sum" aggregation: 11')
+
+    def test_sandbox_avg(self):
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.avg',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 1
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.avg',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 2
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.avg',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 5
+                }
+            })
+        self.send_msg({
+            'Timestamp': 10,
+            'Type': 'test.avg',
+            'Payload': 'payload_test',
+            'Fields': {
+                'name': 'name_test',
+                'value': 3
+                }
+            })
+        data = self.receive_msg()
+        self.assertEqual(data['Fields']['value'], 2.75, 'value field should be with "avg" aggregation: 2.75')
 
 
 if __name__ == '__main__':
