@@ -30,7 +30,7 @@ ticker_interval = 20
 [InfluxOutput]
 type = "HttpOutput"
 message_matcher = "Type == 'heka.sandbox.influx'"
-address = "http://localhost:8086/db/metrics/series"
+address = "http://localhost:8086/db/metrics/series?time_precision=u"
 username = "admin"
 password = "admin_password"
 encoder = "PayloadEncoder"

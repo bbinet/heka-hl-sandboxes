@@ -81,7 +81,6 @@ __filters/format_metric_name.lua:__ This sandbox will be concatenate field with 
 __filters/gather_metrics.lua:__ This sandbox will be group metric and encode it before sending to influxdb
 
 * ticker_interval(int): Frequency (in seconds) that a timer event will be sent to the filter.
-* emit_timestamp_in_sec(boolean): convert timestamp in second instead of nanosecond
 * type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
 
 __filters/gather_last_metrics.lua:__ This sandbox will be group different metric in the same message
