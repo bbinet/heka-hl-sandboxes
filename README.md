@@ -240,6 +240,7 @@ To unload a filter, run the next command
 
 Debug
 -----
+
 Debug mode provide us to see data from payload on the standard output
 To run debug mode, do the following command
 
@@ -250,3 +251,11 @@ And edit debug.toml as following
     [LogOutput]
     message_matcher = "Type == 'next_sandbox'"
     encoder = "RstEncoder"
+
+Test
+----
+
+To test heka sandboxes run the following command
+
+    $ cd $HEKA_PLUGINS_BASE_DIR/test
+    $ python test.py
