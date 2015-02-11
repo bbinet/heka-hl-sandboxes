@@ -643,5 +643,41 @@ type_output = "output"
         self.assertEqual(data['Fields']['name'], 'uuid_test-name_test-10', 'name field should be set to: uuid_test-name_test-10')
 
 
+class TestLogData(HekaTestCase):
+
+    sandboxes = {
+        'TestDecodeLog': {
+            'file': '../filters/decode_metric.lua',
+            'toml': """
+[TestDecodeLog]
+type = "SandboxFilter"
+message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'metric' && Fields[decoder_version] == 0"
+[TestDecodeLog.config]
+type_output = "encode.log"
+"""},
+        'TestEncodeLog': {
+            'file': '../filters/encode_metric.lua',
+            'toml': """
+[TestEncodeLog]
+type = "SandboxFilter"
+message_matcher = "Type == 'heka.sandbox.encode.log'"
+    [TestEncodeLog.config]
+    type_output = "log.output"
+"""}}
+
+    def send_msg(self, msg):
+        self.heka_output.sendto(msg, (HEKA_IP, 5004))
+
+    def receive_msg(self):
+        data, _ = self.heka_input.recvfrom(5000)
+        return data
+
+    def test_sandbox(self):
+        msg = '[14:03:41 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422453821076360704 metric:0] trserver_tracker01_roll_angle 86.27218\n'
+        self.send_msg(msg)
+        data = self.receive_msg()
+        self.assertEqual(data, msg)
+
+
 if __name__ == '__main__':
     unittest.main()
