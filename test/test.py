@@ -691,13 +691,13 @@ message_matcher = "Type == 'heka.sandbox.encode.log.event'"
         return data
 
     def test_sandbox_metric(self):
-        msg = '[14:03:41 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422453821076360704 metric:0] trserver_tracker01_roll_angle 86.27218/newline'
+        msg = '[14:03:41 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422453821076360704 metric:0] trserver_tracker01_roll_angle 86.27218/newline\n'
         self.send_msg(msg)
         data = self.receive_msg()
         self.assertEqual(data, msg)
 
     def test_sandbox_event(self):
-        msg = '[14:03:41 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422453821076360704 event:0] "toto"/newline'
+        msg = '[14:03:41 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422453821076360704 event:0] "toto"/newline\n'
         self.send_msg(msg)
         data = self.receive_msg()
         self.assertEqual(data, msg)
