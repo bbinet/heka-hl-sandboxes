@@ -17,7 +17,7 @@ function process_message()
         end
     end
 
-    inject_payload('txt', 'log_parse', '[' .. table.concat(data, " ") .. '] ' .. read_message('Payload') .. '\n')
+    inject_payload('txt', 'log_parse', '[' .. table.concat(data, " ") .. '] ' .. read_message('Payload') .. '/newline')
 
     return 0
 end

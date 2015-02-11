@@ -19,7 +19,7 @@ function process_message()
 
     inject_message({
 	Type = type_output,
-	Payload = '"' .. string.format("%q", read_message('Fields[msg]')) .. '"',
+	Payload = string.format("%q", read_message('Fields[msg]')),
 	Timestamp = read_message('Timestamp'),
 	Fields = fields
     })

@@ -646,22 +646,40 @@ type_output = "output"
 class TestLogData(HekaTestCase):
 
     sandboxes = {
-        'TestDecodeLog': {
+        'TestDecodeLogMetric': {
             'file': '../filters/decode_metric.lua',
             'toml': """
-[TestDecodeLog]
+[TestDecodeLogMetric]
 type = "SandboxFilter"
 message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'metric' && Fields[decoder_version] == 0"
-[TestDecodeLog.config]
-type_output = "encode.log"
+[TestDecodeLogMetric.config]
+type_output = "encode.log.metric"
 """},
-        'TestEncodeLog': {
+        'TestEncodeLogMetric': {
             'file': '../filters/encode_metric.lua',
             'toml': """
-[TestEncodeLog]
+[TestEncodeLogMetric]
 type = "SandboxFilter"
-message_matcher = "Type == 'heka.sandbox.encode.log'"
-    [TestEncodeLog.config]
+message_matcher = "Type == 'heka.sandbox.encode.log.metric'"
+    [TestEncodeLogMetric.config]
+    type_output = "log.output"
+"""},
+        'TestDecodeLogEvent': {
+            'file': '../filters/decode_event.lua',
+            'toml': """
+[TestDecodeLogEvent]
+type = "SandboxFilter"
+message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'event' && Fields[decoder_version] == 0"
+[TestDecodeLogEvent.config]
+type_output = "encode.log.event"
+"""},
+        'TestEncodeLogEvent': {
+            'file': '../filters/encode_event.lua',
+            'toml': """
+[TestEncodeLogEvent]
+type = "SandboxFilter"
+message_matcher = "Type == 'heka.sandbox.encode.log.event'"
+    [TestEncodeLogEvent.config]
     type_output = "log.output"
 """}}
 
@@ -672,8 +690,14 @@ message_matcher = "Type == 'heka.sandbox.encode.log'"
         data, _ = self.heka_input.recvfrom(5000)
         return data
 
-    def test_sandbox(self):
-        msg = '[14:03:41 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422453821076360704 metric:0] trserver_tracker01_roll_angle 86.27218\n'
+    def test_sandbox_metric(self):
+        msg = '[14:03:41 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422453821076360704 metric:0] trserver_tracker01_roll_angle 86.27218/newline'
+        self.send_msg(msg)
+        data = self.receive_msg()
+        self.assertEqual(data, msg)
+
+    def test_sandbox_event(self):
+        msg = '[14:03:41 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422453821076360704 event:0] "toto"/newline'
         self.send_msg(msg)
         data = self.receive_msg()
         self.assertEqual(data, msg)

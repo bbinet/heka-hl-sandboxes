@@ -41,7 +41,7 @@ filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/decode_header.lua"
 type = "UdpInput"
 address = ":5004"
 parser_type = "regexp"
-delimiter = "\n"
+delimiter = "/newline"
 decoder = "TestLogDecoder"
 
 [TestLogEncoder]
