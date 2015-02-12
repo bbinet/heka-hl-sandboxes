@@ -17,9 +17,10 @@ function process_message()
 	end
     end
 
+    local message = string.gsub(read_message('Fields[msg]'), '\n', '/rc/')
     inject_message({
 	Type = type_output,
-	Payload = string.format("%q", read_message('Fields[msg]')),
+	Payload = string.format("%q", message),
 	Timestamp = read_message('Timestamp'),
 	Fields = fields
     })

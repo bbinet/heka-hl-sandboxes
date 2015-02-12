@@ -4,8 +4,9 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 
 function process_message()
     local payload = read_message('Payload')
+    local message = string.match(string.gsub(payload, '/rc/', '\n'), '^"(.*)"$')
     local fields = {
-	msg = string.match(string.gsub(payload, '\\', ''), '^"(.*)"$')
+	msg = string.gsub(message, '\\', '')
     }
 
     if fields.msg == nil then --TODO: print error message
