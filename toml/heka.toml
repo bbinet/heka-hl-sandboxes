@@ -26,6 +26,10 @@ parser_type = "regexp"
 delimiter = "\n"
 decoder = "TrServerDecoder"
 
+[TrwebclientDecoder]
+type = "SandboxDecoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/trwebclient_decode_event.lua"
 [TrwebclientInput]
 type = "HttpListenInput"
 address = "localhost:5000"
+decoder = "TrwebclientDecoder"
