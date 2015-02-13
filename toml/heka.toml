@@ -1,5 +1,5 @@
 [hekad]
-max_message_loops = 5
+max_message_loops = 6
 max_timer_inject = 100
 
 [PlatformDevs]

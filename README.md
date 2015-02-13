@@ -76,7 +76,11 @@ __filters/format_metric_name.lua:__ This sandbox will be concatenate field with 
 
 * fields(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments must correspond to a field name. The order of these arguments is important!
 * separator(string): the string which will separate fields value
-* emit_timestamp_in_sec(boolean): convert timestamp in second instead of nanosecond
+* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
+
+__filters/gather_metrics.lua:__ This sandbox will be group metric and encode it before sending to influxdb
+
+* ticker_interval(int): Frequency (in seconds) that a timer event will be sent to the filter.
 * type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
 
 __filters/gather_last_metrics.lua:__ This sandbox will be group different metric in the same message
@@ -102,6 +106,8 @@ __filters/encode_metric.lua:__ This sandbox will dump metric message into the pa
 __encoders/encode_header.lua:__ This sandbox will dump metric, alert or event data into the payload
 
 __encoders/metrics_encode_json.lua:__ This sandbox dump data from fields to a JSON object
+
+__encoders/encode_influxdb.lua:__ This sandbox send data from payload to influxdb server
 
 Config
 ------
