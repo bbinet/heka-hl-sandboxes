@@ -21,7 +21,11 @@ filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/trserver_decode_metrics.lua"
     type_output = "heka.statmetric"
 [TrServerInput]
 type = "UdpInput"
-address = "0.0.0.0:8125"
+address = "localhost:8125"
 parser_type = "regexp"
 delimiter = "\n"
 decoder = "TrServerDecoder"
+
+[TrwebclientInput]
+type = "HttpListenInput"
+address = "localhost:5000"

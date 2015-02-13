@@ -10,6 +10,7 @@ import shutil
 HEKA_IP = 'localhost'
 HEKA_INPUT_PORT = 5007
 HEKA_OUTPUT_PORT = 5005
+MAX_BYTES = 5000
 
 def setUpModule():
     global PROC
@@ -27,7 +28,7 @@ class HekaTestCase(unittest.TestCase):
         self.heka_output.sendto(json.dumps(msg)+'\n', (HEKA_IP, HEKA_OUTPUT_PORT))
 
     def receive_msg(self):
-        data, _ = self.heka_input.recvfrom(5000)
+        data, _ = self.heka_input.recvfrom(MAX_BYTES)
         return json.loads(data)
 
     @classmethod
@@ -687,7 +688,7 @@ message_matcher = "Type == 'heka.sandbox.encode.log.event'"
         self.heka_output.sendto(msg, (HEKA_IP, 5004))
 
     def receive_msg(self):
-        data, _ = self.heka_input.recvfrom(5000)
+        data, _ = self.heka_input.recvfrom(MAX_BYTES)
         return data
 
     def test_sandbox_metric(self):

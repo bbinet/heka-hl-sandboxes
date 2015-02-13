@@ -18,3 +18,4 @@
 [17:03:07 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422464587355414528 metric:0] trserver_sun_tilt 23.232218
 [17:03:07 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422464587355414528 metric:0] trserver_sun_roll 94.286638
 [17:03:07 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422464587355414528 metric:0] trserver_tracker01_tilt_angle 59.14791
+[15:25:46 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1423841146188858368 event:0] "test from \"trwebclient\" application:/rc/for log event message"

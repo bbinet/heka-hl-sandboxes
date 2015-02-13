@@ -1,31 +1,31 @@
 [SetUuidHostnameLogFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/add_static_fields.lua"
-message_matcher = "Type == 'heka.sandbox.addFields'"
+message_matcher = "Type == 'heka.sandbox.addFields' || Logger == 'TrwebclientInput'"
     [SetUuidHostnameLogFilter.config]
     fields = "uuid hostname"
     uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
     hostname = "hl-mc-1-dev"
-    type_output = "log.metric"
+    type_output = "log.message"
 
 [EncodeMetricFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/encode_metric.lua"
-message_matcher = "Type == 'heka.sandbox.log.metric'"
+message_matcher = "Type == 'heka.sandbox.log.message' && Fields[log] == NIL"
     [EncodeMetricFilter.config]
     type_output = "log.output"
 
 [EncodeAlertFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/encode_alert.lua"
-message_matcher = "Type == 'heka.sandbox.log.alert'"
+message_matcher = "Type == 'heka.sandbox.log.message' && Fields[log] == 'alert'"
     [EncodeAlertFilter.config]
     type_output = "log.output"
 
 [EncodeEventFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/encode_event.lua"
-message_matcher = "Type == 'heka.sandbox.log.event'"
+message_matcher = "Type == 'heka.sandbox.log.message' && Fields[log] == 'event'"
     [EncodeEventFilter.config]
     type_output = "log.output"
 
