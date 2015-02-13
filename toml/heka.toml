@@ -29,6 +29,8 @@ decoder = "TrServerDecoder"
 [TrwebclientDecoder]
 type = "SandboxDecoder"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/trwebclient_decode_event.lua"
+    [TrwebclientDecoder.config]
+    type_output = "trwebclient.log.event"
 [TrwebclientInput]
 type = "HttpListenInput"
 address = "localhost:5000"

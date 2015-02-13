@@ -1,7 +1,7 @@
 [SetUuidHostnameLogFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/add_static_fields.lua"
-message_matcher = "Type == 'heka.sandbox.addFields' || Logger == 'TrwebclientInput'"
+message_matcher = "Type == 'heka.sandbox.addFields' || Type == 'trwebclient.log.event'"
     [SetUuidHostnameLogFilter.config]
     fields = "uuid hostname"
     uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
