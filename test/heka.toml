@@ -3,15 +3,14 @@ type = "SandboxManagerFilter"
 working_directory = "%ENV[HEKA_PLUGINS_BASE_DIR]/test"
 message_signer = "PlatformTest"
 max_filters = 100
-[ProtobufDecoder]
+[acl_splitter_test]
+type = "HekaFramingSplitter"
+[acl_splitter_test.signer.PlatformTest_0]
+hmac_key = "Platform test"
 [TcpPlatformTest]
 type = "TcpInput"
-parser_type = "message.proto"
-decoder = "ProtobufDecoder"
 address = ":5006"
-    [TcpPlatformTest.signer.PlatformTest_0]
-    hmac_key = "Platform test"
-
+splitter = "acl_splitter_test"
 
 [TestDecoder]
 type = "SandboxDecoder"
@@ -19,8 +18,7 @@ filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/test/testDecoder.lua"
 [TestInput]
 type = "UdpInput"
 address = ":5005"
-parser_type = "regexp"
-delimiter = "\n"
+splitter = "TokenSplitter"
 decoder = "TestDecoder"
 
 [TestEncoder]
@@ -40,8 +38,7 @@ filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/decode_header.lua"
 [TestLogInput]
 type = "UdpInput"
 address = ":5004"
-parser_type = "regexp"
-delimiter = "\n"
+splitter = "TokenSplitter"
 decoder = "TestLogDecoder"
 
 [TestLogEncoder]
