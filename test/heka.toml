@@ -1,6 +1,6 @@
 [PlatformTest]
 type = "SandboxManagerFilter"
-working_directory = "%ENV[HEKA_PLUGINS_BASE_DIR]"
+working_directory = "%ENV[HEKA_PLUGINS_BASE_DIR]/test"
 message_signer = "PlatformTest"
 max_filters = 100
 [ProtobufDecoder]
@@ -16,7 +16,8 @@ address = ":5006"
 [TestDecoder]
 type = "SandboxDecoder"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/test/testDecoder.lua"
-[UdpInput]
+[TestInput]
+type = "UdpInput"
 address = ":5005"
 parser_type = "regexp"
 delimiter = "\n"
@@ -25,7 +26,29 @@ decoder = "TestDecoder"
 [TestEncoder]
 type = "SandboxEncoder"
 filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/test/testEncoder.lua"
-[UdpOutput]
-message_matcher = "Type == 'heka.sandbox.output'"
+[TestOutput]
+type = "UdpOutput"
+message_matcher = "Type == 'heka.sandbox.output' || Type == 'heka.sandbox.output.wind' || Type == 'heka.sandbox.output.all'"
 address = ":5007"
 encoder = "TestEncoder"
+
+[TestLogDecoder]
+type = "SandboxDecoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/decode_header.lua"
+    [TestLogDecoder.config]
+    type_output = "log.input"
+[TestLogInput]
+type = "UdpInput"
+address = ":5004"
+parser_type = "regexp"
+delimiter = "\n"
+decoder = "TestLogDecoder"
+
+[TestLogEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/encoders/encode_header.lua"
+[TestLogOutput]
+type = "UdpOutput"
+message_matcher = "Type == 'heka.sandbox.log.output'"
+address = ":5007"
+encoder = "TestLogEncoder"
