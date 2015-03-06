@@ -2,6 +2,7 @@ import unittest
 import socket
 import subprocess
 import os
+import sys
 import time
 import json
 import tempfile
@@ -14,7 +15,11 @@ MAX_BYTES = 5000
 
 def setUpModule():
     global PROC
-    PROC = subprocess.Popen(['hekad', '-config', 'heka.toml'], stderr=subprocess.PIPE)
+    if '-b' in sys.argv or '--buffer' in sys.argv:
+        PROC = subprocess.Popen(
+            ['hekad', '-config', 'heka.toml'], stdout=subprocess.PIPE)
+    else:
+        PROC = subprocess.Popen(['hekad', '-config', 'heka.toml'])
     time.sleep(1)
 
 def tearDownModule():
@@ -652,7 +657,7 @@ class TestLogData(HekaTestCase):
             'toml': """
 [TestDecodeLogMetric]
 type = "SandboxFilter"
-message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'metric' && Fields[decoder_version] == 0"
+message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'metric'"
 [TestDecodeLogMetric.config]
 type_output = "encode.log.metric"
 """},
@@ -670,7 +675,7 @@ message_matcher = "Type == 'heka.sandbox.encode.log.metric'"
             'toml': """
 [TestDecodeLogEvent]
 type = "SandboxFilter"
-message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'event' && Fields[decoder_version] == 0"
+message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'event'"
 [TestDecodeLogEvent.config]
 type_output = "encode.log.event"
 """},
@@ -698,7 +703,7 @@ message_matcher = "Type == 'heka.sandbox.encode.log.event'"
         self.assertEqual(data, msg)
 
     def test_sandbox_event(self):
-        msg = '[14:03:41 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422453821076360704 event:0] "message test \' characters /rc/ like that"\n'
+        msg = '[14:03:41 hl-mc-1-dev d539a1ab-1742-43c5-982e-02fab58283fa 1422453821076360704 event:0] 2 "test message"\n'
         self.send_msg(msg)
         data = self.receive_msg()
         self.assertEqual(data, msg)
