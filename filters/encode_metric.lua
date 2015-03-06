@@ -1,10 +1,10 @@
+local version = 0
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
-local metric_version = 0
 
 function process_message()
     local fields = {
 	encoder_type = "metric",
-	encoder_version = metric_version
+	encoder_version = version
     }
 
     while true do

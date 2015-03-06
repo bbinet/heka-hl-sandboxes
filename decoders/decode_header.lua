@@ -8,21 +8,20 @@ local regex = table.concat({
     "(%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x)",--uuid
     "(%d+)",               --epoch time
     "(%l+):(%d+)%]",       --log_type and log_version
-    "(.*)$"               --log
+    "(.*)\n$"              --log
 }, ' ')
 
 function process_message()
-    local payload = read_message('Payload')
-    local time, hostname, uuid, timestamp, typ, version, log = string.match(payload, regex)
-
-    if typ ~= "metric" and typ ~= "event" and typ ~= "alert" then
-        return 0 --TODO: print error message
+    local time, hostname, uuid, timestamp, typ, version, payload =
+        string.match(read_message('Payload'), regex)
+    if typ ~= "metric" and typ ~= "event" then
+        return -1, "unknown type: supported types are one of: [metric|event]"
     end
 
     inject_message({
         Type = type_output,
         Timestamp = timestamp,
-        Payload = log,
+        Payload = payload,
         Fields = {
             uuid = uuid,
             hostname = hostname,

@@ -4,14 +4,16 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 
 function process_message()
     local payload = read_message('Payload')
-    local message = string.match(string.gsub(payload, '/rc/', '\n'), '^"(.*)"$')
-    local fields = {
-	msg = string.gsub(message, '\\', '')
-    }
-
-    if fields.msg == nil then --TODO: print error message
-	return 0
+    local severity, msg = string.match(payload, '^(%d+) "(.*)"$')
+    if severity == nil then
+	return -1, "severity can't be nil"
     end
+    if msg == nil then
+	return -1, "msg can't be nil"
+    end
+    local fields = {
+	msg = msg
+    }
 
     while true do
 	typ, name, value = read_next_field()
@@ -25,6 +27,7 @@ function process_message()
 	Type = type_output,
 	Timestamp = read_message('Timestamp'),
 	Payload = payload,
+	Severity = severity,
 	Fields = fields
     })
     return 0
