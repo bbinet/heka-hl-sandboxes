@@ -1,4 +1,5 @@
 require "string"
+require "cjson"
 
 local version = 0
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
@@ -19,7 +20,7 @@ function process_message()
 
     inject_message({
 	Type = type_output,
-	Payload = read_message('Severity') .. ' "' .. read_message('Fields[msg]') .. '"',
+	Payload = read_message('Severity') .. ' ' .. cjson.encode(read_message('Fields[msg]')),
 	Timestamp = read_message('Timestamp'),
 	Fields = fields
     })

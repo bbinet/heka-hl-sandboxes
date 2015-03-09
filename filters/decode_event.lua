@@ -1,4 +1,5 @@
 require "string"
+require "cjson"
 
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
 
@@ -11,9 +12,7 @@ function process_message()
     if msg == nil then
 	return -1, "msg can't be nil"
     end
-    local fields = {
-	msg = msg
-    }
+    local fields = cjson.decode('{"msg":"' .. msg .. '"}')
 
     while true do
 	typ, name, value = read_next_field()
