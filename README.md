@@ -257,5 +257,6 @@ Test
 
 To test heka sandboxes run the following command
 
+    $ export HEKA_PLUGINS_BASE_DIR=path/to/heka-hl-sandboxes/
     $ cd $HEKA_PLUGINS_BASE_DIR/test
     $ python test.py
