@@ -1,3 +1,10 @@
+#[RstEncoder]
+#[FileOutput]
+#message_matcher = "TRUE"
+##message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'event'"
+#encoder = "RstEncoder"
+#path = "/tmp/heka.log"
+
 [PlatformTest]
 type = "SandboxManagerFilter"
 working_directory = "%ENV[HEKA_PLUGINS_BASE_DIR]/test"
