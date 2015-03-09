@@ -5,54 +5,57 @@
 #encoder = "RstEncoder"
 #path = "/tmp/heka.log"
 
-[PlatformTest]
+[SandboxMgr]
 type = "SandboxManagerFilter"
-working_directory = "%ENV[HEKA_PLUGINS_BASE_DIR]/test"
-message_signer = "PlatformTest"
+working_directory = "%ENV[TMP_DIR]"
+message_signer = "tests"
 max_filters = 100
-[acl_splitter_test]
+[AclSplitter]
 type = "HekaFramingSplitter"
-[acl_splitter_test.signer.PlatformTest_0]
-hmac_key = "Platform test"
-[TcpPlatformTest]
+[AclSplitter.signer.tests_0]
+hmac_key = "testing_key"
+[TcpSandboxMgr]
 type = "TcpInput"
-address = ":5006"
-splitter = "acl_splitter_test"
+address = ":6000"
+splitter = "AclSplitter"
 
-[TestDecoder]
+[JsonDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/test/testDecoder.lua"
-[TestInput]
+filename = "%ENV[HEKA_TESTS_DIR]/decode_json.lua"
+[UdpInput]
 type = "UdpInput"
-address = ":5005"
+address = ":%ENV[JSON_OUTPUT_PORT]"
 splitter = "TokenSplitter"
-decoder = "TestDecoder"
+decoder = "JsonDecoder"
 
-[TestEncoder]
+[JsonEncoder]
 type = "SandboxEncoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/test/testEncoder.lua"
-[TestOutput]
+filename = "%ENV[HEKA_TESTS_DIR]/encode_json.lua"
+[UdpOutput]
 type = "UdpOutput"
 message_matcher = "Type == 'heka.sandbox.output' || Type == 'heka.sandbox.output.wind' || Type == 'heka.sandbox.output.all'"
-address = ":5007"
-encoder = "TestEncoder"
+address = ":%ENV[JSON_INPUT_PORT]"
+encoder = "JsonEncoder"
 
-[TestLogDecoder]
+# Tests for encode/decode metrics and events to/from log files
+# We cannot load them dynamically because they are used by go udp input/output
+
+[HeaderDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/decode_header.lua"
-    [TestLogDecoder.config]
+filename = "%ENV[HEKA_HL_DIR]/decoders/decode_header.lua"
+    [HeaderDecoder.config]
     type_output = "log.input"
-[TestLogInput]
+[HeaderUdpInput]
 type = "UdpInput"
-address = ":5004"
+address = ":%ENV[LOG_OUTPUT_PORT]"
 splitter = "TokenSplitter"
-decoder = "TestLogDecoder"
+decoder = "HeaderDecoder"
 
-[TestLogEncoder]
+[HeaderEncoder]
 type = "SandboxEncoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/encoders/encode_header.lua"
-[TestLogOutput]
+filename = "%ENV[HEKA_HL_DIR]/encoders/encode_header.lua"
+[HeaderUdpOutput]
 type = "UdpOutput"
 message_matcher = "Type == 'heka.sandbox.log.output'"
-address = ":5007"
-encoder = "TestLogEncoder"
+address = ":%ENV[LOG_INPUT_PORT]"
+encoder = "HeaderEncoder"

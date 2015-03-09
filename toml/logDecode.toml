@@ -1,32 +1,32 @@
 [DecodeLogMetricFilter]
 type = "SandboxFilter"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/decode_metric.lua"
+filename = "%ENV[HEKA_HL_DIR]/filters/decode_metric.lua"
 message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'metric' && Fields[decoder_version] == 0"
     [DecodeLogMetricFilter.config]
     type_output = "dispatch.log"
 
 [DecodeLogAlertFilter]
 type = "SandboxFilter"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/decode_alert.lua"
+filename = "%ENV[HEKA_HL_DIR]/filters/decode_alert.lua"
 message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'alert' && Fields[decoder_version] == 0"
     [DecodeLogAlertFilter.config]
     type_output = "dispatch.log"
 
 [DecodeLogEventFilter]
 type = "SandboxFilter"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/decode_event.lua"
+filename = "%ENV[HEKA_HL_DIR]/filters/decode_event.lua"
 message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'event' && Fields[decoder_version] == 0"
     [DecodeLogEventFilter.config]
     type_output = "dispatch.log"
 
 [LogFileDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/decode_header.lua"
+filename = "%ENV[HEKA_HL_DIR]/decoders/decode_header.lua"
     [LogFileDecoder.config]
     type_output = "log.input"
 [LogFileInput]
 type = "LogstreamerInput"
-log_directory = "%ENV[HEKA_PLUGINS_BASE_DIR]/log"
+log_directory = "%ENV[HEKA_HL_DIR]/log"
 file_match = "file.log"
 parser_type = "regexp"
 delimiter = "\n"

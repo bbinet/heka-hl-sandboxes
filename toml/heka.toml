@@ -16,7 +16,7 @@ address = ":5565"
 
 [TrServerDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/trserver_decode_metrics.lua"
+filename = "%ENV[HEKA_HL_DIR]/decoders/trserver_decode_metrics.lua"
     [TrServerDecoder.config]
     type_output = "heka.statmetric"
 [TrServerInput]
@@ -28,7 +28,7 @@ decoder = "TrServerDecoder"
 
 [TrwebclientDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/trwebclient_decode_event.lua"
+filename = "%ENV[HEKA_HL_DIR]/decoders/trwebclient_decode_event.lua"
     [TrwebclientDecoder.config]
     type_output = "trwebclient.log.event"
 [TrwebclientInput]

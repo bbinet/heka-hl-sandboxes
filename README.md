@@ -18,8 +18,8 @@ Run
 
 To run heka, do the following step
 
-    $ export HEKA_PLUGINS_BASE_DIR=path/to/heka-hl-sandboxes/
-    $ sudo hekad -config $HEKA_PLUGINS_BASE_DIR/toml
+    $ export HEKA_HL_DIR=path/to/heka-hl-sandboxes/
+    $ sudo hekad -config $HEKA_HL_DIR/toml
 
 API
 ---
@@ -111,7 +111,7 @@ __encoders/encode_influxdb.lua:__ This sandbox send data from payload to influxd
 
 Config
 ------
-To change the heka configuration, edit `$HEKA_PLUGINS_BASE_DIR/toml/heka.toml` file
+To change the heka configuration, edit `$HEKA_HL_DIR/toml/heka.toml` file
 
 Edit the maximum number of times a message can be re-injected into the system. The default is 4.
 
@@ -127,26 +127,26 @@ Decoder which recept metrics from trserver and parse it
 
     [TrServerDecoder]
     type = "SandboxDecoder"
-    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/decoders/trserver_decode_metrics.lua"
+    filename = "%ENV[HEKA_HL_DIR]/decoders/trserver_decode_metrics.lua"
         [TrServerDecoder.config]
         type_output = "heka.statmetric"
 
-To change the trwebclient configuration, edit `$HEKA_PLUGINS_BASE_DIR/toml/trwebclient-stream.toml` file
+To change the trwebclient configuration, edit `$HEKA_HL_DIR/toml/trwebclient-stream.toml` file
 
 Encoder which encode data in json format
 
     [ServerEncoder]
     type = "SandboxEncoder"
-    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/encoders/metrics_encode_json.lua"
+    filename = "%ENV[HEKA_HL_DIR]/encoders/metrics_encode_json.lua"
 
 
-To change the heka filter configuration in order to send data to influxDB, edit `$HEKA_PLUGINS_BASE_DIR/toml/influx.toml`
+To change the heka filter configuration in order to send data to influxDB, edit `$HEKA_HL_DIR/toml/influx.toml`
 
 To group metrics in a same message add this sandbox as following
 
     [GroupMetricsFilter]
     type = "SandboxFilter"
-    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/gather_last_metrics.lua"
+    filename = "%ENV[HEKA_HL_DIR]/filters/gather_last_metrics.lua"
     message_matcher = "Type == 'heka.sandbox.group'"
     ticker_interval = 1
         [GroupMetricsFilter.config]
@@ -156,7 +156,7 @@ To add fields in message add this sandbox as following
 
     [SetUuidHostnameFilter]
     type = "SandboxFilter"
-    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/add_static_fields.lua"
+    filename = "%ENV[HEKA_HL_DIR]/filters/add_static_fields.lua"
     message_matcher = "Type == 'previous_sandbox'"
         [SetUuidHostnameFilter.config]
         fields = "uuid hostname"
@@ -168,7 +168,7 @@ To dispatch statmetrics depending on the regex expression
 
     [MainDispatchFilter]
     type = "SandboxFilter"
-    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/regex_dispatch_metric.lua"
+    filename = "%ENV[HEKA_HL_DIR]/filters/regex_dispatch_metric.lua"
     message_matcher = "Type == 'heka.statmetric'"
         [MainDispatchFilter.config]
         matchers = "windMetric allMetrics"
@@ -181,7 +181,7 @@ To do last aggregation (every minute)
 
     [60sLastFilter]
     type = "SandboxFilter"
-    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/aggregate_metric.lua"
+    filename = "%ENV[HEKA_HL_DIR]/filters/aggregate_metric.lua"
     message_matcher = "Type == 'previous_sandbox'"
     ticker_interval = 60
         [60sLastFilter.config]
@@ -192,7 +192,7 @@ To do gust aggregation (max value of the 3s avg values in 1 minute)
 
     [Gust3sAvgFilter]
     type = "SandboxFilter"
-    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/aggregate_metric.lua"
+    filename = "%ENV[HEKA_HL_DIR]/filters/aggregate_metric.lua"
     message_matcher = "Type == 'heka.sandbox.3s.avg'"
     ticker_interval = 3
         [Gust3sAvgFilter.config]
@@ -201,7 +201,7 @@ To do gust aggregation (max value of the 3s avg values in 1 minute)
 
     [Gust60sMaxFilter]
     type = "SandboxFilter"
-    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/aggregate_metric.lua"
+    filename = "%ENV[HEKA_HL_DIR]/filters/aggregate_metric.lua"
     message_matcher = "Type == 'heka.sandbox.60s.max'"
     ticker_interval = 60
         [Gust60sMaxFilter.config]
@@ -212,7 +212,7 @@ Filter which prepare metrics to be send to influxdb with influx encoder
 
     [Statmetric-influx-preEncoder]
     type = "SandboxFilter"
-    filename = "%ENV[HEKA_PLUGINS_BASE_DIR]/filters/format_metric_name.lua"
+    filename = "%ENV[HEKA_HL_DIR]/filters/format_metric_name.lua"
     message_matcher = "Type == 'heka.sandbox.encode.influx'"
         [Statmetric-influx-preEncoder.config]
         fields = "uuid hostname name"
@@ -229,14 +229,14 @@ Load Filter
 
 To load a filter, run the following command
 
-    heka-sbmgr -action=load -config=$HEKA_PLUGINS_BASE_DIR/PlatformDevs.toml -script=sandbox_file.lua -scriptconfig=configDev.toml
+    heka-sbmgr -action=load -config=$HEKA_HL_DIR/PlatformDevs.toml -script=sandbox_file.lua -scriptconfig=configDev.toml
 
 Unload Filter
 -------------
 
 To unload a filter, run the next command
 
-    heka-sbmgr -action=unload -config=$HEKA_PLUGINS_BASE_DIR/heka-sandboxes/PlatformDevs.toml -filtername=[FilterName]
+    heka-sbmgr -action=unload -config=$HEKA_HL_DIR/heka-sandboxes/PlatformDevs.toml -filtername=[FilterName]
 
 Debug
 -----
@@ -244,7 +244,7 @@ Debug
 Debug mode provide us to see data from payload on the standard output
 To run debug mode, do the following command
 
-    $ mv $HEKA_PLUGINS_BASE_DIR/toml/debug.toml.bak $HEKA_PLUGINS_BASE_DIR/heka-hl-sandbowes/toml/debug.toml
+    $ mv $HEKA_HL_DIR/toml/debug.toml.bak $HEKA_HL_DIR/heka-hl-sandbowes/toml/debug.toml
 
 And edit debug.toml as following
     [RstEncoder]
@@ -257,8 +257,8 @@ Test
 
 To test heka sandboxes run the following command
 
-    $ export HEKA_PLUGINS_BASE_DIR=path/to/heka-hl-sandboxes/
-    $ cd $HEKA_PLUGINS_BASE_DIR/test
+    $ export HEKA_HL_DIR=path/to/heka-hl-sandboxes/
+    $ cd $HEKA_HL_DIR/test
     $ python test.py
 
 Or to run a single test:

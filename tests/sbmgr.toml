@@ -1,0 +1,6 @@
+ip_address   = ":6000"
+[signer]
+    name         = "tests"
+    hmac_hash    = "md5"
+    hmac_key     = "testing_key"
+    version      = 0
