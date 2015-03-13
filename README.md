@@ -242,11 +242,12 @@ Debug
 -----
 
 Debug mode provide us to see data from payload on the standard output
-To run debug mode, do the following command
+To run debug mode, do the following command:
 
     $ mv $HEKA_HL_DIR/toml/debug.toml.bak $HEKA_HL_DIR/heka-hl-sandbowes/toml/debug.toml
 
-And edit debug.toml as following
+And edit debug.toml as following:
+
     [RstEncoder]
     [LogOutput]
     message_matcher = "Type == 'next_sandbox'"
@@ -255,11 +256,11 @@ And edit debug.toml as following
 Test
 ----
 
-To test heka sandboxes run the following command
+To test heka sandboxes run the following command:
 
     $ export HEKA_HL_DIR=path/to/heka-hl-sandboxes/
-    $ cd $HEKA_HL_DIR/test
-    $ python test.py
+    $ cd $HEKA_HL_DIR
+    $ python -m unittest -b test
 
 Or to run a single test:
 
