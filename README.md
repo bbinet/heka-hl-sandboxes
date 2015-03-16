@@ -1,262 +1,21 @@
-HEKA Data collection and processing
-===================================
+# HeliosLite Heka lua sandboxes
 
-Install
-------------
+![Data flow visualization](https://bitbucket.org/helioslite/heka-hl-sandboxes/raw/master/heka_detailed.png)
 
-Get and and install heka with this following link https://github.com/mozilla-services/heka/releases
+## Install Heka
 
-To get heka configuration do following step
+You can download the latest Heka release from:
 
-    $ git clone git@bitbucket.org:helioslite/heka-hl-sandboxes.git
+* https://github.com/mozilla-services/heka/releases [amd64, i386]
+* https://github.com/bbinet/heka/releases [armhf]
 
-Actual configuration from heka-hl-sandboxes
-![alt text](https://bitbucket.org/helioslite/heka-hl-sandboxes/raw/master/heka_detailed.png)
+Then install it with:
 
-Run
----
+    $ sudo dpkg -i path/to/heka.deb
 
-To run heka, do the following step
+## Test HL sandboxes
 
-    $ export HEKA_HL_DIR=path/to/heka-hl-sandboxes/
-    $ sudo hekad -config $HEKA_HL_DIR/toml
-
-API
----
-All the sandboxes filters describe below are these main common parameters
-
-* type(string): sandbox type
-* filename(string): path to the sandbox from the racine
-* message_matcher(string): message matching by the sandbox (https://hekad.readthedocs.org/en/v0.8.2/message_matcher.html)
-
-Configuration for each sandbox
-
-__decoder/trserver_decode_metrics.lua:__ This sandbox catch metrics from trserver and parse it into the fields
-
-* type_output(string): __name__ for the next sandbox.
-
-__decoder/decode_header.lua:__ This sandbox will parse message from log file and send to the right decoder filter (metric, event, alert)
-
-* type_output(string): __name__ for the next sandbox.
-
-__filters/decode_alert.lua:__ This sandbox will parse alert log into the right field
-
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/decode_event.lua:__ This sandbox will parse event log into the right field
-
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/decode_metric.lua:__ This sandbox will parse metric log into the right field
-
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/regex_metric_dispatch.lua:__ This sandbox will send dispatch each metric in function of this metric name to the sandbox corresponding
-
-* matchers(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments will prefix the following parameters. The order of these arguments is important!
-* arg1_regex(string): regular expression to catch metric (http://lua-users.org/wiki/PatternsTutorial)
-* arg1_type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-* arg2_regex(string): regular expression to catch metric (http://lua-users.org/wiki/PatternsTutorial)
-* arg2_type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/aggregate_metric.lua:__ This sandbox will aggregate the value in function of the aggregation type
-
-* ticker_interval(int): Frequency (in seconds) that a timer event will be sent to the filter.
-* aggregation(string): value allow are: "avg", "last", "min", "max", "sum". This value can be multiple with a whitespace as delimiter.
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/add_static_fields.lua:__ This sandbox will be add new Fields to the message
-
-* fields(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments will be the name of the field added.
-* arg1(string): value of the field arg1
-* arg2(string): value of the field arg2
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/format_metric_name.lua:__ This sandbox will be concatenate field with the separator defined
-
-* fields(string "arg1 arg2"): take arguments with as separator a whitespace. Each arguments must correspond to a field name. The order of these arguments is important!
-* separator(string): the string which will separate fields value
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/gather_metrics.lua:__ This sandbox will be group metric and encode it before sending to influxdb
-
-* ticker_interval(int): Frequency (in seconds) that a timer event will be sent to the filter.
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/gather_last_metrics.lua:__ This sandbox will be group different metric in the same message
-
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/add_mode_field.lua:__ This sandbox will add a field with the mode of the tracker
-
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/encode_alert.lua:__ This sandbox will dump alert message into the payload
-
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/encode_event.lua:__ This sandbox will dump event message into the payload
-
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__filters/encode_metric.lua:__ This sandbox will dump metric message into the payload
-
-* type_output(string): __suffix__ name for the next sandbox. The base name is heka.sandbox.
-
-__encoders/encode_header.lua:__ This sandbox will dump metric, alert or event data into the payload
-
-__encoders/metrics_encode_json.lua:__ This sandbox dump data from fields to a JSON object
-
-__encoders/encode_influxdb.lua:__ This sandbox send data from payload to influxdb server
-
-Config
-------
-To change the heka configuration, edit `$HEKA_HL_DIR/toml/heka.toml` file
-
-Edit the maximum number of times a message can be re-injected into the system. The default is 4.
-
-    [hekad]
-    max_message_loops = 5
-
-Edit the maximum number of messages that a sandbox filter’s TimerEvent function can inject in a single call; the default is 10.
-
-    [hekad]
-    max_timer_inject = 100
-
-Decoder which recept metrics from trserver and parse it
-
-    [TrServerDecoder]
-    type = "SandboxDecoder"
-    filename = "%ENV[HEKA_HL_DIR]/decoders/trserver_decode_metrics.lua"
-        [TrServerDecoder.config]
-        type_output = "heka.statmetric"
-
-To change the trwebclient configuration, edit `$HEKA_HL_DIR/toml/trwebclient-stream.toml` file
-
-Encoder which encode data in json format
-
-    [ServerEncoder]
-    type = "SandboxEncoder"
-    filename = "%ENV[HEKA_HL_DIR]/encoders/metrics_encode_json.lua"
-
-
-To change the heka filter configuration in order to send data to influxDB, edit `$HEKA_HL_DIR/toml/influx.toml`
-
-To group metrics in a same message add this sandbox as following
-
-    [GroupMetricsFilter]
-    type = "SandboxFilter"
-    filename = "%ENV[HEKA_HL_DIR]/filters/gather_last_metrics.lua"
-    message_matcher = "Type == 'heka.sandbox.group'"
-    ticker_interval = 1
-        [GroupMetricsFilter.config]
-        type_output = "trwebclient"
-
-To add fields in message add this sandbox as following
-
-    [SetUuidHostnameFilter]
-    type = "SandboxFilter"
-    filename = "%ENV[HEKA_HL_DIR]/filters/add_static_fields.lua"
-    message_matcher = "Type == 'previous_sandbox'"
-        [SetUuidHostnameFilter.config]
-        fields = "uuid hostname"
-        uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
-        hostname = "hl-mc-1-dev"
-        type_output = "next_sandbox"
-
-To dispatch statmetrics depending on the regex expression
-
-    [MainDispatchFilter]
-    type = "SandboxFilter"
-    filename = "%ENV[HEKA_HL_DIR]/filters/regex_dispatch_metric.lua"
-    message_matcher = "Type == 'heka.statmetric'"
-        [MainDispatchFilter.config]
-        matchers = "windMetric allMetrics"
-        allMetrics_regex = ".*"
-        allMetrics_type_output = "5s.avg"
-        windMetric_regex = ".*wind"
-        windMetric_type_output = "3s.avg"
-
-To do last aggregation (every minute)
-
-    [60sLastFilter]
-    type = "SandboxFilter"
-    filename = "%ENV[HEKA_HL_DIR]/filters/aggregate_metric.lua"
-    message_matcher = "Type == 'previous_sandbox'"
-    ticker_interval = 60
-        [60sLastFilter.config]
-        aggregation = "last"
-        type_output = "next_sandbox"
-
-To do gust aggregation (max value of the 3s avg values in 1 minute)
-
-    [Gust3sAvgFilter]
-    type = "SandboxFilter"
-    filename = "%ENV[HEKA_HL_DIR]/filters/aggregate_metric.lua"
-    message_matcher = "Type == 'heka.sandbox.3s.avg'"
-    ticker_interval = 3
-        [Gust3sAvgFilter.config]
-        aggregation = "avg"
-        type_output = "60s.max"
-
-    [Gust60sMaxFilter]
-    type = "SandboxFilter"
-    filename = "%ENV[HEKA_HL_DIR]/filters/aggregate_metric.lua"
-    message_matcher = "Type == 'heka.sandbox.60s.max'"
-    ticker_interval = 60
-        [Gust60sMaxFilter.config]
-        aggregation = "max"
-        type_output = "next_sandbox"
-
-Filter which prepare metrics to be send to influxdb with influx encoder
-
-    [Statmetric-influx-preEncoder]
-    type = "SandboxFilter"
-    filename = "%ENV[HEKA_HL_DIR]/filters/format_metric_name.lua"
-    message_matcher = "Type == 'heka.sandbox.encode.influx'"
-        [Statmetric-influx-preEncoder.config]
-        fields = "uuid hostname name"
-        separator = "."
-        type_output = "influx"
-
-* `ticker_interval` as integer (unit= second)
-* `aggregation` as string (`"avg"`, `"sum"`, `"max"`, `"min"`, `"last"`)
-* all the options are mention and are mandatory execpt `sec_per_row` and `nb_rows` when `aggregation` is `last`
-* `"regex_expression_*"` receive a string corresponding to what you want to match: (http://lua-users.org/wiki/PatternsTutorial)
-
-Load Filter
------------
-
-To load a filter, run the following command
-
-    heka-sbmgr -action=load -config=$HEKA_HL_DIR/PlatformDevs.toml -script=sandbox_file.lua -scriptconfig=configDev.toml
-
-Unload Filter
--------------
-
-To unload a filter, run the next command
-
-    heka-sbmgr -action=unload -config=$HEKA_HL_DIR/heka-sandboxes/PlatformDevs.toml -filtername=[FilterName]
-
-Debug
------
-
-Debug mode provide us to see data from payload on the standard output
-To run debug mode, do the following command:
-
-    $ mv $HEKA_HL_DIR/toml/debug.toml.bak $HEKA_HL_DIR/heka-hl-sandbowes/toml/debug.toml
-
-And edit debug.toml as following:
-
-    [RstEncoder]
-    [LogOutput]
-    message_matcher = "Type == 'next_sandbox'"
-    encoder = "RstEncoder"
-
-Test
-----
-
-To test heka sandboxes run the following command:
+To test Heka HL sandboxes, run the following commands:
 
     $ export HEKA_HL_DIR=path/to/heka-hl-sandboxes/
     $ cd $HEKA_HL_DIR
@@ -265,3 +24,201 @@ To test heka sandboxes run the following command:
 Or to run a single test:
 
     $ python -m unittest -b test.TestLogData
+
+## Run
+
+To run Heka with the sample configuration, you can do:
+
+    $ export HEKA_HL_DIR=path/to/heka-hl-sandboxes/
+    $ hekad -config $HEKA_HL_DIR/toml
+
+### Manage sandboxes dynamically
+
+To load dynamically a new filter, run the following command:
+
+    heka-sbmgr -config=$HEKA_HL_DIR/PlatformDevs.toml \
+        -action=load -script=sandbox_file.lua -scriptconfig=configDev.toml
+
+To unload the previous dynamic filter, run:
+
+    heka-sbmgr -config=$HEKA_HL_DIR/PlatformDevs.toml \
+        -action=unload -filtername=[FilterName]
+
+### Debug
+
+To see all messages flowing through Heka, you can add the following config:
+
+    [RstEncoder]
+    [LogOutput]
+    message_matcher = "TRUE"
+    encoder = "RstEncoder"
+
+Or you can output only some messages by specifying a custom value for
+`message_matcher`.
+
+## Configure
+
+Increase `max_message_loops` and `max_timer_inject` global config values in the
+`[hekad]` configuration so that the same message can be processed in many
+sandboxes, and a single sandbox can generate many messages (e.g.
+`aggregate_metric.lua` sandbox filter needs this):
+
+    [hekad]
+    max_message_loops = 10
+    max_timer_inject = 200
+
+For better understanding of Heka global configuration option, see:
+https://hekad.readthedocs.org/en/latest/config/index.html#global-configuration-options
+
+Sample configuration files and more configuration documentation are
+available in the `toml` directory.
+
+## API
+
+Here are the list of all sandboxes available in `heka-hl-sandboxes` repository.
+
+### Sandbox decoders
+
+Common configuration:
+
+* `type(string)`: Sandbox type (should be: `SandboxDecoder`).
+* `filename(string)`: Path to the lua sandbox filter.
+* `message_matcher(string)`: Message matcher which determines wether or not
+  the sandbox filter should be run.
+* `type_output(string)`: Sets the message `Type` header to the specified
+  value.
+
+Here is the list of common Heka sandbox parameters:
+https://hekad.readthedocs.org/en/latest/config/common_sandbox_parameter.html
+
+#### `decoders/trserver_decode_metrics.lua`
+
+This sandbox receives and parses metrics from trserver.
+
+#### `decoders/decode_header.lua`
+
+This sandbox parses messages from log files (generic header part only) and
+forward them to a specific decoder filter (metric, event) for further decoding.
+
+### Sandbox filters
+
+Common configuration:
+
+* `type(string)`: Sandbox type (should be: `SandboxFilter`).
+* `filename(string)`: Path to the lua sandbox filter.
+* `message_matcher(string)`: Message matcher which determines wether or not
+  the sandbox filter should be run.
+* `type_output(string)`: Sets the message `Type` header to the specified
+  value (will be prefixed with `heka.sandbox.`).
+
+#### `filters/decode_event.lua`
+
+This sandbox parses the event specific part of a log line.
+
+#### `filters/decode_metric.lua`
+
+This sandbox parses the metric specific part of a log line.
+
+#### `filters/regex_metric_dispatch.lua`
+
+This sandbox acts as a router: it dynamically sets the `type_output` header
+value of a message depending on the metric name (regex matching).
+
+Custom configuration for this sandbox filter:
+
+* `matchers(string "item1 item2")`: Space separated list of matchers items.
+  Each item refers to two other dedicated configuration options: `<item>_regex`
+  and `<item>_type_output` (see below).
+  The order is important, since every item will be tested sequentially: the
+  first item that matches wins.
+* `<item>_regex(string)`: Regular expression to match for metric names.
+  (http://lua-users.org/wiki/PatternsTutorial)
+* `<item>_type_output(string)`: Sets the message `Type` header to the specified
+  value (will be prefixed with `heka.sandbox.`).
+
+#### `filters/aggregate_metric.lua`
+
+This sandbox aggregates metric values according to an aggregate method
+(average, minimum, maximum, sum, last).
+
+Custom configuration for this sandbox filter:
+
+* `ticker_interval(int)`: Frequency (in seconds) at which a new aggregated
+  metric will be generated.
+* `aggregation(string)`: Single or multiple (space separated list) aggregation
+  methods. Allowed aggregation methods are:
+  * `avg`: Average calulation.
+  * `min`: Mimimum value received.
+  * `max`: Maximum value received.
+  * `sum`: Sum calculation.
+  * `last`: Last value received.
+  * `count`: Number of metric values received.
+
+#### `filters/add_static_fields.lua`
+
+This sandbox sets hardcoded values for given fields.
+
+* `fields(string "field1 field2")`: Space separated list of fields.
+  Each field refers to another configuration option that specify the value of
+  the field to hardcode.
+* `<fieldname>(string)`: Value of the static field "fieldname" to set.
+
+#### `filters/format_metric_name.lua`
+
+This sandbox sets the "name" field of the message by concatenating other
+fields values.
+
+* `fields(string "field1 field2")`: Space separated list of fields.
+  Each field must refer to a field name which actually exists in the message.
+  The concatenation of the fields values will keep the same order of the list.
+* `separator(string)`: String separator to use concatenate all fields values.
+
+#### `filters/gather_metrics.lua`
+
+This sandbox gathers multiple metrics, groups and encodes them by batch as json
+before sending to InfluxDB.
+
+* `ticker_interval(int)`: Frequency (in seconds) at which a new batch metric
+  will be generated.
+
+#### `filters/gather_last_metrics.lua`
+
+This sandbox gathers multiple metrics in the same message but keep only the
+last value of every metric.
+
+* `ticker_interval(int)`: Frequency (in seconds) at which a new message will be
+  generated with last values for all gathered metrics.
+
+#### `filters/add_mode_field.lua`
+
+This sandbox adds a "mode" field to all tracker messages which value is set to
+the last mode metric value that have been received for the same tracker.
+
+#### `filters/encode_event.lua`
+
+This sandbox encodes events messages as a specific formatted string into the
+payload for further processing of the `encode_header.lua` encoder.
+
+#### `filters/encode_metric.lua`
+
+This sandbox encodes metrics messages as a specific formatted string into the
+payload for further processing of the `encode_header.lua` encoder.
+
+### Sandbox encoders
+
+Common configuration:
+
+* `type(string)`: Sandbox type (should be: `SandboxEncoder`).
+* `filename(string)`: Path to the lua sandbox filter.
+* `message_matcher(string)`: Message matcher which determines wether or not
+  the sandbox filter should be run.
+
+#### `encoders/encode_header.lua`
+
+This sandbox encodes the generic part of a message as a formatted string into
+the payload (the metric or event specific part that has already been serialized
+in above dedicated filters is copyed as is).
+
+#### `encoders/metrics_encode_json.lua`
+
+This sandbox encodes the timestamp and all message fields to JSON.
