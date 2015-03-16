@@ -147,12 +147,12 @@ Custom configuration for this sandbox filter:
   metric will be generated.
 * `aggregation(string)`: Single or multiple (space separated list) aggregation
   methods. Allowed aggregation methods are:
-  * `avg`: Average calulation.
-  * `min`: Mimimum value received.
-  * `max`: Maximum value received.
-  * `sum`: Sum calculation.
-  * `last`: Last value received.
-  * `count`: Number of metric values received.
+    * `avg`: Average calulation.
+    * `min`: Mimimum value received.
+    * `max`: Maximum value received.
+    * `sum`: Sum calculation.
+    * `last`: Last value received.
+    * `count`: Number of metric values received.
 
 #### `filters/add_static_fields.lua`
 
