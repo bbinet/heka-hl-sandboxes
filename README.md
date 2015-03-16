@@ -25,37 +25,6 @@ Or to run a single test:
 
     $ python -m unittest -b test.TestLogData
 
-## Run
-
-To run Heka with the sample configuration, you can do:
-
-    $ export HEKA_HL_DIR=path/to/heka-hl-sandboxes/
-    $ hekad -config $HEKA_HL_DIR/toml
-
-### Manage sandboxes dynamically
-
-To load dynamically a new filter, run the following command:
-
-    heka-sbmgr -config=$HEKA_HL_DIR/PlatformDevs.toml \
-        -action=load -script=sandbox_file.lua -scriptconfig=configDev.toml
-
-To unload the previous dynamic filter, run:
-
-    heka-sbmgr -config=$HEKA_HL_DIR/PlatformDevs.toml \
-        -action=unload -filtername=[FilterName]
-
-### Debug
-
-To see all messages flowing through Heka, you can add the following config:
-
-    [RstEncoder]
-    [LogOutput]
-    message_matcher = "TRUE"
-    encoder = "RstEncoder"
-
-Or you can output only some messages by specifying a custom value for
-`message_matcher`.
-
 ## Configure
 
 Increase `max_message_loops` and `max_timer_inject` global config values in the
@@ -72,6 +41,37 @@ https://hekad.readthedocs.org/en/latest/config/index.html#global-configuration-o
 
 Sample configuration files and more configuration documentation are
 available in the `toml` directory.
+
+## Run
+
+To run Heka with the sample configuration, you can do:
+
+    $ export HEKA_HL_DIR=path/to/heka-hl-sandboxes/
+    $ hekad -config $HEKA_HL_DIR/toml
+
+### Debug
+
+To see all messages flowing through Heka, you can add the following config:
+
+    [RstEncoder]
+    [LogOutput]
+    message_matcher = "TRUE"
+    encoder = "RstEncoder"
+
+Or you can output only some messages by specifying a custom value for
+`message_matcher`.
+
+### Manage sandboxes dynamically
+
+To load dynamically a new filter, run the following command:
+
+    heka-sbmgr -config=$HEKA_HL_DIR/PlatformDevs.toml \
+        -action=load -script=sandbox_file.lua -scriptconfig=configDev.toml
+
+To unload the previous dynamic filter, run:
+
+    heka-sbmgr -config=$HEKA_HL_DIR/PlatformDevs.toml \
+        -action=unload -filtername=[FilterName]
 
 ## API
 
