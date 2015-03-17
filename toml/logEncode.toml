@@ -15,13 +15,6 @@ message_matcher = "Type == 'heka.sandbox.log.message' && Fields[log] == NIL"
     [EncodeMetricFilter.config]
     type_output = "log.output"
 
-[EncodeAlertFilter]
-type = "SandboxFilter"
-filename = "%ENV[HEKA_HL_DIR]/filters/encode_alert.lua"
-message_matcher = "Type == 'heka.sandbox.log.message' && Fields[log] == 'alert'"
-    [EncodeAlertFilter.config]
-    type_output = "log.output"
-
 [EncodeEventFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/filters/encode_event.lua"
