@@ -19,11 +19,11 @@ To test Heka HL sandboxes, run the following commands:
 
     $ export HEKA_HL_DIR=path/to/heka-hl-sandboxes/
     $ cd $HEKA_HL_DIR
-    $ python -m unittest -b test
+    $ python -m unittest -b tests
 
 Or to run a single test:
 
-    $ python -m unittest -b test.TestLogData
+    $ python -m unittest -b tests.TestLogData
 
 ## Configure
 
