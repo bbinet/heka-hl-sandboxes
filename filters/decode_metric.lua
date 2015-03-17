@@ -6,7 +6,7 @@ function process_message()
     local payload = read_message('Payload')
     local name, value = string.match(payload, "^([%w._-]+) (%d+[.]?%d*)$")
     if name == nil or value == nil then
-	return 0 --TODO: print error message
+	return -1, "can't parse metric in payload"
     end
 
     local fields = {

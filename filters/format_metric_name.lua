@@ -9,7 +9,7 @@ function process_message()
     local parts = { }
     for part in string.gmatch(fields, "[%S]+") do
 	if read_message('Fields[' .. part .. ']') == nil then
-	    return 0 --TODO: echo "the Fields: " .. part .. " can't be a nil value"
+	    return -1, "'Fields[" .. part .. "]' can't be nil"
 	end
 	parts[#parts+1] = read_message('Fields[' .. part .. ']')
     end

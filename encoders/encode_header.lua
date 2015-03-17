@@ -11,9 +11,9 @@ function process_message()
         read_message('Fields[encoder_type]') .. ':' .. read_message('Fields[encoder_version]')
     }
 
-    for k, v in pairs(data) do --TODO: print error message
+    for k, v in pairs(data) do
         if v == nil then
-            return 0
+            return -1, "data[" .. k .. "] can't be nil"
         end
     end
 
