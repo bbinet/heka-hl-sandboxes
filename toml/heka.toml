@@ -28,7 +28,7 @@ decoder = "TrServerDecoder"
 
 [TrwebclientDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_HL_DIR]/decoders/trwebclient_decode_event.lua"
+filename = "%ENV[HEKA_HL_DIR]/decoders/decode_json_fields.lua"
     [TrwebclientDecoder.config]
     type_output = "trwebclient.log.event"
 [TrwebclientInput]
