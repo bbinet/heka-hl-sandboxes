@@ -6,13 +6,14 @@ max_timer_inject = 100
 type = "SandboxManagerFilter"
 message_signer = "PlatformDevs"
 max_filters = 100
+[AclSplitter]
+type = "HekaFramingSplitter"
+[AclSplitter.signer.PlatformDevs_0]
+hmac_key = "Platform devs signing key"
 [TCP:5565]
 type = "TcpInput"
-parser_type = "message.proto"
-decoder = "ProtobufDecoder"
 address = ":5565"
-    [TCP:5565.signer.PlatformDevs_0]
-    hmac_key = "Platform devs signing key"
+splitter = "AclSplitter"
 
 [TrServerDecoder]
 type = "SandboxDecoder"
@@ -22,8 +23,7 @@ filename = "%ENV[HEKA_HL_DIR]/decoders/trserver_decode_metrics.lua"
 [TrServerInput]
 type = "UdpInput"
 address = "localhost:8125"
-parser_type = "regexp"
-delimiter = "\n"
+splitter = "TokenSplitter"
 decoder = "TrServerDecoder"
 
 [TrwebclientDecoder]
