@@ -5,13 +5,6 @@ message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'metric' && Fi
     [DecodeLogMetricFilter.config]
     type_output = "dispatch.log"
 
-[DecodeLogAlertFilter]
-type = "SandboxFilter"
-filename = "%ENV[HEKA_HL_DIR]/filters/decode_alert.lua"
-message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'alert' && Fields[decoder_version] == 0"
-    [DecodeLogAlertFilter.config]
-    type_output = "dispatch.log"
-
 [DecodeLogEventFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/filters/decode_event.lua"
