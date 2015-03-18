@@ -91,14 +91,43 @@ Common configuration:
 Here is the list of common Heka sandbox parameters:
 https://hekad.readthedocs.org/en/latest/config/common_sandbox_parameter.html
 
-#### `decoders/trserver_decode_metrics.lua`
-
-This sandbox receives and parses metrics from trserver.
-
 #### `decoders/decode_header.lua`
 
 This sandbox parses messages from log files (generic header part only) and
 forward them to a specific decoder filter (metric, event) for further decoding.
+
+#### `decoders/decode_json.lua`
+
+This sandbox parses messages from json.
+
+* `allowed_headers(string)`: Single or multiple (space separated list) headers
+  to include in the new message. If `nil`, all standard headers will be set.
+
+#### `decoders/decode_trserver_metrics.lua`
+
+This sandbox parses metrics from trserver.
+
+### Sandbox encoders
+
+Common configuration:
+
+* `type(string)`: Sandbox type (should be: `SandboxEncoder`).
+* `filename(string)`: Path to the lua sandbox filter.
+* `message_matcher(string)`: Message matcher which determines wether or not
+  the sandbox filter should be run.
+
+#### `encoders/encode_header.lua`
+
+This sandbox encodes the generic part of a message as a formatted string into
+the payload (the metric or event specific part that has already been serialized
+in above dedicated filters is copyed as is).
+
+#### `encoders/encode_json.lua`
+
+This sandbox encodes a message to JSON.
+
+* `allowed_headers(string)`: Single or multiple (space separated list) headers
+  to include in the json. If `nil`, all standard headers will be included.
 
 ### Sandbox filters
 
@@ -111,30 +140,19 @@ Common configuration:
 * `type_output(string)`: Sets the message `Type` header to the specified
   value (will be prefixed with `heka.sandbox.`).
 
-#### `filters/decode_event.lua`
+#### `filters/add_mode_field.lua`
 
-This sandbox parses the event specific part of a log line.
+This sandbox adds a "mode" field to all tracker messages which value is set to
+the last mode metric value that have been received for the same tracker.
 
-#### `filters/decode_metric.lua`
+#### `filters/add_static_fields.lua`
 
-This sandbox parses the metric specific part of a log line.
+This sandbox sets hardcoded values for given fields.
 
-#### `filters/regex_metric_dispatch.lua`
-
-This sandbox acts as a router: it dynamically sets the `type_output` header
-value of a message depending on the metric name (regex matching).
-
-Custom configuration for this sandbox filter:
-
-* `matchers(string "item1 item2")`: Space separated list of matchers items.
-  Each item refers to two other dedicated configuration options: `<item>_regex`
-  and `<item>_type_output` (see below).
-  The order is important, since every item will be tested sequentially: the
-  first item that matches wins.
-* `<item>_regex(string)`: Regular expression to match for metric names.
-  (http://lua-users.org/wiki/PatternsTutorial)
-* `<item>_type_output(string)`: Sets the message `Type` header to the specified
-  value (will be prefixed with `heka.sandbox.`).
+* `fields(string "field1 field2")`: Space separated list of fields.
+  Each field refers to another configuration option that specify the value of
+  the field to hardcode.
+* `<fieldname>(string)`: Value of the static field "fieldname" to set.
 
 #### `filters/aggregate_metric.lua`
 
@@ -154,14 +172,33 @@ Custom configuration for this sandbox filter:
     * `last`: Last value received.
     * `count`: Number of metric values received.
 
-#### `filters/add_static_fields.lua`
+#### `filters/decode_event.lua`
 
-This sandbox sets hardcoded values for given fields.
+This sandbox parses the event specific part of a log line.
 
-* `fields(string "field1 field2")`: Space separated list of fields.
-  Each field refers to another configuration option that specify the value of
-  the field to hardcode.
-* `<fieldname>(string)`: Value of the static field "fieldname" to set.
+#### `filters/decode_metric.lua`
+
+This sandbox parses the metric specific part of a log line.
+
+#### `filters/encode_event.lua`
+
+This sandbox encodes events messages as a specific formatted string into the
+payload for further processing of the `encode_header.lua` encoder.
+
+#### `filters/encode_influxdb_0_8.lua`
+
+This sandbox gathers multiple metrics, groups and encodes them by batch as json
+before sending to InfluxDB.
+The sandbox will store the encoded json string in the payload, so this can then
+be sent to a HttpOutput configured with a PayloadEncoder.
+
+* `ticker_interval(int)`: Frequency (in seconds) at which a new batch metric
+  will be generated.
+
+#### `filters/encode_metric.lua`
+
+This sandbox encodes metrics messages as a specific formatted string into the
+payload for further processing of the `encode_header.lua` encoder.
 
 #### `filters/format_metric_name.lua`
 
@@ -173,14 +210,6 @@ fields values.
   The concatenation of the fields values will keep the same order of the list.
 * `separator(string)`: String separator to use concatenate all fields values.
 
-#### `filters/gather_metrics.lua`
-
-This sandbox gathers multiple metrics, groups and encodes them by batch as json
-before sending to InfluxDB.
-
-* `ticker_interval(int)`: Frequency (in seconds) at which a new batch metric
-  will be generated.
-
 #### `filters/gather_last_metrics.lua`
 
 This sandbox gathers multiple metrics in the same message but keep only the
@@ -189,39 +218,22 @@ last value of every metric.
 * `ticker_interval(int)`: Frequency (in seconds) at which a new message will be
   generated with last values for all gathered metrics.
 
-#### `filters/add_mode_field.lua`
+#### `filters/regex_dispatch_metric.lua`
 
-This sandbox adds a "mode" field to all tracker messages which value is set to
-the last mode metric value that have been received for the same tracker.
+This sandbox acts as a router: it dynamically sets the `type_output` header
+value of a message depending on the metric name (regex matching).
 
-#### `filters/encode_event.lua`
+Custom configuration for this sandbox filter:
 
-This sandbox encodes events messages as a specific formatted string into the
-payload for further processing of the `encode_header.lua` encoder.
-
-#### `filters/encode_metric.lua`
-
-This sandbox encodes metrics messages as a specific formatted string into the
-payload for further processing of the `encode_header.lua` encoder.
-
-### Sandbox encoders
-
-Common configuration:
-
-* `type(string)`: Sandbox type (should be: `SandboxEncoder`).
-* `filename(string)`: Path to the lua sandbox filter.
-* `message_matcher(string)`: Message matcher which determines wether or not
-  the sandbox filter should be run.
-
-#### `encoders/encode_header.lua`
-
-This sandbox encodes the generic part of a message as a formatted string into
-the payload (the metric or event specific part that has already been serialized
-in above dedicated filters is copyed as is).
-
-#### `encoders/metrics_encode_json.lua`
-
-This sandbox encodes the timestamp and all message fields to JSON.
+* `matchers(string "item1 item2")`: Space separated list of matchers items.
+  Each item refers to two other dedicated configuration options: `<item>_regex`
+  and `<item>_type_output` (see below).
+  The order is important, since every item will be tested sequentially: the
+  first item that matches wins.
+* `<item>_regex(string)`: Regular expression to match for metric names.
+  (http://lua-users.org/wiki/PatternsTutorial)
+* `<item>_type_output(string)`: Sets the message `Type` header to the specified
+  value (will be prefixed with `heka.sandbox.`).
 
 ## Todo
 
