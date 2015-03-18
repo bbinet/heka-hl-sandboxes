@@ -17,7 +17,7 @@ splitter = "AclSplitter"
 
 [TrServerDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_HL_DIR]/decoders/trserver_decode_metrics.lua"
+filename = "%ENV[HEKA_HL_DIR]/decoders/decode_trserver_metrics.lua"
     [TrServerDecoder.config]
     type_output = "heka.statmetric"
 [TrServerInput]
