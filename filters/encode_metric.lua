@@ -15,9 +15,16 @@ function process_message()
 	end
     end
 
+    if fields['name'] == nil then
+	return -1, "Fields['name'] can't be nil"
+    end
+    if fields['value'] == nil then
+	return -1, "Fields['value'] can't be nil"
+    end
+
     inject_message({
 	Type = type_output,
-	Payload = read_message('Fields[name]') .. ' ' .. read_message('Fields[value]'),
+	Payload = fields['name'] .. ' ' .. fields['value'],
 	Timestamp = read_message('Timestamp'),
 	Fields = fields
     })
