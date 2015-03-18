@@ -30,7 +30,7 @@ decoder = "JsonDecoder"
 
 [JsonEncoder]
 type = "SandboxEncoder"
-filename = "%ENV[HEKA_TESTS_DIR]/encode_json.lua"
+filename = "%ENV[HEKA_HL_DIR]/encoders/encode_json.lua"
 [UdpOutput]
 type = "UdpOutput"
 message_matcher = "Type == 'heka.sandbox.output' || Type == 'heka.sandbox.output.wind' || Type == 'heka.sandbox.output.all'"
