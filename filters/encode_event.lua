@@ -6,11 +6,12 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 
 function process_message()
     -- check that both Severity and Fields[msg] exist
-    local severity = read_message('Severity')
-    local msg = read_message('Fields[msg]')
+    local severity = read_message("Severity")
     if severity == nil then
 	return -1, "severity can't be nil"
     end
+
+    local msg = read_message('Fields[msg]')
     if msg == nil then
 	return -1, "msg can't be nil"
     end
@@ -19,7 +20,6 @@ function process_message()
 	encoder_type = "event",
 	encoder_version = version
     }
-
     while true do
 	typ, name, value = read_next_field()
 	if not typ then break end
@@ -32,6 +32,7 @@ function process_message()
 	Type = type_output,
 	Payload = severity .. ' ' .. cjson.encode(msg),
 	Timestamp = read_message('Timestamp'),
+	Severity = read_message('Severity'),
 	Fields = fields
     })
     return 0

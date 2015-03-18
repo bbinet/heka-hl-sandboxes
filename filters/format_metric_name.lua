@@ -29,13 +29,13 @@ function process_message()
     end
     f['name'] = table.concat(parts, separator)
 
-    local data = {
+    inject_message({
 	Type = type_output,
 	Timestamp = read_message('Timestamp'),
+	Payload = read_message('Payload'),
+	Severity = read_message('Severity'),
 	Fields = f
-    }
-
-    inject_message(data)
+    })
 
     return 0
 end

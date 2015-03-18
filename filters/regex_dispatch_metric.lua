@@ -1,7 +1,7 @@
 require "string"
 
 local matcher = read_config('matchers') or error ('you must initialize "matchers" option')
-local matchers = { }
+local matchers = {}
 
 for value in string.gmatch(matcher, "[%S]+") do
     matchers[#matchers + 1] = {
@@ -11,7 +11,7 @@ for value in string.gmatch(matcher, "[%S]+") do
 end
 
 function process_message()
-    local fields = { }
+    local fields = {}
     while true do
 	typ, key, value = read_next_field()
 	if not typ then break end
@@ -26,6 +26,7 @@ function process_message()
 		Type = item.type_output,
 		Timestamp = read_message('Timestamp'),
 		Payload = read_message('Payload'),
+		Severity = read_message('Severity'),
 		Fields = fields
 	    })
 	    break

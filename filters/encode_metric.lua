@@ -26,6 +26,7 @@ function process_message()
 	Type = type_output,
 	Payload = fields['name'] .. ' ' .. fields['value'],
 	Timestamp = read_message('Timestamp'),
+	Severity = read_message('Severity'),
 	Fields = fields
     })
     return 0
