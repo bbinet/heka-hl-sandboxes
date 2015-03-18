@@ -26,7 +26,9 @@ ticker_interval = 1
 
 [ServerEncoder]
 type = "SandboxEncoder"
-filename = "%ENV[HEKA_HL_DIR]/encoders/metrics_encode_json.lua"
+filename = "%ENV[HEKA_HL_DIR]/encoders/encode_json.lua"
+    [ServerEncoder.config]
+    allowed_headers = "Fields Timestamp"
 [ServerOutput]
 type = "HttpOutput"
 message_matcher = "Type == 'heka.sandbox.trwebclient'"
