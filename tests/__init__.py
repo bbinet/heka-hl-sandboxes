@@ -637,7 +637,7 @@ class TestFormatMetricName(HekaTestCase):
 type = "SandboxFilter"
 message_matcher = "Type == 'test'"
 [TestAddFields.config]
-type_output = "gather.metrics"
+type_output = "encode.influxdb"
 fields = "uuid"
 uuid = "uuid_test"
 """},
@@ -646,7 +646,7 @@ uuid = "uuid_test"
             'toml': """
 [TestGatherFields]
 type = "SandboxFilter"
-message_matcher = "Type == 'heka.sandbox.gather.metrics'"
+message_matcher = "Type == 'heka.sandbox.encode.influxdb'"
 [TestGatherFields.config]
 fields = "uuid name value"
 separator = "-"

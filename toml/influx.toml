@@ -15,20 +15,20 @@ message_matcher = "Type == 'heka.sandbox.encode.name'"
     [FormatMetricNameFilter.config]
     fields = "uuid hostname name"
     separator = "."
-    type_output = "gather.metrics"
+    type_output = "encode.influxdb"
 
-[GatherMetrics]
+[EncodeInfluxDB]
 type = "SandboxFilter"
-filename = "%ENV[HEKA_HL_DIR]/filters/gather_metrics.lua"
-message_matcher = "Type == 'heka.sandbox.gather.metrics'"
+filename = "%ENV[HEKA_HL_DIR]/filters/encode_influxdb_0_8.lua"
+message_matcher = "Type == 'heka.sandbox.encode.influxdb'"
 ticker_interval = 20
-    [GatherMetrics.config]
-    type_output = "influx"
+    [EncodeInfluxDB.config]
+    type_output = "influx.output"
 
 [PayloadEncoder]
 [InfluxOutput]
 type = "HttpOutput"
-message_matcher = "Type == 'heka.sandbox.influx'"
+message_matcher = "Type == 'heka.sandbox.influx.output'"
 address = "http://localhost:8086/db/metrics/series?time_precision=u"
 username = "admin"
 password = "admin_password"
