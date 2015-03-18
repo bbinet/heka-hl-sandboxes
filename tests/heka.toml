@@ -21,7 +21,7 @@ splitter = "AclSplitter"
 
 [JsonDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_TESTS_DIR]/decode_json.lua"
+filename = "%ENV[HEKA_HL_DIR]/decoders/decode_json.lua"
 [UdpInput]
 type = "UdpInput"
 address = ":%ENV[JSON_OUTPUT_PORT]"
