@@ -28,9 +28,10 @@ decoder = "TrServerDecoder"
 
 [TrwebclientDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_HL_DIR]/decoders/decode_json_fields.lua"
+filename = "%ENV[HEKA_HL_DIR]/decoders/decode_json.lua"
     [TrwebclientDecoder.config]
     type_output = "trwebclient.log.event"
+    allowed_headers = "Fields Severity"
 [TrwebclientInput]
 type = "HttpListenInput"
 address = "localhost:5000"
