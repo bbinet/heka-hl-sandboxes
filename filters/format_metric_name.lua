@@ -2,33 +2,37 @@ require "string"
 require "table"
 
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
-local fields = read_config('fields') or error('you must initialize "fields" option')
+local fields_str = read_config('fields') or error('you must initialize "fields" option')
 local separator = read_config('separator') or error('you must initialize "separator" option')
+local fields = {}
+for field in string.gmatch(fields_str, "[%S]+") do
+    fields[#fields+1] = field
+end
 
 function process_message()
     local parts = { }
-    for part in string.gmatch(fields, "[%S]+") do
-	if read_message('Fields[' .. part .. ']') == nil then
-	    return -1, "'Fields[" .. part .. "]' can't be nil"
+    for i, field in ipairs(fields) do
+	part = read_message('Fields[' .. field .. ']')
+	if part == nil then
+	    return -1, "'Fields[" .. field .. "]' can't be nil"
 	end
-	parts[#parts+1] = read_message('Fields[' .. part .. ']')
+	parts[#parts+1] = part
     end
 
-    local fields = {}
+    local f = {}
     while true do
 	typ, key, value = read_next_field()
 	if not typ then break end
 	if typ ~= 1 then --exclude bytes
-	    fields[key] = value
+	    f[key] = value
 	end
     end
-    fields['name'] = table.concat(parts, separator)
+    f['name'] = table.concat(parts, separator)
 
     local data = {
 	Type = type_output,
-	Payload = read_message('Payload'),
 	Timestamp = read_message('Timestamp'),
-	Fields = fields
+	Fields = f
     }
 
     inject_message(data)
