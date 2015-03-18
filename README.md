@@ -222,3 +222,8 @@ in above dedicated filters is copyed as is).
 #### `encoders/metrics_encode_json.lua`
 
 This sandbox encodes the timestamp and all message fields to JSON.
+
+## Todo
+
+* Issue #3 - test that sandboxes won't crash (but generate error messages) when
+  receiving wrong inputs.
