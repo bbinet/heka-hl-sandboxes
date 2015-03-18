@@ -11,14 +11,14 @@ message_matcher = "Type == 'heka.sandbox.addFields' || Type == 'trwebclient.log.
 [EncodeMetricFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/filters/encode_metric.lua"
-message_matcher = "Type == 'heka.sandbox.log.message' && Fields[log] == NIL"
+message_matcher = "Type == 'heka.sandbox.log.message' && Fields[type] == NIL"
     [EncodeMetricFilter.config]
     type_output = "log.output"
 
 [EncodeEventFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/filters/encode_event.lua"
-message_matcher = "Type == 'heka.sandbox.log.message' && Fields[log] == 'event'"
+message_matcher = "Type == 'heka.sandbox.log.message' && Fields[type] == 'event'"
     [EncodeEventFilter.config]
     type_output = "log.output"
 
