@@ -3,12 +3,12 @@ require "string"
 
 local aggregation = read_config('aggregation') or error('you must initialize "aggregation" option')
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
-local data = { }
-local aggs = { }
+local data = {}
+local aggs = {}
 
 for agg in string.gmatch(aggregation, "[%S]+") do
     if  agg ~= "avg" and agg ~= "max" and agg ~= "min" and agg ~= "sum" and agg ~= "last" and agg ~= "count" then
-	error('"' .. agg .. '" unknow aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last", "count"')
+	error('"' .. agg .. '" unknown aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last", "count"')
     end
     aggs[agg] = agg
 end
@@ -16,6 +16,12 @@ end
 function process_message()
     local name = read_message('Fields[name]')
     local value = tonumber(read_message('Fields[value]'))
+    if name == nil then
+	return -1, "Fields[name] cant be nil"
+    end
+    if value == nil then
+	return -1, "Fields[value] cant be nil"
+    end
 
     if data[name] == nil then
 	data[name] = {
@@ -56,5 +62,5 @@ function timer_event(ns)
 	    })
 	end
     end
-    data = { }
+    data = {}
 end

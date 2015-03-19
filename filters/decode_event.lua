@@ -5,10 +5,10 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 
 function process_message()
     local payload = read_message('Payload')
-    local severity, msg = string.match(payload, '^(%d+) "(.*)"$')
-    if severity == nil then
-	return -1, "severity can't be nil"
+    if payload == nil then
+        return -1, "Payload can't be nil"
     end
+    local msg = string.match(payload, '^"(.*)"$')
     if msg == nil then
 	return -1, "msg can't be nil"
     end
@@ -26,7 +26,7 @@ function process_message()
 	Type = type_output,
 	Timestamp = read_message('Timestamp'),
 	Payload = payload,
-	Severity = severity,
+	Severity = read_message('Severity'),
 	Fields = fields
     })
     return 0
