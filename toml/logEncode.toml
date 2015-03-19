@@ -30,3 +30,12 @@ type = "FileOutput"
 message_matcher = "Type == 'heka.sandbox.log.output'"
 path = "%ENV[HEKA_HL_DIR]/log/file.log"
 encoder = "LogFileEncoder"
+
+[LogFileCarbonEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_HL_DIR]/encoders/encode_carbon.lua"
+[LogFileCarbonOutput]
+type = "FileOutput"
+message_matcher = "Type == 'heka.sandbox.log.message' && Fields[type] == NIL"
+path = "%ENV[HEKA_HL_DIR]/log/carbon.log"
+encoder = "LogFileCarbonEncoder"
