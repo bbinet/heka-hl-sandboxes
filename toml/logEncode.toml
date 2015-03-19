@@ -31,11 +31,21 @@ message_matcher = "Type == 'heka.sandbox.log.output'"
 path = "%ENV[HEKA_HL_DIR]/log/file.log"
 encoder = "LogFileEncoder"
 
+
+[FormatCarbonMetricNameFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/filters/format_metric_name.lua"
+message_matcher = "Type == 'heka.sandbox.log.message' && Fields[type] == NIL"
+    [FormatCarbonMetricNameFilter.config]
+    fields = "uuid hostname name"
+    separator = "."
+    type_output = "log.carbon"
+
 [LogFileCarbonEncoder]
 type = "SandboxEncoder"
 filename = "%ENV[HEKA_HL_DIR]/encoders/encode_carbon.lua"
 [LogFileCarbonOutput]
 type = "FileOutput"
-message_matcher = "Type == 'heka.sandbox.log.message' && Fields[type] == NIL"
+message_matcher = "Type == 'heka.sandbox.log.carbon'"
 path = "%ENV[HEKA_HL_DIR]/log/carbon.log"
 encoder = "LogFileCarbonEncoder"
