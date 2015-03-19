@@ -54,6 +54,7 @@ function timer_event(ns)
 	    inject_message({
 		Type = type_output,
 		Timestamp = ns,
+		Severity = 7,
 		Fields = {
 		    aggregation = agg,
 		    value = value,
