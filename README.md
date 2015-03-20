@@ -116,6 +116,11 @@ Common configuration:
 * `message_matcher(string)`: Message matcher which determines wether or not
   the sandbox filter should be run.
 
+#### `encoders/encode_carbon.lua`
+
+This sandbox encodes metrics to the plaintext carbon format so that it can be
+ingested by a carbon (graphite) server.
+
 #### `encoders/encode_header.lua`
 
 This sandbox encodes the generic part of a message as a formatted string into
