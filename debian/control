@@ -1,0 +1,16 @@
+Source: heka-hl-sandboxes
+Section: devel
+Priority: extra
+Maintainer: Bruno Binet <bruno.binet@helioslite.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: https://bitbucket.org/helioslite/heka-hl-sandboxes/
+#Vcs-Git: git://git.debian.org/collab-maint/heka-hl-sandboxes.git
+Vcs-Browser: https://bitbucket.org/helioslite/heka-hl-sandboxes/src
+
+Package: heka-hl-sandboxes
+Architecture: all
+Depends: heka, ${misc:Depends}
+Description: HeliosLite Heka Lua sandboxes
+ This package provides Heka Lua sandboxes dedicated to collect, process, and
+ forward data on HeliosLite master controller environments.

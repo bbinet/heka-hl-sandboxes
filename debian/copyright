@@ -1,0 +1,8 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: heka-hl-sandboxes
+Upstream-Contact: Bruno Binet <bruno.binet@helioslite.com>
+Source: https://bitbucket.org/helioslite/heka-hl-sandboxes/
+
+Files: *
+Copyright: 2015 HeliosLite <bruno.binet@helioslite.com>
+License: All rights reserved

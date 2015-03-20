@@ -1,0 +1,3 @@
+decoders/* usr/share/heka-hl-sandboxes/lua_decoders/
+encoders/* usr/share/heka-hl-sandboxes/lua_encoders/
+filters/* usr/share/heka-hl-sandboxes/lua_filters/
