@@ -146,6 +146,9 @@ Common configuration:
   the sandbox filter should be run.
 * `type_output(string)`: Sets the message `Type` header to the specified
   value (will be prefixed with `heka.sandbox.`).
+* `type_output_method([prefix|suffix|overwrite])`: Determines how the
+  `type_output` string should be set on the `Type` header (default is
+  "overwrite").
 
 #### `filters/add_mode_field.lua`
 
@@ -165,6 +168,8 @@ This sandbox sets hardcoded values for given fields.
 
 This sandbox aggregates metric values according to an aggregate method
 (average, minimum, maximum, sum, last).
+
+The `type_output_method` config option is not supported for this filter.
 
 Custom configuration for this sandbox filter:
 
@@ -199,6 +204,10 @@ before sending to InfluxDB.
 The sandbox will store the encoded json string in the payload, so this can then
 be sent to a HttpOutput configured with a PayloadEncoder.
 
+The `type_output_method` config option is not supported for this filter.
+
+Custom configuration for this sandbox filter:
+
 * `ticker_interval(int)`: Frequency (in seconds) at which a new batch metric
   will be generated.
 
@@ -221,6 +230,10 @@ fields values.
 
 This sandbox gathers multiple metrics in the same message but keep only the
 last value of every metric.
+
+The `type_output_method` config option is not supported for this filter.
+
+Custom configuration for this sandbox filter:
 
 * `ticker_interval(int)`: Frequency (in seconds) at which a new message will be
   generated with last values for all gathered metrics.
