@@ -121,6 +121,8 @@ Common configuration:
 This sandbox encodes metrics to the plaintext carbon format so that it can be
 ingested by a carbon (graphite) server.
 
+See: http://graphite.readthedocs.org/en/latest/feeding-carbon.html#the-plaintext-protocol
+
 #### `encoders/encode_header.lua`
 
 This sandbox encodes the generic part of a message as a formatted string into
