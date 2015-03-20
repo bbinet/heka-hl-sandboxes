@@ -4,9 +4,9 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 
 function process_message()
     local payload = read_message('Payload')
-    local name, value = string.match(payload, "^([%w._-]+) (%d+[.]?%d*)$")
+    local name, value = string.match(payload, "^([%w._-]+) (-?%d+[.]?%d*)$")
     if name == nil or value == nil then
-	return -1, "can't parse metric in payload"
+	return -1, "can't parse metric in payload: " .. payload
     end
 
     local fields = {
