@@ -30,9 +30,9 @@ function process_message()
 
     local type_out = type_output
     if method == 'prefix' then
-	type_out = type_output .. read_message('Type')
+	type_out = type_output .. string.gsub(read_message('Type'), "^heka.sandbox.", "")
     elseif method == 'suffix' then
-	type_out = read_message('Type') .. type_output
+	type_out = string.gsub(read_message('Type'), "^heka.sandbox.", "") .. type_output
     end
 
     inject_message({
