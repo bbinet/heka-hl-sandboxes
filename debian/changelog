@@ -1,3 +1,10 @@
+heka-hl-sandboxes (0.2+hl~1) wheezy; urgency=low
+
+  * remove existing "heka.sandbox." prefix if any
+  * cosmetics: remove old require
+
+ -- Bruno Binet <bruno.binet@gmail.com>  Mon, 23 Mar 2015 15:35:50 +0100
+
 heka-hl-sandboxes (0.1) wheezy; urgency=low
 
   * Initial Release.
