@@ -1,4 +1,3 @@
-require "circular_buffer"
 require "string"
 
 local aggregation = read_config('aggregation') or error('you must initialize "aggregation" option')
