@@ -364,6 +364,8 @@ type_output = "output"
         data = self.receive_json()
         self.assertEqual(data['Fields']['name_test_1'], 5)
         self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'max')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_min(self):
         self.send_json({
@@ -393,6 +395,8 @@ type_output = "output"
         data = self.receive_json()
         self.assertEqual(data['Fields']['name_test_1'], 2)
         self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'min')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_count(self):
         self.send_json({
@@ -422,6 +426,8 @@ type_output = "output"
         data = self.receive_json()
         self.assertEqual(data['Fields']['name_test_1'], 2)
         self.assertEqual(data['Fields']['name_test_2'], 1)
+        self.assertEqual(data['Fields']['_aggregation'], 'count')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_last(self):
         self.send_json({
@@ -451,6 +457,8 @@ type_output = "output"
         data = self.receive_json()
         self.assertEqual(data['Fields']['name_test_1'], 5)
         self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'last')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_sum(self):
         self.send_json({
@@ -480,6 +488,8 @@ type_output = "output"
         data = self.receive_json()
         self.assertEqual(data['Fields']['name_test_1'], 7)
         self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'sum')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_avg(self):
         self.send_json({
@@ -509,6 +519,8 @@ type_output = "output"
         data = self.receive_json()
         self.assertEqual(data['Fields']['name_test_1'], 3.5)
         self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'avg')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
 
 class TestGatherLastMetric(HekaTestCase):
