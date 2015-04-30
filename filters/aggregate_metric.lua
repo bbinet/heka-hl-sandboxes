@@ -43,25 +43,25 @@ function process_message()
 end
 
 function timer_event(ns)
+    local msg = {
+	Type = type_output,
+	Timestamp = ns,
+	Severity = 7,
+	Fields = {
+	    _ticker_interval = ticker_interval
+	}
+    }
     for index, agg in pairs(aggs) do
+	msg['Fields']['_aggregation'] = agg
 	for name, cb in pairs(data) do
-	    local value = 0
-	    if agg == "avg" then
-		value = data[name].sum/data[name].count
+	    if agg == 'avg' then
+		msg['Fields'][name] = data[name].sum/data[name].count
 	    else
-		value = data[name][agg]
+		msg['Fields'][name] = data[name][agg]
 	    end
-	    inject_message({
-		Type = type_output,
-		Timestamp = ns,
-		Severity = 7,
-		Fields = {
-		    ticker_interval = ticker_interval,
-		    aggregation = agg,
-		    value = value,
-		    name = name
-		}
-	    })
+	end
+	if next(data) ~= nil then
+	    inject_message(msg)
 	end
     end
     data = {}
