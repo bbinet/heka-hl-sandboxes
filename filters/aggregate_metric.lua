@@ -2,6 +2,7 @@ require "string"
 
 local aggregation = read_config('aggregation') or error('you must initialize "aggregation" option')
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
+local ticker_interval = read_config('ticker_interval') or error('you must initialize "ticker_interval" option')
 local data = {}
 local aggs = {}
 
@@ -55,6 +56,7 @@ function timer_event(ns)
 		Timestamp = ns,
 		Severity = 7,
 		Fields = {
+		    ticker_interval = ticker_interval,
 		    aggregation = agg,
 		    value = value,
 		    name = name

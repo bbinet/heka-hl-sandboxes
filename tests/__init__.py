@@ -279,6 +279,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.max'"
 ticker_interval = 3
 [TestMaxFilter.config]
+ticker_interval = 3
 aggregation = "max"
 type_output = "output"
     """}, 'TestMinFilter': {
@@ -290,6 +291,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.min'"
 ticker_interval = 3
 [TestMinFilter.config]
+ticker_interval = 3
 aggregation = "min"
 type_output = "output"
     """}, 'TestCountFilter': {
@@ -301,6 +303,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.count'"
 ticker_interval = 3
 [TestCountFilter.config]
+ticker_interval = 3
 aggregation = "count"
 type_output = "output"
     """}, 'TestLastFilter': {
@@ -312,6 +315,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.last'"
 ticker_interval = 3
 [TestLastFilter.config]
+ticker_interval = 3
 aggregation = "last"
 type_output = "output"
     """}, 'TestSumFilter': {
@@ -323,6 +327,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.sum'"
 ticker_interval = 3
 [TestSumFilter.config]
+ticker_interval = 3
 aggregation = "sum"
 type_output = "output"
     """}, 'TestAvgFilter': {
@@ -334,6 +339,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.avg'"
 ticker_interval = 3
 [TestAvgFilter.config]
+ticker_interval = 3
 aggregation = "avg"
 type_output = "output"
 """}}
