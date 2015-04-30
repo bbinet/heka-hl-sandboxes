@@ -106,7 +106,6 @@ uuid = "uuid_test"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test',
                 }
@@ -134,7 +133,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_roll_angle',
                 'value': 15
@@ -147,7 +145,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_mode',
                 'value': 0
@@ -160,7 +157,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_roll_angle',
                 'value': 15
@@ -175,7 +171,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker02_roll_angle',
                 'value': 15
@@ -188,7 +183,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_mode',
                 'value': 2
@@ -202,7 +196,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_roll_angle',
                 'value': 15
@@ -234,7 +227,6 @@ allMetric_type_output = "output.all"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'wind_test',
                 'value': 10
@@ -248,7 +240,6 @@ allMetric_type_output = "output.all"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'other_wind_test',
                 'value': 12
@@ -260,7 +251,6 @@ allMetric_type_output = "output.all"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'other_metric',
                 'value': 7
@@ -538,7 +528,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test_1',
                 'value': 10
@@ -547,7 +536,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test_2',
                 'value': 12
@@ -556,7 +544,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test_3',
                 'value': 7
@@ -598,7 +585,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test',
                 'value': 10
