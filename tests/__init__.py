@@ -45,6 +45,7 @@ class HekaTestCase(unittest.TestCase):
 
     def send_json(self, msg):
         # TODO: add timeout
+        print "=> %s" % json.dumps(msg)
         self.heka_output.sendto(
             json.dumps(msg) + '\n',
             ('localhost', int(ENV['JSON_OUTPUT_PORT'])))
@@ -52,6 +53,7 @@ class HekaTestCase(unittest.TestCase):
     def receive_json(self):
         # TODO: add timeout
         data, _ = self.heka_input.recvfrom(MAX_BYTES)
+        print "<= %s" % data
         return json.loads(data)
 
     @classmethod
