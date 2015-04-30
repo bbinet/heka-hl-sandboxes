@@ -21,6 +21,7 @@ ENV = {
     'JSON_OUTPUT_PORT': '6011',
     'LOG_INPUT_PORT': '6020',
     'LOG_OUTPUT_PORT': '6021',
+    'CARBON_INPUT_PORT': '6030',
 }
 
 def setUpModule():
@@ -672,6 +673,40 @@ message_matcher = "Type == 'heka.sandbox.encode.log.event'"
         self.send_log(msg)
         data = self.receive_log()
         self.assertEqual(data, msg)
+
+
+class TestEncodeCarbon(HekaTestCase):
+
+    def setUp(self):
+        self.heka_log_input = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.heka_log_input.bind(('localhost', int(ENV['CARBON_INPUT_PORT'])))
+
+    def tearDown(self):
+        self.heka_log_input.close()
+
+    sandboxes = {}
+
+    def receive_carbon(self):
+        data, _ = self.heka_log_input.recvfrom(MAX_BYTES)
+        return data
+
+    def test_sandbox_metric(self):
+        self.send_json({
+            'Timestamp': 10000000000,
+            'Type': 'carbon.output',
+            'Severity': 7,
+            'Fields': {
+                'm_1': 1.2,
+                'm_2': 0,
+                '_aggregation': 'min',
+                '_ticker_interval': 3,
+                }
+            })
+        data = self.receive_carbon()
+        self.assertEqual(
+            data,
+            'd539a1ab-1742-43c5-982e-02fab58283fa.hl-mc-1-dev.m_1 1.2 10\n'
+            'd539a1ab-1742-43c5-982e-02fab58283fa.hl-mc-1-dev.m_2 0 10\n')
 
 
 if __name__ == '__main__':

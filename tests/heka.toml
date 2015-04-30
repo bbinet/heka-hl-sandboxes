@@ -60,6 +60,18 @@ message_matcher = "Type == 'heka.sandbox.log.output'"
 address = ":%ENV[LOG_INPUT_PORT]"
 encoder = "HeaderEncoder"
 
+[CarbonEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_HL_DIR]/encoders/encode_carbon.lua"
+    [CarbonEncoder.config]
+    uuid = "d539a1ab-1742-43c5-982e-02fab58283fa"
+    hostname = "hl-mc-1-dev"
+[CarbonUdpOutput]
+type = "UdpOutput"
+message_matcher = "Type == 'carbon.output'"
+address = ":%ENV[CARBON_INPUT_PORT]"
+encoder = "CarbonEncoder"
+
 [RstEncoder]
 [FileOutput]
 message_matcher = "TRUE"
