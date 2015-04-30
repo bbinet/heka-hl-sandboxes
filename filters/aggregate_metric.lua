@@ -2,6 +2,7 @@ require "string"
 
 local aggregation = read_config('aggregation') or error('you must initialize "aggregation" option')
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
+local ticker_interval = read_config('ticker_interval') or error('you must initialize "ticker_interval" option')
 local data = {}
 local aggs = {}
 
@@ -42,24 +43,25 @@ function process_message()
 end
 
 function timer_event(ns)
+    local msg = {
+	Type = type_output,
+	Timestamp = ns,
+	Severity = 7,
+	Fields = {
+	    _ticker_interval = ticker_interval
+	}
+    }
     for index, agg in pairs(aggs) do
+	msg['Fields']['_aggregation'] = agg
 	for name, cb in pairs(data) do
-	    local value = 0
-	    if agg == "avg" then
-		value = data[name].sum/data[name].count
+	    if agg == 'avg' then
+		msg['Fields'][name] = data[name].sum/data[name].count
 	    else
-		value = data[name][agg]
+		msg['Fields'][name] = data[name][agg]
 	    end
-	    inject_message({
-		Type = type_output,
-		Timestamp = ns,
-		Severity = 7,
-		Fields = {
-		    aggregation = agg,
-		    value = value,
-		    name = name
-		}
-	    })
+	end
+	if next(data) ~= nil then
+	    inject_message(msg)
 	end
     end
     data = {}

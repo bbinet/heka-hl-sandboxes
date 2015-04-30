@@ -45,6 +45,7 @@ class HekaTestCase(unittest.TestCase):
 
     def send_json(self, msg):
         # TODO: add timeout
+        print "=> %s" % json.dumps(msg)
         self.heka_output.sendto(
             json.dumps(msg) + '\n',
             ('localhost', int(ENV['JSON_OUTPUT_PORT'])))
@@ -52,6 +53,7 @@ class HekaTestCase(unittest.TestCase):
     def receive_json(self):
         # TODO: add timeout
         data, _ = self.heka_input.recvfrom(MAX_BYTES)
+        print "<= %s" % data
         return json.loads(data)
 
     @classmethod
@@ -104,7 +106,6 @@ uuid = "uuid_test"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test',
                 }
@@ -132,7 +133,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_roll_angle',
                 'value': 15
@@ -145,7 +145,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_mode',
                 'value': 0
@@ -158,7 +157,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_roll_angle',
                 'value': 15
@@ -173,7 +171,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker02_roll_angle',
                 'value': 15
@@ -186,7 +183,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_mode',
                 'value': 2
@@ -200,7 +196,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'trserver_tracker01_roll_angle',
                 'value': 15
@@ -232,7 +227,6 @@ allMetric_type_output = "output.all"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'wind_test',
                 'value': 10
@@ -246,7 +240,6 @@ allMetric_type_output = "output.all"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'other_wind_test',
                 'value': 12
@@ -258,7 +251,6 @@ allMetric_type_output = "output.all"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'other_metric',
                 'value': 7
@@ -279,6 +271,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.max'"
 ticker_interval = 3
 [TestMaxFilter.config]
+ticker_interval = 3
 aggregation = "max"
 type_output = "output"
     """}, 'TestMinFilter': {
@@ -290,6 +283,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.min'"
 ticker_interval = 3
 [TestMinFilter.config]
+ticker_interval = 3
 aggregation = "min"
 type_output = "output"
     """}, 'TestCountFilter': {
@@ -301,6 +295,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.count'"
 ticker_interval = 3
 [TestCountFilter.config]
+ticker_interval = 3
 aggregation = "count"
 type_output = "output"
     """}, 'TestLastFilter': {
@@ -312,6 +307,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.last'"
 ticker_interval = 3
 [TestLastFilter.config]
+ticker_interval = 3
 aggregation = "last"
 type_output = "output"
     """}, 'TestSumFilter': {
@@ -323,6 +319,7 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.sum'"
 ticker_interval = 3
 [TestSumFilter.config]
+ticker_interval = 3
 aggregation = "sum"
 type_output = "output"
     """}, 'TestAvgFilter': {
@@ -334,250 +331,196 @@ filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.avg'"
 ticker_interval = 3
 [TestAvgFilter.config]
+ticker_interval = 3
 aggregation = "avg"
 type_output = "output"
 """}}
 
     def test_sandbox_max(self):
-
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.max',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
-                'value': 1
-                }
-            })
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test.max',
-            'Payload': 'payload_test',
-            'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 2
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.max',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 5
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.max',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
-                'value': 1
+                'name': 'name_test_2',
+                'value': 3
                 }
             })
         data = self.receive_json()
-        self.assertEqual(data['Fields']['value'], 5, 'value field should be with "max" aggregation: 5')
+        self.assertEqual(data['Fields']['name_test_1'], 5)
+        self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'max')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_min(self):
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.min',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
-                'value': 1
-                }
-            })
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test.min',
-            'Payload': 'payload_test',
-            'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 2
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.min',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 5
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.min',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_2',
                 'value': 3
                 }
             })
         data = self.receive_json()
-        self.assertEqual(data['Fields']['value'], 1, 'value field should be with "min" aggregation: 1')
+        self.assertEqual(data['Fields']['name_test_1'], 2)
+        self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'min')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_count(self):
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.count',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
-                'value': 1
-                }
-            })
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test.count',
-            'Payload': 'payload_test',
-            'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 2
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.count',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 5
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.count',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_2',
                 'value': 3
                 }
             })
         data = self.receive_json()
-        self.assertEqual(data['Fields']['value'], 4, 'value field should be with "count" aggregation: 4')
+        self.assertEqual(data['Fields']['name_test_1'], 2)
+        self.assertEqual(data['Fields']['name_test_2'], 1)
+        self.assertEqual(data['Fields']['_aggregation'], 'count')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_last(self):
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.last',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
-                'value': 1
-                }
-            })
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test.last',
-            'Payload': 'payload_test',
-            'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 2
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.last',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 5
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.last',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_2',
                 'value': 3
                 }
             })
         data = self.receive_json()
-        self.assertEqual(data['Fields']['value'], 3, 'value field should be with "last" aggregation: 3')
+        self.assertEqual(data['Fields']['name_test_1'], 5)
+        self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'last')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_sum(self):
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.sum',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
-                'value': 1
-                }
-            })
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test.sum',
-            'Payload': 'payload_test',
-            'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 2
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.sum',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 5
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.sum',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_2',
                 'value': 3
                 }
             })
         data = self.receive_json()
-        self.assertEqual(data['Fields']['value'], 11, 'value field should be with "sum" aggregation: 11')
+        self.assertEqual(data['Fields']['name_test_1'], 7)
+        self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'sum')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_avg(self):
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.avg',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
-                'value': 1
-                }
-            })
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test.avg',
-            'Payload': 'payload_test',
-            'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 2
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.avg',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_1',
                 'value': 5
                 }
             })
         self.send_json({
             'Timestamp': 10,
             'Type': 'test.avg',
-            'Payload': 'payload_test',
             'Fields': {
-                'name': 'name_test',
+                'name': 'name_test_2',
                 'value': 3
                 }
             })
         data = self.receive_json()
-        self.assertEqual(data['Fields']['value'], 2.75, 'value field should be with "avg" aggregation: 2.75')
+        self.assertEqual(data['Fields']['name_test_1'], 3.5)
+        self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'avg')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
 
 class TestGatherLastMetric(HekaTestCase):
@@ -597,7 +540,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test_1',
                 'value': 10
@@ -606,7 +548,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test_2',
                 'value': 12
@@ -615,7 +556,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test_3',
                 'value': 7
@@ -657,7 +597,6 @@ type_output = "output"
         self.send_json({
             'Timestamp': 10,
             'Type': 'test',
-            'Payload': 'payload_test',
             'Fields': {
                 'name': 'name_test',
                 'value': 10
