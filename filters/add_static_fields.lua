@@ -5,7 +5,7 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 local method = read_config('type_output_method') or 'overwrite'
 local fields = { }
 for item in string.gmatch(fields_cfg, "[%S]+") do
-    fields[item] = read_config(item) or ('you must initialize "' .. item .. '" option')
+    fields[item] = read_config(item) or error('you must initialize "' .. item .. '" option')
 end
 
 if method ~= "prefix" and method ~= "suffix" and method ~= "overwrite" then
