@@ -1,6 +1,9 @@
 require "string"
 
-local aggregation = read_config('aggregation') or error('you must initialize "aggregation" option')
+local agg = read_config('aggregation') or error('you must initialize "aggregation" option')
+if  agg ~= "avg" and agg ~= "max" and agg ~= "min" and agg ~= "sum" and agg ~= "last" and agg ~= "count" and agg ~= "direct" then
+    error('"' .. agg .. '" unknown aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last", "count", "direct"')
+end
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
 local ticker_interval = read_config('ticker_interval') or error('you must initialize "ticker_interval" option')
 local gust = read_config('gust')
@@ -14,14 +17,6 @@ if gust ~= nil then
     gust_ns = gust * 10^9
 end
 local data = {}
-local aggs = {}
-
-for agg in string.gmatch(aggregation, "[%S]+") do
-    if  agg ~= "avg" and agg ~= "max" and agg ~= "min" and agg ~= "sum" and agg ~= "last" and agg ~= "count" then
-	error('"' .. agg .. '" unknown aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last", "count"')
-    end
-    aggs[agg] = agg
-end
 
 function process_message()
     local ts = read_message('Timestamp')
@@ -32,6 +27,18 @@ function process_message()
     end
     if value == nil then
 	return -1, "Fields[value] cant be nil"
+    end
+    if agg == "direct" then
+	local msg = {
+	    Type = type_output,
+	    Timestamp = ts,
+	    Severity = 7,
+	    Fields = {
+		_aggregation = agg
+	    }
+	}
+	msg['Fields'][name] = value
+	inject_message(msg)
     end
 
     if gust ~= nil then
@@ -75,29 +82,30 @@ function process_message()
 end
 
 function timer_event(ns)
+    if agg == "direct" then
+	return 0
+    end
     local msg = {
 	Type = type_output,
 	Timestamp = ns,
 	Severity = 7,
 	Fields = {
-	    _ticker_interval = ticker_interval
+	    _ticker_interval = ticker_interval,
+	    _aggregation = agg
 	}
     }
     if gust ~= nil then
 	msg['Fields']['_gust'] = gust
     end
-    for index, agg in pairs(aggs) do
-	msg['Fields']['_aggregation'] = agg
-	for name, cb in pairs(data) do
-	    if agg == 'avg' then
-		msg['Fields'][name] = data[name].sum/data[name].count
-	    else
-		msg['Fields'][name] = data[name][agg]
-	    end
+    for name, cb in pairs(data) do
+	if agg == 'avg' then
+	    msg['Fields'][name] = data[name].sum/data[name].count
+	else
+	    msg['Fields'][name] = data[name][agg]
 	end
-	if next(data) ~= nil then
-	    inject_message(msg)
-	end
+    end
+    if next(data) ~= nil then
+	inject_message(msg)
     end
     data = {}
 end
