@@ -263,7 +263,33 @@ allMetric_type_output = "output.all"
 
 class TestAggregateMetric(HekaTestCase):
 
-    sandboxes = {'TestMaxFilter': {
+    sandboxes = {'TestGustMinFilter': {
+        'file': '%s/aggregate_metric.lua' % HEKA_FILTERS_DIR,
+        'toml': """
+[TestGustMinFilter]
+type = "SandboxFilter"
+filename = "../filters/aggregate_metric.lua"
+message_matcher = "Type == 'test.gust.min'"
+ticker_interval = 3
+[TestGustMinFilter.config]
+ticker_interval = 3
+aggregation = "min"
+gust = 2
+type_output = "output"
+    """}, 'TestGustMaxFilter': {
+        'file': '%s/aggregate_metric.lua' % HEKA_FILTERS_DIR,
+        'toml': """
+[TestGustMaxFilter]
+type = "SandboxFilter"
+filename = "../filters/aggregate_metric.lua"
+message_matcher = "Type == 'test.gust.max'"
+ticker_interval = 3
+[TestGustMaxFilter.config]
+ticker_interval = 3
+aggregation = "max"
+gust = 2
+type_output = "output"
+    """}, 'TestMaxFilter': {
         'file': '%s/aggregate_metric.lua' % HEKA_FILTERS_DIR,
         'toml': """
 [TestMaxFilter]
@@ -337,6 +363,106 @@ aggregation = "avg"
 type_output = "output"
 """}}
 
+    def test_sandbox_gust_min(self):
+        self.send_json({
+            'Timestamp': 10000000000,
+            'Type': 'test.gust.min',
+            'Fields': {
+                'name': 'name_test_1',
+                'value': 2
+                }
+            })
+        self.send_json({
+            'Timestamp': 11500000000,
+            'Type': 'test.gust.min',
+            'Fields': {
+                'name': 'name_test_1',
+                'value': 6
+                }
+            })
+        self.send_json({
+            'Timestamp': 13000000000,
+            'Type': 'test.gust.min',
+            'Fields': {
+                'name': 'name_test_1',
+                'value': 3
+                }
+            })
+        self.send_json({
+            'Timestamp': 14000000000,
+            'Type': 'test.gust.min',
+            'Fields': {
+                'name': 'name_test_2',
+                'value': 5
+                }
+            })
+        self.send_json({
+            'Timestamp': 16010000000,
+            'Type': 'test.gust.min',
+            'Fields': {
+                'name': 'name_test_2',
+                'value': 3
+                }
+            })
+        data = self.receive_json()
+        # name_test_1 gust min value is 2 because it is the first received
+        # value and so there is no previous value to aggregate with
+        self.assertEqual(data['Fields']['name_test_1'], 2)
+        self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'min')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
+        self.assertTrue('_gust' in data['Fields'])
+        self.assertEqual(data['Fields']['_gust'], 2)
+
+    def test_sandbox_gust_max(self):
+        self.send_json({
+            'Timestamp': 10000000000,
+            'Type': 'test.gust.max',
+            'Fields': {
+                'name': 'name_test_1',
+                'value': 2
+                }
+            })
+        self.send_json({
+            'Timestamp': 11500000000,
+            'Type': 'test.gust.max',
+            'Fields': {
+                'name': 'name_test_1',
+                'value': 6
+                }
+            })
+        self.send_json({
+            'Timestamp': 13000000000,
+            'Type': 'test.gust.max',
+            'Fields': {
+                'name': 'name_test_1',
+                'value': 3
+                }
+            })
+        self.send_json({
+            'Timestamp': 14000000000,
+            'Type': 'test.gust.max',
+            'Fields': {
+                'name': 'name_test_2',
+                'value': 5
+                }
+            })
+        self.send_json({
+            'Timestamp': 16010000000,
+            'Type': 'test.gust.max',
+            'Fields': {
+                'name': 'name_test_2',
+                'value': 3
+                }
+            })
+        data = self.receive_json()
+        self.assertEqual(data['Fields']['name_test_1'], 4.5)
+        self.assertEqual(data['Fields']['name_test_2'], 5)
+        self.assertEqual(data['Fields']['_aggregation'], 'max')
+        self.assertEqual(data['Fields']['_ticker_interval'], 3)
+        self.assertTrue('_gust' in data['Fields'])
+        self.assertEqual(data['Fields']['_gust'], 2)
+
     def test_sandbox_max(self):
         self.send_json({
             'Timestamp': 10,
@@ -367,6 +493,7 @@ type_output = "output"
         self.assertEqual(data['Fields']['name_test_2'], 3)
         self.assertEqual(data['Fields']['_aggregation'], 'max')
         self.assertEqual(data['Fields']['_ticker_interval'], 3)
+        self.assertFalse('_gust' in data['Fields'])
 
     def test_sandbox_min(self):
         self.send_json({
