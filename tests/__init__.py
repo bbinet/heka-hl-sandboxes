@@ -731,28 +731,37 @@ type_output = "output"
             })
 
         data = self.receive_json()
-        self.assertEqual(len(data), 3)
+        self.assertEqual(len(data), 1)
+        data = data[0]
 
-        self.assertEqual(data[0]['Fields']['name_test_1'], 2)
-        self.assertEqual(data[0]['Fields']['_aggregation'], 'direct')
-        self.assertEqual(data[0]['Timestamp'], 10)
-        self.assertFalse('name_test_2' in data[0]['Fields'])
-        self.assertFalse('_ticker_interval' in data[0]['Fields'])
-        self.assertFalse('_gust' in data[0]['Fields'])
+        self.assertEqual(data['Fields']['name_test_1'], 2)
+        self.assertEqual(data['Fields']['_aggregation'], 'direct')
+        self.assertEqual(data['Timestamp'], 10)
+        self.assertFalse('name_test_2' in data['Fields'])
+        self.assertFalse('_ticker_interval' in data['Fields'])
+        self.assertFalse('_gust' in data['Fields'])
 
-        self.assertEqual(data[1]['Fields']['name_test_1'], 5)
-        self.assertEqual(data[1]['Fields']['_aggregation'], 'direct')
-        self.assertEqual(data[1]['Timestamp'], 11)
-        self.assertFalse('name_test_2' in data[1]['Fields'])
-        self.assertFalse('_ticker_interval' in data[1]['Fields'])
-        self.assertFalse('_gust' in data[1]['Fields'])
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
 
-        self.assertEqual(data[2]['Fields']['name_test_2'], 3)
-        self.assertEqual(data[2]['Fields']['_aggregation'], 'direct')
-        self.assertEqual(data[2]['Timestamp'], 12)
-        self.assertFalse('name_test_1' in data[2]['Fields'])
-        self.assertFalse('_ticker_interval' in data[2]['Fields'])
-        self.assertFalse('_gust' in data[2]['Fields'])
+        self.assertEqual(data['Fields']['name_test_1'], 5)
+        self.assertEqual(data['Fields']['_aggregation'], 'direct')
+        self.assertEqual(data['Timestamp'], 11)
+        self.assertFalse('name_test_2' in data['Fields'])
+        self.assertFalse('_ticker_interval' in data['Fields'])
+        self.assertFalse('_gust' in data['Fields'])
+
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+
+        self.assertEqual(data['Fields']['name_test_2'], 3)
+        self.assertEqual(data['Fields']['_aggregation'], 'direct')
+        self.assertEqual(data['Timestamp'], 12)
+        self.assertFalse('name_test_1' in data['Fields'])
+        self.assertFalse('_ticker_interval' in data['Fields'])
+        self.assertFalse('_gust' in data['Fields'])
 
 
 class TestGatherLastMetric(HekaTestCase):
