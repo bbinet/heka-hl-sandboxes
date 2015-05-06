@@ -912,5 +912,65 @@ class TestEncodeCarbon(HekaTestCase):
             'd539a1ab-1742-43c5-982e-02fab58283fa.hl-mc-1-dev.m_2 0 10\n')
 
 
+class TestEncodeInflux08(HekaTestCase):
+
+    sandboxes = {'TestEncodeInflux08': {
+        'file': '%s/encode_influxdb_0_8.lua' % HEKA_FILTERS_DIR,
+        'toml': """
+[TestEncodeInflux08]
+type = "SandboxFilter"
+message_matcher = "Type == 'test'"
+ticker_interval = 2
+[TestEncodeInflux08.config]
+type_output = "output"
+"""}}
+
+    def test_sandbox_metric(self):
+        self.send_json({
+            'Timestamp': 10,
+            'Type': 'test',
+            'Severity': 7,
+            'Fields': {
+                'm_1': 1.2,
+                'm_2': 0,
+                '_aggregation': 'min',
+                '_ticker_interval': 3,
+                }
+            })
+        self.send_json({
+            'Timestamp': 15,
+            'Type': 'test',
+            'Severity': 7,
+            'Fields': {
+                'm_1': 1,
+                '_aggregation': 'max',
+                '_ticker_interval': 3,
+                }
+            })
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertGreater(len(data['Payload']), 0)
+        payload = json.loads(data['Payload'])
+        self.assertDictEqual(payload[0],
+            {
+                u'points': [[0.01, 1.2]],
+                u'name': u'm_1',
+                u'columns': [u'time', u'value']
+            })
+        self.assertDictEqual(payload[1],
+            {
+                u'points': [[0.01, 0]],
+                u'name': u'm_2',
+                u'columns': [u'time', u'value']
+            })
+        self.assertDictEqual(payload[2],
+            {
+                u'points': [[0.015, 1]],
+                u'name': u'm_1',
+                u'columns': [u'time', u'value']
+            })
+
+
 if __name__ == '__main__':
     unittest.main()
