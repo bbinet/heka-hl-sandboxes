@@ -192,7 +192,6 @@ class TestAggregateMetric(HekaTestCase):
         'toml': """
 [TestGustMinFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.gust.min'"
 ticker_interval = 3
 [TestGustMinFilter.config]
@@ -205,7 +204,6 @@ type_output = "output"
         'toml': """
 [TestGustMaxFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.gust.max'"
 ticker_interval = 3
 [TestGustMaxFilter.config]
@@ -218,7 +216,6 @@ type_output = "output"
         'toml': """
 [TestMaxFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.max'"
 ticker_interval = 3
 [TestMaxFilter.config]
@@ -230,7 +227,6 @@ type_output = "output"
         'toml': """
 [TestMinFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.min'"
 ticker_interval = 3
 [TestMinFilter.config]
@@ -242,7 +238,6 @@ type_output = "output"
         'toml': """
 [TestCountFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.count'"
 ticker_interval = 3
 [TestCountFilter.config]
@@ -254,7 +249,6 @@ type_output = "output"
         'toml': """
 [TestLastFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.last'"
 ticker_interval = 3
 [TestLastFilter.config]
@@ -266,7 +260,6 @@ type_output = "output"
         'toml': """
 [TestSumFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.sum'"
 ticker_interval = 3
 [TestSumFilter.config]
@@ -278,7 +271,6 @@ type_output = "output"
         'toml': """
 [TestAvgFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.avg'"
 ticker_interval = 3
 [TestAvgFilter.config]
@@ -290,7 +282,6 @@ type_output = "output"
         'toml': """
 [TestDirectFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.direct'"
 ticker_interval = 3
 [TestDirectFilter.config]
