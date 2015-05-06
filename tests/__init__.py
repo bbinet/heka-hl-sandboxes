@@ -22,6 +22,7 @@ ENV = {
     'LOG_INPUT_PORT': '6020',
     'LOG_OUTPUT_PORT': '6021',
     'CARBON_INPUT_PORT': '6030',
+    'TRSERVER_OUTPUT_PORT': '6040',
 }
 jsondec = json.JSONDecoder()
 
@@ -849,6 +850,76 @@ type_output = "output"
         self.assertEqual(len(data), 1)
         data = data[0]
         self.assertEqual(data['Fields']['name'], 'uuid_test-name_test-10', 'name field should be set to: uuid_test-name_test-10')
+
+
+class TestTrserverData(HekaTestCase):
+
+    sandboxes = {}
+
+    def send_trserver(self, msg):
+        print "=> %s" % json.dumps(msg)
+        self.heka_output.sendto(
+            msg, ('localhost', int(ENV['TRSERVER_OUTPUT_PORT'])))
+
+    def test_sandbox(self):
+        self.send_trserver('trserver_tracker01_accelerometer:300|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_accelerometer')
+        self.assertEqual(data['Fields']['value'], 300)
+        self.assertFalse('_mode' in data['Fields'])
+
+        self.send_trserver('trserver_sun_roll:-51.842|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_sun_roll')
+        self.assertEqual(data['Fields']['value'], -51.842)
+        self.assertFalse('_mode' in data['Fields'])
+
+        self.send_trserver('trserver_tracker01_mode:5|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_mode')
+        self.assertEqual(data['Fields']['value'], 5)
+        self.assertTrue('_mode' in data['Fields'])
+        self.assertEqual(data['Fields']['_mode'], 5)
+
+        self.send_trserver('trserver_tracker01_wind:11.4|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_wind')
+        self.assertEqual(data['Fields']['value'], 11.4)
+        self.assertTrue('_mode' in data['Fields'])
+        self.assertEqual(data['Fields']['_mode'], 5)
+
+        self.send_trserver('trserver_tracker01_accelerometer:300|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_accelerometer')
+        self.assertEqual(data['Fields']['value'], 300)
+        self.assertTrue('_mode' in data['Fields'])
+        self.assertEqual(data['Fields']['_mode'], 5)
+
+        self.send_trserver('trserver_sun_roll:-51.842|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_sun_roll')
+        self.assertEqual(data['Fields']['value'], -51.842)
+        self.assertFalse('_mode' in data['Fields'])
+
+        self.send_trserver('trserver_tracker02_accelerometer:300|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker02_accelerometer')
+        self.assertEqual(data['Fields']['value'], 300)
+        self.assertFalse('_mode' in data['Fields'])
 
 
 class TestLogData(HekaTestCase):
