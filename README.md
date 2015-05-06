@@ -107,6 +107,9 @@ This sandbox parses messages from json.
 
 This sandbox parses metrics from trserver.
 
+It also adds a `_mode` field to all tracker messages which value is set to
+the last mode metric value that have been received for the same tracker.
+
 ### Sandbox encoders
 
 Common configuration:
