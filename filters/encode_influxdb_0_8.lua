@@ -29,9 +29,11 @@ function process_message()
 end
 
 function timer_event(ns)
-    inject_message({
-	Type = type_output,
-	Payload = cjson.encode(metrics)
-    })
+    if next(metrics) ~= nil then
+	inject_message({
+	    Type = type_output,
+	    Payload = cjson.encode(metrics)
+	})
+    end
     metrics = {}
 end
