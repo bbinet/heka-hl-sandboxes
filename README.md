@@ -211,28 +211,6 @@ Custom configuration for this sandbox filter:
 This sandbox encodes metrics messages as a specific formatted string into the
 payload for further processing of the `encode_header.lua` encoder.
 
-#### `filters/format_metric_name.lua`
-
-This sandbox sets the "name" field of the message by concatenating other
-fields values.
-
-* `fields(string "field1 field2")`: Space separated list of fields.
-  Each field must refer to a field name which actually exists in the message.
-  The concatenation of the fields values will keep the same order of the list.
-* `separator(string)`: String separator to use concatenate all fields values.
-
-#### `filters/gather_last_metrics.lua`
-
-This sandbox gathers multiple metrics in the same message but keep only the
-last value of every metric.
-
-The `type_output_method` config option is not supported for this filter.
-
-Custom configuration for this sandbox filter:
-
-* `ticker_interval(int)`: Frequency (in seconds) at which a new message will be
-  generated with last values for all gathered metrics.
-
 #### `filters/regex_dispatch_metric.lua`
 
 This sandbox acts as a router: it dynamically sets the `type_output` header
