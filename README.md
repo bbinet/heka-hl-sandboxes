@@ -150,11 +150,6 @@ Common configuration:
   `type_output` string should be set on the `Type` header (default is
   "overwrite").
 
-#### `filters/add_mode_field.lua`
-
-This sandbox adds a "mode" field to all tracker messages which value is set to
-the last mode metric value that have been received for the same tracker.
-
 #### `filters/add_static_fields.lua`
 
 This sandbox sets hardcoded values for given fields.
