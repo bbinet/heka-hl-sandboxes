@@ -172,7 +172,8 @@ The `type_output_method` config option is not supported for this filter.
 Custom configuration for this sandbox filter:
 
 * `ticker_interval(int)`: Frequency (in seconds) at which a new aggregated
-  metric will be generated.
+  metric will be generated. *This should be set both in the common and custom
+  config sections.*
 * `gust(int|nil)`: Wether or not to apply a "gust" average pretreatment. If
   gust is not nil, it must be the number of seconds (integer) from which an
   average of previous values will be computed and used instead of the raw value

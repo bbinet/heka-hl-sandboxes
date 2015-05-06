@@ -12,6 +12,7 @@ MAX_BYTES = 5000
 HEKA_TESTS_DIR = os.path.realpath(os.path.dirname(__file__))
 HEKA_HL_DIR = os.path.realpath(os.path.join(HEKA_TESTS_DIR, '..'))
 HEKA_FILTERS_DIR = os.path.join(HEKA_HL_DIR, 'filters')
+HEKA_OLD_FILTERS_DIR = os.path.join(HEKA_HL_DIR, 'old', 'filters')
 HEKA_TOML = os.path.join(HEKA_TESTS_DIR, 'heka.toml')
 SANBOXMGR_TOML = os.path.join(HEKA_TESTS_DIR, 'sbmgr.toml')
 ENV = {
@@ -191,7 +192,6 @@ class TestAggregateMetric(HekaTestCase):
         'toml': """
 [TestGustMinFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.gust.min'"
 ticker_interval = 3
 [TestGustMinFilter.config]
@@ -204,7 +204,6 @@ type_output = "output"
         'toml': """
 [TestGustMaxFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.gust.max'"
 ticker_interval = 3
 [TestGustMaxFilter.config]
@@ -217,7 +216,6 @@ type_output = "output"
         'toml': """
 [TestMaxFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.max'"
 ticker_interval = 3
 [TestMaxFilter.config]
@@ -229,7 +227,6 @@ type_output = "output"
         'toml': """
 [TestMinFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.min'"
 ticker_interval = 3
 [TestMinFilter.config]
@@ -241,7 +238,6 @@ type_output = "output"
         'toml': """
 [TestCountFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.count'"
 ticker_interval = 3
 [TestCountFilter.config]
@@ -253,7 +249,6 @@ type_output = "output"
         'toml': """
 [TestLastFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.last'"
 ticker_interval = 3
 [TestLastFilter.config]
@@ -265,7 +260,6 @@ type_output = "output"
         'toml': """
 [TestSumFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.sum'"
 ticker_interval = 3
 [TestSumFilter.config]
@@ -277,7 +271,6 @@ type_output = "output"
         'toml': """
 [TestAvgFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.avg'"
 ticker_interval = 3
 [TestAvgFilter.config]
@@ -289,7 +282,6 @@ type_output = "output"
         'toml': """
 [TestDirectFilter]
 type = "SandboxFilter"
-filename = "../filters/aggregate_metric.lua"
 message_matcher = "Type == 'test.direct'"
 ticker_interval = 3
 [TestDirectFilter.config]
@@ -663,14 +655,14 @@ type_output = "output"
 
 class TestGatherLastMetric(HekaTestCase):
 
-    sandboxes = {'TestFilter': {
-        'file': '%s/gather_last_metrics.lua' % HEKA_FILTERS_DIR,
+    sandboxes = {'TestGatherLastMetricFilter': {
+        'file': '%s/gather_last_metrics.lua' % HEKA_OLD_FILTERS_DIR,
         'toml': """
-[TestFilter]
+[TestGatherLastMetricFilter]
 type = "SandboxFilter"
 message_matcher = "Type == 'test'"
 ticker_interval = 2
-[TestFilter.config]
+[TestGatherLastMetricFilter.config]
 type_output = "output"
 """}}
 
@@ -721,13 +713,13 @@ type_output = "encode.influxdb"
 fields = "uuid"
 uuid = "uuid_test"
 """},
-        'TestGatherFields': {
-            'file': '%s/format_metric_name.lua' % HEKA_FILTERS_DIR,
+        'TestFormatMetricName': {
+            'file': '%s/format_metric_name.lua' % HEKA_OLD_FILTERS_DIR,
             'toml': """
-[TestGatherFields]
+[TestFormatMetricName]
 type = "SandboxFilter"
 message_matcher = "Type == 'heka.sandbox.encode.influxdb'"
-[TestGatherFields.config]
+[TestFormatMetricName.config]
 fields = "uuid name value"
 separator = "-"
 type_output = "output"
