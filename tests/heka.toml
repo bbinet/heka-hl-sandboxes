@@ -33,12 +33,23 @@ type = "SandboxEncoder"
 filename = "%ENV[HEKA_HL_DIR]/encoders/encode_json.lua"
 [UdpOutput]
 type = "UdpOutput"
-message_matcher = "Type == 'heka.sandbox.output' || Type == 'heka.sandbox.output.wind' || Type == 'heka.sandbox.output.all'"
+message_matcher = "Type == 'heka.sandbox.output' || Type == 'heka.sandbox.output.wind' || Type == 'heka.sandbox.output.all' || Type == 'trserver.metric'"
 address = ":%ENV[JSON_INPUT_PORT]"
 encoder = "JsonEncoder"
 
 # Tests for encode/decode metrics and events to/from log files
 # We cannot load them dynamically because they are used by go udp input/output
+
+[TrserverMetricsDecoder]
+type = "SandboxDecoder"
+filename = "%ENV[HEKA_HL_DIR]/decoders/decode_trserver_metrics.lua"
+    [TrserverMetricsDecoder.config]
+    type_output = "trserver.metric"
+[TrserverMetricsUdpInput]
+type = "UdpInput"
+address = ":%ENV[TRSERVER_OUTPUT_PORT]"
+splitter = "TokenSplitter"
+decoder = "TrserverMetricsDecoder"
 
 [HeaderDecoder]
 type = "SandboxDecoder"

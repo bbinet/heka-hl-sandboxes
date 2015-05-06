@@ -22,6 +22,7 @@ ENV = {
     'LOG_INPUT_PORT': '6020',
     'LOG_OUTPUT_PORT': '6021',
     'CARBON_INPUT_PORT': '6030',
+    'TRSERVER_OUTPUT_PORT': '6040',
 }
 jsondec = json.JSONDecoder()
 
@@ -122,110 +123,6 @@ uuid = "uuid_test"
         data = data[0]
         self.assertEqual(data['Fields']['uuid'], 'uuid_test', 'uuid field should be add to the current message with uuid_test value')
         self.assertEqual(data['Fields']['name'], 'name_test', 'name field should be keep the same value: "name_test"')
-
-
-class TestAddModeField(HekaTestCase):
-
-    sandboxes = {'TestFilter': {
-        'file': '%s/add_mode_field.lua' % HEKA_FILTERS_DIR,
-        'toml': """
-[TestFilter]
-type = "SandboxFilter"
-message_matcher = "Type == 'test'"
-[TestFilter.config]
-type_output = "output"
-"""}}
-
-    def test_sandbox(self):
-        # send message from tracker01_roll_angle before the first mode message
-        # equivalent to a message without tracker attachment
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test',
-            'Fields': {
-                'name': 'trserver_tracker01_roll_angle',
-                'value': 15
-                }
-            })
-        data = self.receive_json()
-        self.assertEqual(len(data), 1)
-        data = data[0]
-        self.assertFalse('mode' in data['Fields'], 'mode field should not be present since no previous message has been sent with a mode name')
-
-        # send message with mode: 0
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test',
-            'Fields': {
-                'name': 'trserver_tracker01_mode',
-                'value': 0
-                }
-            })
-        data = self.receive_json()
-        self.assertEqual(len(data), 1)
-        data = data[0]
-        self.assertEqual(data['Fields']['mode'], 0, 'mode should be set to 0 with the current message which is a mode metric set to 0')
-
-        # send first message from tracker01_roll_angle
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test',
-            'Fields': {
-                'name': 'trserver_tracker01_roll_angle',
-                'value': 15
-                }
-            })
-        data = self.receive_json()
-        self.assertEqual(len(data), 1)
-        data = data[0]
-        self.assertEqual(data['Fields']['mode'], 0, 'mode should be set to 0 when a previous message with mode 0 has been sent before')
-
-        # send first message from tracker02_roll_angle
-        # we should don't have any impact by the change mode of tracker 01
-        # which should be unstage
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test',
-            'Fields': {
-                'name': 'trserver_tracker02_roll_angle',
-                'value': 15
-                }
-            })
-        data = self.receive_json()
-        self.assertEqual(len(data), 1)
-        data = data[0]
-        self.assertFalse('mode' in data['Fields'], 'mode field should not be present since no previous message has been sent with a mode name')
-
-        # send message with mode: 2
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test',
-            'Fields': {
-                'name': 'trserver_tracker01_mode',
-                'value': 2
-                }
-            })
-        data = self.receive_json()
-        self.assertEqual(len(data), 1)
-        data = data[0]
-        self.assertEqual(data['Fields']['mode'], 2, 'mode should be set to 2 with the current message which is a mode metric set to 2')
-
-        # send first message from tracker01_roll_angle
-        # and test if other fields are untouched
-        self.send_json({
-            'Timestamp': 10,
-            'Type': 'test',
-            'Fields': {
-                'name': 'trserver_tracker01_roll_angle',
-                'value': 15
-                }
-            })
-        data = self.receive_json()
-        self.assertEqual(len(data), 1)
-        data = data[0]
-        self.assertEqual(data['Fields']['mode'], 2, 'mode should be set to 2 when a previous message with mode 2 has been sent before')
-        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_roll_angle', 'name field should be keep the same value: "trserver_tracker01_roll_angle"')
-        self.assertEqual(data['Fields']['value'], 15, 'value field should be keep the same value: 15')
 
 
 class TestRegexDispatchMetric(HekaTestCase):
@@ -849,6 +746,76 @@ type_output = "output"
         self.assertEqual(len(data), 1)
         data = data[0]
         self.assertEqual(data['Fields']['name'], 'uuid_test-name_test-10', 'name field should be set to: uuid_test-name_test-10')
+
+
+class TestTrserverData(HekaTestCase):
+
+    sandboxes = {}
+
+    def send_trserver(self, msg):
+        print "=> %s" % json.dumps(msg)
+        self.heka_output.sendto(
+            msg, ('localhost', int(ENV['TRSERVER_OUTPUT_PORT'])))
+
+    def test_sandbox(self):
+        self.send_trserver('trserver_tracker01_accelerometer:300|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_accelerometer')
+        self.assertEqual(data['Fields']['value'], 300)
+        self.assertFalse('_mode' in data['Fields'])
+
+        self.send_trserver('trserver_sun_roll:-51.842|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_sun_roll')
+        self.assertEqual(data['Fields']['value'], -51.842)
+        self.assertFalse('_mode' in data['Fields'])
+
+        self.send_trserver('trserver_tracker01_mode:5|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_mode')
+        self.assertEqual(data['Fields']['value'], 5)
+        self.assertTrue('_mode' in data['Fields'])
+        self.assertEqual(data['Fields']['_mode'], 5)
+
+        self.send_trserver('trserver_tracker01_wind:11.4|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_wind')
+        self.assertEqual(data['Fields']['value'], 11.4)
+        self.assertTrue('_mode' in data['Fields'])
+        self.assertEqual(data['Fields']['_mode'], 5)
+
+        self.send_trserver('trserver_tracker01_accelerometer:300|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker01_accelerometer')
+        self.assertEqual(data['Fields']['value'], 300)
+        self.assertTrue('_mode' in data['Fields'])
+        self.assertEqual(data['Fields']['_mode'], 5)
+
+        self.send_trserver('trserver_sun_roll:-51.842|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_sun_roll')
+        self.assertEqual(data['Fields']['value'], -51.842)
+        self.assertFalse('_mode' in data['Fields'])
+
+        self.send_trserver('trserver_tracker02_accelerometer:300|p\n')
+        data = self.receive_json()
+        self.assertEqual(len(data), 1)
+        data = data[0]
+        self.assertEqual(data['Fields']['name'], 'trserver_tracker02_accelerometer')
+        self.assertEqual(data['Fields']['value'], 300)
+        self.assertFalse('_mode' in data['Fields'])
 
 
 class TestLogData(HekaTestCase):
