@@ -3,6 +3,16 @@ require "string"
 local aggregation = read_config('aggregation') or error('you must initialize "aggregation" option')
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
 local ticker_interval = read_config('ticker_interval') or error('you must initialize "ticker_interval" option')
+local gust = read_config('gust')
+local gusts = nil
+local gust_ns = nil
+if gust ~= nil then
+    if type(gust) ~= "number" then
+	error('if gust is set, it must be a number')
+    end
+    gusts = {}
+    gust_ns = gust * 10^9
+end
 local data = {}
 local aggs = {}
 
@@ -14,6 +24,7 @@ for agg in string.gmatch(aggregation, "[%S]+") do
 end
 
 function process_message()
+    local ts = read_message('Timestamp')
     local name = read_message('Fields[name]')
     local value = tonumber(read_message('Fields[value]'))
     if name == nil then
@@ -21,6 +32,27 @@ function process_message()
     end
     if value == nil then
 	return -1, "Fields[value] cant be nil"
+    end
+
+    if gust ~= nil then
+	gusts[name] = {
+	    t = ts,
+	    value = value,
+	    next = gusts[name]
+	}
+	local count = 0
+	local sum = 0
+	local l = gusts[name]
+	while l do
+	    count = count + 1
+	    sum = sum + l.value
+	    if l.next ~= nil and l.next.t < ts - gust_ns then
+		l.next = nil
+	    end
+	    l = l.next
+	end
+	-- override value with the average of the gust
+	value = sum / count
     end
 
     if data[name] == nil then
@@ -51,6 +83,9 @@ function timer_event(ns)
 	    _ticker_interval = ticker_interval
 	}
     }
+    if gust ~= nil then
+	msg['Fields']['_gust'] = gust
+    end
     for index, agg in pairs(aggs) do
 	msg['Fields']['_aggregation'] = agg
 	for name, cb in pairs(data) do
