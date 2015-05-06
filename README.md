@@ -173,14 +173,19 @@ Custom configuration for this sandbox filter:
 
 * `ticker_interval(int)`: Frequency (in seconds) at which a new aggregated
   metric will be generated.
-* `aggregation(string)`: Single or multiple (space separated list) aggregation
-  methods. Allowed aggregation methods are:
+* `gust(int|nil)`: Wether or not to apply a "gust" average pretreatment. If
+  gust is not nil, it must be the number of seconds (integer) from which an
+  average of previous values will be computed and used instead of the raw value
+  received.
+* `aggregation(string)`: Aggregation method. Allowed aggregation methods are:
     * `avg`: Average calulation.
     * `min`: Mimimum value received.
     * `max`: Maximum value received.
     * `sum`: Sum calculation.
     * `last`: Last value received.
     * `count`: Number of metric values received.
+    * `direct`: Don't do any aggregation, but forward metrics as soon as they
+                arrive in the aggregated format.
 
 #### `filters/decode_event.lua`
 
