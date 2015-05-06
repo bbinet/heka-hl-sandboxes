@@ -107,6 +107,9 @@ This sandbox parses messages from json.
 
 This sandbox parses metrics from trserver.
 
+It also adds a `_mode` field to all tracker messages which value is set to
+the last mode metric value that have been received for the same tracker.
+
 ### Sandbox encoders
 
 Common configuration:
@@ -150,11 +153,6 @@ Common configuration:
   `type_output` string should be set on the `Type` header (default is
   "overwrite").
 
-#### `filters/add_mode_field.lua`
-
-This sandbox adds a "mode" field to all tracker messages which value is set to
-the last mode metric value that have been received for the same tracker.
-
 #### `filters/add_static_fields.lua`
 
 This sandbox sets hardcoded values for given fields.
@@ -175,14 +173,19 @@ Custom configuration for this sandbox filter:
 
 * `ticker_interval(int)`: Frequency (in seconds) at which a new aggregated
   metric will be generated.
-* `aggregation(string)`: Single or multiple (space separated list) aggregation
-  methods. Allowed aggregation methods are:
+* `gust(int|nil)`: Wether or not to apply a "gust" average pretreatment. If
+  gust is not nil, it must be the number of seconds (integer) from which an
+  average of previous values will be computed and used instead of the raw value
+  received.
+* `aggregation(string)`: Aggregation method. Allowed aggregation methods are:
     * `avg`: Average calulation.
     * `min`: Mimimum value received.
     * `max`: Maximum value received.
     * `sum`: Sum calculation.
     * `last`: Last value received.
     * `count`: Number of metric values received.
+    * `direct`: Don't do any aggregation, but forward metrics as soon as they
+                arrive in the aggregated format.
 
 #### `filters/decode_event.lua`
 
@@ -215,28 +218,6 @@ Custom configuration for this sandbox filter:
 
 This sandbox encodes metrics messages as a specific formatted string into the
 payload for further processing of the `encode_header.lua` encoder.
-
-#### `filters/format_metric_name.lua`
-
-This sandbox sets the "name" field of the message by concatenating other
-fields values.
-
-* `fields(string "field1 field2")`: Space separated list of fields.
-  Each field must refer to a field name which actually exists in the message.
-  The concatenation of the fields values will keep the same order of the list.
-* `separator(string)`: String separator to use concatenate all fields values.
-
-#### `filters/gather_last_metrics.lua`
-
-This sandbox gathers multiple metrics in the same message but keep only the
-last value of every metric.
-
-The `type_output_method` config option is not supported for this filter.
-
-Custom configuration for this sandbox filter:
-
-* `ticker_interval(int)`: Frequency (in seconds) at which a new message will be
-  generated with last values for all gathered metrics.
 
 #### `filters/regex_dispatch_metric.lua`
 
