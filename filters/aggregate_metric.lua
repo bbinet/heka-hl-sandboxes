@@ -7,6 +7,9 @@ local gust = read_config('gust')
 local gusts = nil
 local gust_ns = nil
 if gust ~= nil then
+    if type(gust) ~= "number" then
+	error('if gust is set, it must be a number')
+    end
     gusts = {}
     gust_ns = gust * 10^9
 end
