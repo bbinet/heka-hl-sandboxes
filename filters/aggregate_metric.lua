@@ -34,7 +34,7 @@ function process_message()
 	    Timestamp = ts,
 	    Severity = 7,
 	    Fields = {
-		_aggregation = agg
+		_agg = agg
 	    }
 	}
 	msg['Fields'][name] = value
@@ -91,7 +91,7 @@ function timer_event(ns)
 	Severity = 7,
 	Fields = {
 	    _ticker_interval = ticker_interval,
-	    _aggregation = agg
+	    _agg = agg
 	}
     }
     if gust ~= nil then

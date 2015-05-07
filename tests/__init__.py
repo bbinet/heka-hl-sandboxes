@@ -338,7 +338,7 @@ type_output = "output"
         # value and so there is no previous value to aggregate with
         self.assertEqual(data['Fields']['name_test_1'], 2)
         self.assertEqual(data['Fields']['name_test_2'], 3)
-        self.assertEqual(data['Fields']['_aggregation'], 'min')
+        self.assertEqual(data['Fields']['_agg'], 'min')
         self.assertEqual(data['Fields']['_ticker_interval'], 3)
         self.assertTrue('_gust' in data['Fields'])
         self.assertEqual(data['Fields']['_gust'], 2)
@@ -389,7 +389,7 @@ type_output = "output"
         data = data[0]
         self.assertEqual(data['Fields']['name_test_1'], 4.5)
         self.assertEqual(data['Fields']['name_test_2'], 5)
-        self.assertEqual(data['Fields']['_aggregation'], 'max')
+        self.assertEqual(data['Fields']['_agg'], 'max')
         self.assertEqual(data['Fields']['_ticker_interval'], 3)
         self.assertTrue('_gust' in data['Fields'])
         self.assertEqual(data['Fields']['_gust'], 2)
@@ -424,7 +424,7 @@ type_output = "output"
         data = data[0]
         self.assertEqual(data['Fields']['name_test_1'], 5)
         self.assertEqual(data['Fields']['name_test_2'], 3)
-        self.assertEqual(data['Fields']['_aggregation'], 'max')
+        self.assertEqual(data['Fields']['_agg'], 'max')
         self.assertEqual(data['Fields']['_ticker_interval'], 3)
         self.assertFalse('_gust' in data['Fields'])
 
@@ -458,7 +458,7 @@ type_output = "output"
         data = data[0]
         self.assertEqual(data['Fields']['name_test_1'], 2)
         self.assertEqual(data['Fields']['name_test_2'], 3)
-        self.assertEqual(data['Fields']['_aggregation'], 'min')
+        self.assertEqual(data['Fields']['_agg'], 'min')
         self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_count(self):
@@ -491,7 +491,7 @@ type_output = "output"
         data = data[0]
         self.assertEqual(data['Fields']['name_test_1'], 2)
         self.assertEqual(data['Fields']['name_test_2'], 1)
-        self.assertEqual(data['Fields']['_aggregation'], 'count')
+        self.assertEqual(data['Fields']['_agg'], 'count')
         self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_last(self):
@@ -524,7 +524,7 @@ type_output = "output"
         data = data[0]
         self.assertEqual(data['Fields']['name_test_1'], 5)
         self.assertEqual(data['Fields']['name_test_2'], 3)
-        self.assertEqual(data['Fields']['_aggregation'], 'last')
+        self.assertEqual(data['Fields']['_agg'], 'last')
         self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_sum(self):
@@ -557,7 +557,7 @@ type_output = "output"
         data = data[0]
         self.assertEqual(data['Fields']['name_test_1'], 7)
         self.assertEqual(data['Fields']['name_test_2'], 3)
-        self.assertEqual(data['Fields']['_aggregation'], 'sum')
+        self.assertEqual(data['Fields']['_agg'], 'sum')
         self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_avg(self):
@@ -590,7 +590,7 @@ type_output = "output"
         data = data[0]
         self.assertEqual(data['Fields']['name_test_1'], 3.5)
         self.assertEqual(data['Fields']['name_test_2'], 3)
-        self.assertEqual(data['Fields']['_aggregation'], 'avg')
+        self.assertEqual(data['Fields']['_agg'], 'avg')
         self.assertEqual(data['Fields']['_ticker_interval'], 3)
 
     def test_sandbox_direct(self):
@@ -624,7 +624,7 @@ type_output = "output"
         data = data[0]
 
         self.assertEqual(data['Fields']['name_test_1'], 2)
-        self.assertEqual(data['Fields']['_aggregation'], 'no')
+        self.assertEqual(data['Fields']['_agg'], 'no')
         self.assertEqual(data['Timestamp'], 10)
         self.assertFalse('name_test_2' in data['Fields'])
         self.assertFalse('_ticker_interval' in data['Fields'])
@@ -635,7 +635,7 @@ type_output = "output"
         data = data[0]
 
         self.assertEqual(data['Fields']['name_test_1'], 5)
-        self.assertEqual(data['Fields']['_aggregation'], 'no')
+        self.assertEqual(data['Fields']['_agg'], 'no')
         self.assertEqual(data['Timestamp'], 11)
         self.assertFalse('name_test_2' in data['Fields'])
         self.assertFalse('_ticker_interval' in data['Fields'])
@@ -646,7 +646,7 @@ type_output = "output"
         data = data[0]
 
         self.assertEqual(data['Fields']['name_test_2'], 3)
-        self.assertEqual(data['Fields']['_aggregation'], 'no')
+        self.assertEqual(data['Fields']['_agg'], 'no')
         self.assertEqual(data['Timestamp'], 12)
         self.assertFalse('name_test_1' in data['Fields'])
         self.assertFalse('_ticker_interval' in data['Fields'])
@@ -901,7 +901,7 @@ class TestEncodeCarbon(HekaTestCase):
             'Fields': {
                 'm_1': 1.2,
                 'm_2': 0,
-                '_aggregation': 'min',
+                '_agg': 'min',
                 '_ticker_interval': 3,
                 }
             })
@@ -933,7 +933,7 @@ type_output = "output"
             'Fields': {
                 'm_1': 1.2,
                 'm_2': 0,
-                '_aggregation': 'min',
+                '_agg': 'min',
                 '_ticker_interval': 3,
                 }
             })
@@ -943,7 +943,7 @@ type_output = "output"
             'Severity': 7,
             'Fields': {
                 'm_1': 1,
-                '_aggregation': 'max',
+                '_agg': 'max',
                 '_ticker_interval': 3,
                 }
             })
