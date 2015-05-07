@@ -282,11 +282,11 @@ type_output = "output"
         'toml': """
 [TestDirectFilter]
 type = "SandboxFilter"
-message_matcher = "Type == 'test.direct'"
+message_matcher = "Type == 'test.no'"
 ticker_interval = 3
 [TestDirectFilter.config]
 ticker_interval = 3
-aggregation = "direct"
+aggregation = "no"
 type_output = "output"
 """}}
 
@@ -596,7 +596,7 @@ type_output = "output"
     def test_sandbox_direct(self):
         self.send_json({
             'Timestamp': 10,
-            'Type': 'test.direct',
+            'Type': 'test.no',
             'Fields': {
                 'name': 'name_test_1',
                 'value': 2
@@ -604,7 +604,7 @@ type_output = "output"
             })
         self.send_json({
             'Timestamp': 11,
-            'Type': 'test.direct',
+            'Type': 'test.no',
             'Fields': {
                 'name': 'name_test_1',
                 'value': 5
@@ -612,7 +612,7 @@ type_output = "output"
             })
         self.send_json({
             'Timestamp': 12,
-            'Type': 'test.direct',
+            'Type': 'test.no',
             'Fields': {
                 'name': 'name_test_2',
                 'value': 3
@@ -624,7 +624,7 @@ type_output = "output"
         data = data[0]
 
         self.assertEqual(data['Fields']['name_test_1'], 2)
-        self.assertEqual(data['Fields']['_aggregation'], 'direct')
+        self.assertEqual(data['Fields']['_aggregation'], 'no')
         self.assertEqual(data['Timestamp'], 10)
         self.assertFalse('name_test_2' in data['Fields'])
         self.assertFalse('_ticker_interval' in data['Fields'])
@@ -635,7 +635,7 @@ type_output = "output"
         data = data[0]
 
         self.assertEqual(data['Fields']['name_test_1'], 5)
-        self.assertEqual(data['Fields']['_aggregation'], 'direct')
+        self.assertEqual(data['Fields']['_aggregation'], 'no')
         self.assertEqual(data['Timestamp'], 11)
         self.assertFalse('name_test_2' in data['Fields'])
         self.assertFalse('_ticker_interval' in data['Fields'])
@@ -646,7 +646,7 @@ type_output = "output"
         data = data[0]
 
         self.assertEqual(data['Fields']['name_test_2'], 3)
-        self.assertEqual(data['Fields']['_aggregation'], 'direct')
+        self.assertEqual(data['Fields']['_aggregation'], 'no')
         self.assertEqual(data['Timestamp'], 12)
         self.assertFalse('name_test_1' in data['Fields'])
         self.assertFalse('_ticker_interval' in data['Fields'])

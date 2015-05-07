@@ -185,7 +185,7 @@ Custom configuration for this sandbox filter:
     * `sum`: Sum calculation.
     * `last`: Last value received.
     * `count`: Number of metric values received.
-    * `direct`: Don't do any aggregation, but forward metrics as soon as they
+    * `no`: Don't do any aggregation, but forward metrics as soon as they
                 arrive in the aggregated format.
 
 #### `filters/decode_event.lua`

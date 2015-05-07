@@ -1,8 +1,8 @@
 require "string"
 
 local agg = read_config('aggregation') or error('you must initialize "aggregation" option')
-if  agg ~= "avg" and agg ~= "max" and agg ~= "min" and agg ~= "sum" and agg ~= "last" and agg ~= "count" and agg ~= "direct" then
-    error('"' .. agg .. '" unknown aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last", "count", "direct"')
+if  agg ~= "avg" and agg ~= "max" and agg ~= "min" and agg ~= "sum" and agg ~= "last" and agg ~= "count" and agg ~= "no" then
+    error('"' .. agg .. '" unknown aggregation method: allowed values for aggregation are "avg", "sum", "max", "min", "last", "count", "no"')
 end
 local type_output = read_config('type_output') or error('you must initialize "type_output" option')
 local ticker_interval = read_config('ticker_interval') or error('you must initialize "ticker_interval" option')
@@ -28,7 +28,7 @@ function process_message()
     if value == nil then
 	return -1, "Fields[value] cant be nil"
     end
-    if agg == "direct" then
+    if agg == "no" then
 	local msg = {
 	    Type = type_output,
 	    Timestamp = ts,
@@ -82,7 +82,7 @@ function process_message()
 end
 
 function timer_event(ns)
-    if agg == "direct" then
+    if agg == "no" then
 	return 0
     end
     local msg = {
