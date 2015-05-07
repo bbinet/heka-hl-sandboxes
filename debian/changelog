@@ -1,3 +1,40 @@
+heka-hl-sandboxes (0.3+hl~1) wheezy; urgency=low
+
+  * add ticker_interval to the fields returned by aggregate_metric filter
+  * add more debugging statements in the tests
+  * redesign filters/aggregate_metric.lua and update tests
+  * remove useless payload in message sent
+  * add tests to check _aggregation & _ticker_interval values
+  * add missing error function
+  * update carbon encoder following aggregate_metric changes
+  * add tests for encode_carbon.lua encoder
+  * add gust support to the aggregate_metric.lua filter
+  * add tests for the gust feature of aggregate_metric.lua filter
+  * add check for "gust" value to be a number
+  * add support for "direct" aggregation in filters/aggregate_metric.lua
+  * add tests for the "direct" aggregation
+  * fix direct aggregation tests
+  * integrate add_mode_field feature directly in decode_trserver_metrics.lua
+  * add tests for decode_trserver_metrics.lua
+  * remove filters/add_mode_field.lua and related tests
+  * git mv filters/gather_last_metrics.lua old/filters
+  * git mv filters/format_metric_name.lua old/filters/
+  * remove doc for filters/add_mode_field.lua
+  * move doc of the old sandboxes
+  * update decoders/decode_trserver_metrics.lua api doc
+  * update filters/aggregate_metric.lua api doc
+  * fix tests failing because moved to old/ dir
+  * remove useless "filename" param in sandboxes config
+  * update ticker_interval doc for filters/aggregate_metric.lua
+  * update filters/encode_influxdb_0_8 encoder following aggregate_metric changes
+  * add tests for encode_influxdb_0_8.lua filter
+  * don't inject_payload if no data has been received
+  * rename aggregation "direct" => "no"
+  * rename "_aggregation' => "_agg"
+  * rename "_ticker_interval' => "_tick"
+
+ -- Bruno Binet <bruno.binet@gmail.com>  Thu, 07 May 2015 10:23:21 +0200
+
 heka-hl-sandboxes (0.2+hl~1) wheezy; urgency=low
 
   * remove existing "heka.sandbox." prefix if any
