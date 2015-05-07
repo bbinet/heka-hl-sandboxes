@@ -1,0 +1,14 @@
+[CarbonFileOutput]
+type = "FileOutput"
+message_matcher = "Type == 'heka.sandbox.metric.aggregate'"
+path = "%ENV[CARBON_OUT_DIR]/2006/01/02.log"
+rotation_interval = 24
+flush_interval = 60000
+encoder = "CarbonEncoder"
+
+[CarbonEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_HL_DIR]/lua_encoders/encode_carbon.lua"
+    [CarbonEncoder.config]
+    uuid = "1b29c505-6fe5-4a15-9219-fe5dd4496020"
+    hostname = "hl-lxc-1-dev"

@@ -1,0 +1,53 @@
+[ParkRegexDispatchFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/regex_dispatch_metric.lua"
+message_matcher = "Type == 'trserver.metric' && Fields[_mode] == 2"
+    [ParkRegexDispatchFilter.config]
+    matchers = "command all"
+
+    command_regex = "trserver_tracker00_command"
+    command_type_output = "agg.no"
+
+    all_regex = ".*"
+    all_type_output = "agg.60m.last"
+
+
+[MainRegexDispatchFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/regex_dispatch_metric.lua"
+message_matcher = "Type == 'trserver.metric' && (Fields[_mode] != 2 || Fields[_mode] == NIL)"
+    [MainRegexDispatchFilter.config]
+    matchers = "sensor wind drivecurrent command trserver ccenum cc smaenum sma ysdi all"
+
+    sensor_regex = "trserver_tracker%d%d_Isensor%d"
+    sensor_type_output = "agg.60s.avg"
+
+    wind_regex = "trserver_tracker%d%d_wind"
+    wind_type_output = "agg.60s.max.gust3s"
+
+    drivecurrent_regex = "trserver_tracker%d%d_drive%d_current"
+    drivecurrent_type_output = "agg.60s.max"
+
+    command_regex = "trserver_tracker00_command"
+    command_type_output = "agg.no"
+
+    trserver_regex = "trserver_.*"
+    trserver_type_output = "agg.60s.last"
+
+    ccenum_regex = ".*clustercontroller.*Enum'"
+    ccenum_type_output = "agg.60s.last"
+
+    cc_regex = ".*clustercontroller.*"
+    cc_type_output = "agg.60s.avg"
+
+    smaenum_regex = ".*sma_inverter.*Enum"
+    smaenum_type_output = "agg.60s.last"
+
+    sma_regex = ".*sma_inverter.*"
+    sma_type_output = "agg.60s.avg"
+
+    ysdi_regex = ".*ysdi.*"
+    ysdi_type_output = "agg.60s.avg"
+
+    all_regex = ".*"
+    all_type_output = "agg.60s.last"

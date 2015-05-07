@@ -1,0 +1,9 @@
+#[AddStaticFieldsFilter]
+#type = "SandboxFilter"
+#filename = "%ENV[HEKA_HL_DIR]/lua_filters/add_static_fields.lua"
+#message_matcher = "Type == 'heka.sandbox.metric.aggregate'"
+#    [AddStaticFieldsFilter.config]
+#    fields = "uuid hostname"
+#    uuid = "1b29c505-6fe5-4a15-9219-fe5dd4496020"
+#    hostname = "hl-lxc-1-dev"
+#    type_output = "metric.static_fields"

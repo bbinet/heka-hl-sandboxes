@@ -1,0 +1,24 @@
+[Trwebclient1sLastAggregateMetricFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
+message_matcher = "Type == 'trserver.metric'"
+ticker_interval = 1
+    [Trwebclient1sLastAggregateMetricFilter.config]
+    ticker_interval = 1
+    aggregation = "last"
+    type_output = "trwebclient"
+
+[TrwebclientOutput]
+type = "HttpOutput"
+message_matcher = "Type == 'heka.sandbox.trwebclient'"
+address = "http://localhost:8888/heka"
+encoder = "TrwebclientEncoder"
+http_timeout = 1000
+    [TrwebclientOutput.headers]
+    Content-Type = ["application/json"]
+
+[TrwebclientEncoder]
+type = "SandboxEncoder"
+filename = "%ENV[HEKA_HL_DIR]/lua_encoders/encode_json.lua"
+    [TrwebclientEncoder.config]
+    allowed_headers = "Fields Timestamp"

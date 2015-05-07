@@ -1,0 +1,9 @@
+[ProtobufFileOutput]
+type = "FileOutput"
+message_matcher = "Type == 'heka.sandbox.metric.static_fields.formatted'"
+path = "/var/local/protobuf/2006/01/02.log"
+rotation_interval = 24
+flush_interval = 60000
+encoder = "ProtobufEncoder"
+
+[ProtobufEncoder]

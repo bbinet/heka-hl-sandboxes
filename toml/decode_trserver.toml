@@ -1,0 +1,11 @@
+[TrserverInput]
+type = "UdpInput"
+address = "localhost:8125"
+splitter = "TokenSplitter"
+decoder = "TrserverDecoder"
+
+[TrserverDecoder]
+type = "SandboxDecoder"
+filename = "%ENV[HEKA_HL_DIR]/lua_decoders/decode_trserver_metrics.lua"
+    [TrserverDecoder.config]
+    type_output = "trserver.metric"
