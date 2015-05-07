@@ -90,7 +90,7 @@ function timer_event(ns)
 	Timestamp = ns,
 	Severity = 7,
 	Fields = {
-	    _ticker_interval = ticker_interval,
+	    _tick = ticker_interval,
 	    _agg = agg
 	}
     }
