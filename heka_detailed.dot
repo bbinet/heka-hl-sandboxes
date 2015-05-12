@@ -1,0 +1,49 @@
+digraph G {
+	//rankdir="LR"
+	node[shape=record,style=rounded]
+
+	trserver[label="decode_trserver\n(w/ mode)"]
+
+	subgraph cluster_carbonlogs{
+		label="carbon logs"
+		color=brown
+		fontcolor=brown
+		style=dashed
+		node[group=carb]
+
+		dispatch[label="{regex_dispatch_metric|{<park>park|<pow>pow|<other>other}}"]
+		agg[label="{{<park>60m|<pow>3s|<other>60s}|aggregate_metric|{avg|max|last|max.gust3s|no}}"]
+		carbon[label="encode_carbon\n(host+uuid)"]
+
+		dispatch:park->agg:park
+		dispatch:pow->agg:pow
+		dispatch:other->agg:other
+		agg->carbon
+	}
+
+	subgraph cluster_trwebclient{
+		label="trwebclient"
+		color=purple
+		fontcolor=purple
+		style=dashed
+		node[group=trw]
+
+		agg_trw[label="{{1s}|aggregate_metric|{last}}"]
+		json[label="encode_json"]
+
+		agg_trw->json
+	}
+
+	node[shape=box,style=solid]
+	inudp[label="UDP Input\nlocalhost:8125"]
+	outfile[label="FILE Output\n/var/local/stats",shape=note,group=carb]
+	outhttp[label="HTTP Output\nlocalhost:8888/heka",group=trw]
+	{rank=same;outfile;outhttp}
+
+	inudp->trserver
+	trserver->dispatch
+	trserver->agg_trw
+	carbon->outfile
+	json->outhttp
+}
+
