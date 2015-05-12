@@ -237,6 +237,12 @@ Custom configuration for this sandbox filter:
 * `<item>_type_output(string)`: Sets the message `Type` header to the specified
   value (will be prefixed with `heka.sandbox.`).
 
+## Graphviz schema
+
+You can update the heka-hl-sandboxes schema image with the following Graphviz command:
+
+    $ dot -Tpng heka_detailed.dot -o heka_detailed.png
+
 ## Todo
 
 * Issue #3 - test that sandboxes won't crash (but generate error messages) when
