@@ -1,23 +1,17 @@
-[ParkRegexDispatchFilter]
+
+[PowRegexDispatchFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/lua_filters/regex_dispatch_metric.lua"
-message_matcher = "Type == 'trserver.metric' && Fields[_mode] == 2"
-    [ParkRegexDispatchFilter.config]
-    matchers = "command all"
+message_matcher = "Type == 'trserver.metric' && Fields[_mode] >= 6"
+    [PowRegexDispatchFilter.config]
+    sensor3s_regex = "trserver_tracker%d%d_Isensor%d"
+    sensor3s_type_output = "agg.3s.avg"
+
+    angle3s_regex = "trserver_tracker%d%d_.*_angle"
+    angle3s_type_output = "agg.3s.last"
 
     command_regex = "trserver_tracker00_command"
     command_type_output = "agg.no"
-
-    all_regex = ".*"
-    all_type_output = "agg.60m.last"
-
-
-[MainRegexDispatchFilter]
-type = "SandboxFilter"
-filename = "%ENV[HEKA_HL_DIR]/lua_filters/regex_dispatch_metric.lua"
-message_matcher = "Type == 'trserver.metric' && (Fields[_mode] != 2 || Fields[_mode] == NIL)"
-    [MainRegexDispatchFilter.config]
-    matchers = "sensor wind drivecurrent command trserver ccenum cc smaenum sma ysdi all"
 
     sensor_regex = "trserver_tracker%d%d_Isensor%d"
     sensor_type_output = "agg.60s.avg"
@@ -25,11 +19,36 @@ message_matcher = "Type == 'trserver.metric' && (Fields[_mode] != 2 || Fields[_m
     wind_regex = "trserver_tracker%d%d_wind"
     wind_type_output = "agg.60s.max.gust3s"
 
+    drivevoltage_regex = "trserver_tracker%d%d_drive%d_voltage"
+    drivevoltage_type_output = "agg.60s.min"
+
     drivecurrent_regex = "trserver_tracker%d%d_drive%d_current"
     drivecurrent_type_output = "agg.60s.max"
 
+    trserver_regex = "trserver_.*"
+    trserver_type_output = "agg.60s.last"
+
+    matchers = "sensor3s angle3s command sensor wind drivevoltage drivecurrent trserver"
+
+[MainRegexDispatchFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/regex_dispatch_metric.lua"
+message_matcher = "Type == 'trserver.metric' && (Fields[_mode] == NIL || (Fields[_mode] != 2 && Fields[_mode] < 6))"
+    [MainRegexDispatchFilter.config]
     command_regex = "trserver_tracker00_command"
     command_type_output = "agg.no"
+
+    sensor_regex = "trserver_tracker%d%d_Isensor%d"
+    sensor_type_output = "agg.60s.avg"
+
+    wind_regex = "trserver_tracker%d%d_wind"
+    wind_type_output = "agg.60s.max.gust3s"
+
+    drivevoltage_regex = "trserver_tracker%d%d_drive%d_voltage"
+    drivevoltage_type_output = "agg.60s.min"
+
+    drivecurrent_regex = "trserver_tracker%d%d_drive%d_current"
+    drivecurrent_type_output = "agg.60s.max"
 
     trserver_regex = "trserver_.*"
     trserver_type_output = "agg.60s.last"
@@ -51,3 +70,28 @@ message_matcher = "Type == 'trserver.metric' && (Fields[_mode] != 2 || Fields[_m
 
     all_regex = ".*"
     all_type_output = "agg.60s.last"
+
+    matchers = "command sensor wind drivevoltage drivecurrent trserver ccenum cc smaenum sma ysdi all"
+
+[ParkRegexDispatchFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/regex_dispatch_metric.lua"
+message_matcher = "Type == 'trserver.metric' && Fields[_mode] == 2"
+    [ParkRegexDispatchFilter.config]
+    command_regex = "trserver_tracker00_command"
+    command_type_output = "agg.no"
+
+    wind_regex = "trserver_tracker%d%d_wind"
+    wind_type_output = "agg.60m.max.gust3s"
+
+    drivevoltage_regex = "trserver_tracker%d%d_drive%d_voltage"
+    drivevoltage_type_output = "agg.60m.min"
+
+    drivecurrent_regex = "trserver_tracker%d%d_drive%d_current"
+    drivecurrent_type_output = "agg.60m.max"
+
+    all_regex = ".*"
+    all_type_output = "agg.60m.last"
+
+    matchers = "command wind drivevoltage drivecurrent all"
+
