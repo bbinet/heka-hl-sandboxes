@@ -46,6 +46,7 @@ available in the `toml` directory.
 
 To run Heka with the sample configuration, you can do:
 
+    $ export CARBON_OUT_DIR=/tmp
     $ export HEKA_HL_DIR=path/to/heka-hl-sandboxes/
     $ hekad -config $HEKA_HL_DIR/toml
 
