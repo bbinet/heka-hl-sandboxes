@@ -1,3 +1,4 @@
+
 [60mLastAggregateMetricFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
@@ -5,6 +6,77 @@ message_matcher = "Type == 'heka.sandbox.agg.60m.last'"
 ticker_interval = 3600
     [60mLastAggregateMetricFilter.config]
     ticker_interval = 3600
+    aggregation = "last"
+    type_output = "metric.aggregate"
+
+[60mMaxAggregateMetricFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
+message_matcher = "Type == 'heka.sandbox.agg.60m.max'"
+ticker_interval = 3600
+    [60mMaxAggregateMetricFilter.config]
+    ticker_interval = 3600
+    aggregation = "max"
+    type_output = "metric.aggregate"
+
+[3sAvgAggregateMetricFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
+message_matcher = "Type == 'heka.sandbox.agg.60s.avg'"
+ticker_interval = 3
+    [3sAvgAggregateMetricFilter.config]
+    ticker_interval = 3
+    aggregation = "avg"
+    type_output = "metric.aggregate"
+
+[60sMinAggregateMetricFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
+message_matcher = "Type == 'heka.sandbox.agg.60s.min'"
+ticker_interval = 60
+    [60sMinAggregateMetricFilter.config]
+    ticker_interval = 60
+    aggregation = "min"
+    type_output = "metric.aggregate"
+
+[NoAggregateMetricFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
+message_matcher = "Type == 'heka.sandbox.agg.no'"
+ticker_interval = 3600
+    [NoAggregateMetricFilter.config]
+    ticker_interval = 3600
+    aggregation = "no"
+    type_output = "metric.aggregate"
+
+[60mMaxGust3sAggregateMetricFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
+message_matcher = "Type == 'heka.sandbox.agg.60m.max.gust3s'"
+ticker_interval = 3600
+    [60mMaxGust3sAggregateMetricFilter.config]
+    ticker_interval = 3600
+    aggregation = "max"
+    gust = 3
+    type_output = "metric.aggregate"
+
+[60sMaxAggregateMetricFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
+message_matcher = "Type == 'heka.sandbox.agg.60s.max'"
+ticker_interval = 60
+    [60sMaxAggregateMetricFilter.config]
+    ticker_interval = 60
+    aggregation = "max"
+    type_output = "metric.aggregate"
+
+[3sLastAggregateMetricFilter]
+type = "SandboxFilter"
+filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
+message_matcher = "Type == 'heka.sandbox.agg.60s.last'"
+ticker_interval = 3
+    [3sLastAggregateMetricFilter.config]
+    ticker_interval = 3
     aggregation = "last"
     type_output = "metric.aggregate"
 
@@ -28,16 +100,6 @@ ticker_interval = 60
     aggregation = "avg"
     type_output = "metric.aggregate"
 
-[60sMaxAggregateMetricFilter]
-type = "SandboxFilter"
-filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
-message_matcher = "Type == 'heka.sandbox.agg.60s.max'"
-ticker_interval = 60
-    [60sMaxAggregateMetricFilter.config]
-    ticker_interval = 60
-    aggregation = "max"
-    type_output = "metric.aggregate"
-
 [60sMaxGust3sAggregateMetricFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
@@ -49,12 +111,13 @@ ticker_interval = 60
     gust = 3
     type_output = "metric.aggregate"
 
-[NoAggregateMetricFilter]
+[60mMinAggregateMetricFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
-message_matcher = "Type == 'heka.sandbox.agg.no'"
+message_matcher = "Type == 'heka.sandbox.agg.60m.min'"
 ticker_interval = 3600
-    [NoAggregateMetricFilter.config]
+    [60mMinAggregateMetricFilter.config]
     ticker_interval = 3600
-    aggregation = "no"
+    aggregation = "min"
     type_output = "metric.aggregate"
+

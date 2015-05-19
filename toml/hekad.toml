@@ -1,6 +1,8 @@
+
 [hekad]
-max_message_loops = 10
 maxprocs = 4
+poolsize = 200
+max_message_loops = 10
 
 # Heka listens to localhost:5565 for Heka ACL protobuf messages
 [TCP:5565]
@@ -17,3 +19,6 @@ type = "HekaFramingSplitter"
 type = "SandboxManagerFilter"
 message_signer = "SandboxManager"
 max_filters = 100
+
+[DashboardOutput]
+ticker_interval = 30
