@@ -53,7 +53,7 @@ decoder = "TrserverMetricsDecoder"
 
 [HeaderDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_HL_DIR]/decoders/decode_header.lua"
+filename = "%ENV[HEKA_HL_DIR]/old/decoders/decode_header.lua"
     [HeaderDecoder.config]
     type_output = "log.input"
 [HeaderUdpInput]
@@ -64,7 +64,7 @@ decoder = "HeaderDecoder"
 
 [HeaderEncoder]
 type = "SandboxEncoder"
-filename = "%ENV[HEKA_HL_DIR]/encoders/encode_header.lua"
+filename = "%ENV[HEKA_HL_DIR]/old/encoders/encode_header.lua"
 [HeaderUdpOutput]
 type = "UdpOutput"
 message_matcher = "Type == 'heka.sandbox.log.output'"

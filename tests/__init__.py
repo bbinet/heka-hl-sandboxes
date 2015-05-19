@@ -821,7 +821,7 @@ class TestLogData(HekaTestCase):
 
     sandboxes = {
         'TestDecodeLogMetric': {
-            'file': '%s/decode_metric.lua' % HEKA_FILTERS_DIR,
+            'file': '%s/decode_metric.lua' % HEKA_OLD_FILTERS_DIR,
             'toml': """
 [TestDecodeLogMetric]
 type = "SandboxFilter"
@@ -830,7 +830,7 @@ message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'metric'"
 type_output = "encode.log.metric"
 """},
         'TestEncodeLogMetric': {
-            'file': '%s/encode_metric.lua' % HEKA_FILTERS_DIR,
+            'file': '%s/encode_metric.lua' % HEKA_OLD_FILTERS_DIR,
             'toml': """
 [TestEncodeLogMetric]
 type = "SandboxFilter"
@@ -839,7 +839,7 @@ message_matcher = "Type == 'heka.sandbox.encode.log.metric'"
     type_output = "log.output"
 """},
         'TestDecodeLogEvent': {
-            'file': '%s/decode_event.lua' % HEKA_FILTERS_DIR,
+            'file': '%s/decode_event.lua' % HEKA_OLD_FILTERS_DIR,
             'toml': """
 [TestDecodeLogEvent]
 type = "SandboxFilter"
@@ -848,7 +848,7 @@ message_matcher = "Type == 'log.input' && Fields[decoder_type] == 'event'"
 type_output = "encode.log.event"
 """},
         'TestEncodeLogEvent': {
-            'file': '%s/encode_event.lua' % HEKA_FILTERS_DIR,
+            'file': '%s/encode_event.lua' % HEKA_OLD_FILTERS_DIR,
             'toml': """
 [TestEncodeLogEvent]
 type = "SandboxFilter"
