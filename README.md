@@ -92,11 +92,6 @@ Common configuration:
 Here is the list of common Heka sandbox parameters:
 https://hekad.readthedocs.org/en/latest/config/common_sandbox_parameter.html
 
-#### `decoders/decode_header.lua`
-
-This sandbox parses messages from log files (generic header part only) and
-forward them to a specific decoder filter (metric, event) for further decoding.
-
 #### `decoders/decode_json.lua`
 
 This sandbox parses messages from json.
@@ -126,12 +121,6 @@ This sandbox encodes metrics to the plaintext carbon format so that it can be
 ingested by a carbon (graphite) server.
 
 See: http://graphite.readthedocs.org/en/latest/feeding-carbon.html#the-plaintext-protocol
-
-#### `encoders/encode_header.lua`
-
-This sandbox encodes the generic part of a message as a formatted string into
-the payload (the metric or event specific part that has already been serialized
-in above dedicated filters is copyed as is).
 
 #### `encoders/encode_json.lua`
 
@@ -189,19 +178,6 @@ Custom configuration for this sandbox filter:
     * `no`: Don't do any aggregation, but forward metrics as soon as they
                 arrive in the aggregated format.
 
-#### `filters/decode_event.lua`
-
-This sandbox parses the event specific part of a log line.
-
-#### `filters/decode_metric.lua`
-
-This sandbox parses the metric specific part of a log line.
-
-#### `filters/encode_event.lua`
-
-This sandbox encodes events messages as a specific formatted string into the
-payload for further processing of the `encode_header.lua` encoder.
-
 #### `filters/encode_influxdb_0_8.lua`
 
 This sandbox gathers multiple metrics, groups and encodes them by batch as json
@@ -215,11 +191,6 @@ Custom configuration for this sandbox filter:
 
 * `ticker_interval(int)`: Frequency (in seconds) at which a new batch metric
   will be generated.
-
-#### `filters/encode_metric.lua`
-
-This sandbox encodes metrics messages as a specific formatted string into the
-payload for further processing of the `encode_header.lua` encoder.
 
 #### `filters/regex_dispatch_metric.lua`
 
