@@ -215,7 +215,3 @@ You can update the heka-hl-sandboxes schema image with the following Graphviz co
 
     $ dot -Tpng heka_detailed.dot -o heka_detailed.png
 
-## Todo
-
-* Issue #3 - test that sandboxes won't crash (but generate error messages) when
-  receiving wrong inputs.
