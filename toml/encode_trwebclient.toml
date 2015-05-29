@@ -1,7 +1,7 @@
 [Trwebclient1sLastAggregateMetricFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/lua_filters/aggregate_metric.lua"
-message_matcher = "Type == 'trserver.metric'"
+message_matcher = "Type == 'statsdp.metric'"
 ticker_interval = 1
     [Trwebclient1sLastAggregateMetricFilter.config]
     ticker_interval = 1

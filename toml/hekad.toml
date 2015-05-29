@@ -22,3 +22,10 @@ max_filters = 100
 
 [DashboardOutput]
 ticker_interval = 30
+
+#[DebugFileOutput]
+#type = "FileOutput"
+#message_matcher = "TRUE"
+#path = "/tmp/heka-debug.rst"
+#encoder = "RstEncoder"
+#[RstEncoder]

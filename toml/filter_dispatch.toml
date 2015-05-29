@@ -2,7 +2,7 @@
 [PowRegexDispatchFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/lua_filters/regex_dispatch_metric.lua"
-message_matcher = "Type == 'trserver.metric' && Fields[_mode] >= 6"
+message_matcher = "Type == 'statsdp.metric' && Fields[_mode] >= 6"
     [PowRegexDispatchFilter.config]
     sensor3s_regex = "trserver_tracker%d%d_Isensor%d"
     sensor3s_type_output = "agg.3s.avg"
@@ -33,7 +33,7 @@ message_matcher = "Type == 'trserver.metric' && Fields[_mode] >= 6"
 [MainRegexDispatchFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/lua_filters/regex_dispatch_metric.lua"
-message_matcher = "Type == 'trserver.metric' && (Fields[_mode] == NIL || (Fields[_mode] != 2 && Fields[_mode] < 6))"
+message_matcher = "Type == 'statsdp.metric' && (Fields[_mode] == NIL || (Fields[_mode] != 2 && Fields[_mode] < 6))"
     [MainRegexDispatchFilter.config]
     command_regex = "trserver_tracker00_command"
     command_type_output = "agg.no"
@@ -76,7 +76,7 @@ message_matcher = "Type == 'trserver.metric' && (Fields[_mode] == NIL || (Fields
 [ParkRegexDispatchFilter]
 type = "SandboxFilter"
 filename = "%ENV[HEKA_HL_DIR]/lua_filters/regex_dispatch_metric.lua"
-message_matcher = "Type == 'trserver.metric' && Fields[_mode] == 2"
+message_matcher = "Type == 'statsdp.metric' && Fields[_mode] == 2"
     [ParkRegexDispatchFilter.config]
     command_regex = "trserver_tracker00_command"
     command_type_output = "agg.no"
