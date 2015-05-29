@@ -1,3 +1,13 @@
+heka-hl-sandboxes (0.5+hl~1) wheezy; urgency=low
+
+  * fix heka message_matcher for 3sAvg & 3sLast aggregations
+  * allow dot (.) char in metric name
+  * git mv decode_trserver_metrics.lua decode_statsdp.lua
+  * update toml and readme: s/decode_trserver_metrics/decode_statsdp/
+  * update heka toml config
+
+ -- Bruno Binet <bruno.binet@gmail.com>  Fri, 29 May 2015 17:53:40 +0200
+
 heka-hl-sandboxes (0.4+hl~1) wheezy; urgency=low
 
   * update toml config files to match production configuration
