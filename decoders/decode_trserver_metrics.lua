@@ -3,7 +3,7 @@ local type_output = read_config('type_output') or error('you must initialize "ty
 local trackers_mode = {}
 
 function process_message()
-    local name, value = string.match(read_message('Payload'), "^([%w_]+):([%w_.+-]+)|p\n$")
+    local name, value = string.match(read_message('Payload'), "^([%w_.]+):([%w_.+-]+)|p\n$")
     value = tonumber(value)
     if name == nil then
 	return -1, "name can't be nil"
