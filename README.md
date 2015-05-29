@@ -99,9 +99,10 @@ This sandbox parses messages from json.
 * `allowed_headers(string)`: Single or multiple (space separated list) headers
   to include in the new message. If `nil`, all standard headers will be set.
 
-#### `decoders/decode_trserver_metrics.lua`
+#### `decoders/decode_statsdp.lua`
 
-This sandbox parses metrics from trserver.
+This sandbox parses metrics in the statsdp format (statsd proxy mode):
+`name:value|p\n`
 
 It also adds a `_mode` field to all tracker messages which value is set to
 the last mode metric value that have been received for the same tracker.

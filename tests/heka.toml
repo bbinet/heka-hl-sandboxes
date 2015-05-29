@@ -42,7 +42,7 @@ encoder = "JsonEncoder"
 
 [TrserverMetricsDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_HL_DIR]/decoders/decode_trserver_metrics.lua"
+filename = "%ENV[HEKA_HL_DIR]/decoders/decode_statsdp.lua"
     [TrserverMetricsDecoder.config]
     type_output = "trserver.metric"
 [TrserverMetricsUdpInput]

@@ -6,6 +6,6 @@ decoder = "TrserverDecoder"
 
 [TrserverDecoder]
 type = "SandboxDecoder"
-filename = "%ENV[HEKA_HL_DIR]/lua_decoders/decode_trserver_metrics.lua"
+filename = "%ENV[HEKA_HL_DIR]/lua_decoders/decode_statsdp.lua"
     [TrserverDecoder.config]
     type_output = "trserver.metric"
