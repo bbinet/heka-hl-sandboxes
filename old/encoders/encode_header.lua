@@ -37,7 +37,8 @@ function process_message()
         os.date("%X", timestamp/1e9),
         hostname,
         uuid,
-        string.format("%d", timestamp),
+        -- workaround for lua5.1 on arch arm
+        string.format("%.0f", timestamp),
         severity,
         encoder_type .. ':' .. encoder_version
     }, " ") .. '] ' .. payload .. '\n')

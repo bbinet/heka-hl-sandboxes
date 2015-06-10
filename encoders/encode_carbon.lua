@@ -9,7 +9,8 @@ function process_message()
     if timestamp == nil then
         return -1, "Timestamp can't be nil"
     end
-    local timestr = string.format("%d", timestamp/1e9)
+    -- workaround for lua5.1 on arch arm
+    local timestr = string.format("%.0f", timestamp/1e9)
 
     while true do
 	typ, key, value = read_next_field()
